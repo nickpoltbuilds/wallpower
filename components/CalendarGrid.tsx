@@ -118,7 +118,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="e.g., 'Grandma coming for dinner Sunday at 5pm'"
-                    className="w-full bg-transparent text-white text-sm focus:outline-none resize-none placeholder-white/30 mb-2 font-light"
+                    className="w-full bg-transparent text-white text-md focus:outline-none resize-none placeholder-white/30 mb-2 font-light"
                     rows={1}
                 />
                 <div className="flex justify-end">
@@ -186,7 +186,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                                                     </span>
                                                 )}
                                             </div>
-                                            <div className="font-bold text-xs leading-snug mb-0.5">
+                                            <div className="font-bold text-sm leading-tight mb-0.5">
                                                 {event.title}
                                             </div>
                                             {event.location && (

@@ -73,7 +73,7 @@ export const CalendarWidget: React.FC<CalendarWidgetProps> = ({ events, setEvent
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="e.g., 'Piano lesson every Tuesday at 4pm', 'Dentist tomorrow 10am'"
-                className="w-full bg-transparent text-white text-sm focus:outline-none resize-none placeholder-white/30 mb-2"
+                className="w-full bg-transparent text-white text-md focus:outline-none resize-none placeholder-white/30 mb-2"
                 rows={2}
             />
             <div className="flex justify-end gap-2">
