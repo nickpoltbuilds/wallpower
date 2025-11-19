@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface GlassCardProps {
@@ -8,9 +7,18 @@ interface GlassCardProps {
   icon?: React.ReactNode;
   action?: React.ReactNode;
   darkText?: boolean; // New prop to toggle text color
+  noContentPadding?: boolean;
 }
 
-export const GlassCard: React.FC<GlassCardProps> = ({ children, className = '', title, icon, action, darkText = false }) => {
+export const GlassCard: React.FC<GlassCardProps> = ({ 
+  children, 
+  className = '', 
+  title, 
+  icon, 
+  action, 
+  darkText = false,
+  noContentPadding = false
+}) => {
   const textColor = darkText ? 'text-slate-900' : 'text-white';
   const iconColor = darkText ? 'text-slate-700' : 'text-white/80';
   const titleColor = darkText ? 'text-slate-500' : 'text-white/60';
@@ -26,7 +34,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({ children, className = '', 
           {action && <div>{action}</div>}
         </div>
       )}
-      <div className={`flex-1 px-6 pb-5 pt-0 relative z-10 ${textColor}`}>
+      <div className={`flex-1 relative z-10 ${textColor} ${noContentPadding ? '' : 'px-6 pb-5 pt-0'}`}>
         {children}
       </div>
     </div>

@@ -17,7 +17,7 @@ body {
   }
 }
 
-/* Custom Scrollbar - Darker track for the light calendar cards */
+/* Global Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -27,4 +27,9 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+}
+
+/* Custom Scrollbar for Dark Containers (Calendar) */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
 }
