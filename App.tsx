@@ -108,7 +108,7 @@ const App: React.FC = () => {
   }, [isGoogleLinked, settings.refreshInterval]);
 
   return (
-    <div className="h-screen w-full bg-[#0f172a] p-6 md:p-8 relative selection:bg-blue-500/30 overflow-hidden flex flex-col">
+    <div className="h-screen w-full bg-[#0f172a] p-4 md:p-6 relative selection:bg-blue-500/30 overflow-hidden flex flex-col">
       
       {/* Background Ambient Effects */}
       <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -117,27 +117,26 @@ const App: React.FC = () => {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 flex justify-between items-center mb-6 flex-shrink-0">
+      <header className="relative z-10 flex justify-between items-center mb-3 flex-shrink-0">
         <div className="flex flex-col">
-            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-2xl font-bold text-white tracking-tight leading-none">
                 {greeting}, <span className="text-blue-400">{settings.familyName}</span>
             </h1>
-            <p className="text-white/50 text-xs md:text-sm mt-0.5">Here is your daily overview</p>
+            <p className="text-white/50 text-xs mt-1">Here is your daily overview</p>
         </div>
         <button 
             onClick={() => setIsSettingsOpen(true)}
-            className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-white/70 hover:text-white"
+            className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-white/70 hover:text-white"
         >
-            <Settings size={20} />
+            <Settings size={18} />
         </button>
       </header>
 
       {/* Main Content Area - Flex Column split */}
-      <div className="relative z-10 flex-1 flex flex-col gap-6 min-h-0">
+      <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
         
-        {/* Top Row: Status Widgets (Fixed Height ~35%) */}
-        {/* Changed from grid-cols-3 to grid-cols-4 to fit Dad Joke */}
-        <div className="h-[35%] grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Top Row: Status Widgets (Fixed Height ~28% to give Calendar more room) */}
+        <div className="h-[28%] grid grid-cols-1 md:grid-cols-4 gap-4">
             <TimeWidget />
             <WeatherWidget 
                 location={settings.location} 

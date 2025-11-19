@@ -20,7 +20,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({ children, className = '', 
           {action && <div>{action}</div>}
         </div>
       )}
-      <div className="flex-1 p-6 relative z-10">
+      <div className="flex-1 px-6 pb-6 pt-0 relative z-10">
         {children}
       </div>
       

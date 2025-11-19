@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Utensils, ExternalLink, ChefHat } from 'lucide-react';
 import { GlassCard } from './GlassCard';
@@ -38,7 +39,7 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
   return (
     <GlassCard 
       title="School Lunch" 
-      icon={<Utensils size={20} />} 
+      icon={<Utensils size={18} />} 
       className="h-full bg-gradient-to-br from-green-900/20 to-teal-900/20"
       action={
         schoolId ? (
@@ -49,20 +50,16 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
       }
     >
         {loading ? (
-            <div className="h-full flex items-center justify-center text-white/30 animate-pulse text-sm">Checking menu...</div>
+            <div className="h-full flex items-center justify-center text-white/30 animate-pulse text-xs">Checking menu...</div>
         ) : allEntrees.length > 0 ? (
-            <div className="flex flex-col h-full pt-2">
-                <div className="flex items-center gap-2 mb-4 opacity-60">
-                     <ChefHat size={16} className="text-green-400" />
-                     <span className="text-xs font-bold uppercase tracking-wider text-green-200">Today's Menu</span>
-                </div>
+            <div className="flex flex-col h-full pt-1">
                 
-                <div className="flex flex-col gap-3 overflow-y-auto pr-1">
+                <div className="flex flex-col gap-2 overflow-y-auto pr-1">
                     {allEntrees.map((item, i) => (
-                        <div key={i} className="relative pl-4 py-1">
+                        <div key={i} className="relative pl-3">
                             {/* Bullet point line */}
-                            <div className="absolute left-0 top-3 w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]"></div>
-                            <span className="text-md font-medium text-white leading-snug block">
+                            <div className="absolute left-0 top-2 w-1 h-1 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]"></div>
+                            <span className="text-sm font-medium text-white leading-snug block">
                                 {item}
                             </span>
                         </div>
@@ -70,19 +67,19 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
                 </div>
             </div>
         ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center p-4">
-                <span className="text-2xl mb-2">🍽️</span>
-                <p className="text-white/60 text-sm mb-3">
+            <div className="h-full flex flex-col items-center justify-center text-center p-2">
+                <span className="text-xl mb-1">🍽️</span>
+                <p className="text-white/60 text-xs mb-2">
                     {menu?.main === 'Unavailable' 
-                        ? "No menu found for today." 
-                        : "Add school ID in settings"}
+                        ? "No menu found." 
+                        : "Add school ID"}
                 </p>
                 {schoolId && (
                     <button 
                         onClick={handleOpenMenu}
-                        className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-bold text-white transition-colors border border-white/10"
+                        className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] font-bold text-white transition-colors border border-white/10"
                     >
-                        View Menu Online
+                        View Menu
                     </button>
                 )}
             </div>

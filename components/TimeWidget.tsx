@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { GlassCard } from './GlassCard';
 
@@ -18,12 +19,12 @@ export const TimeWidget: React.FC = () => {
   };
 
   return (
-    <GlassCard className="h-full flex justify-center items-center bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-400/20">
-      <div className="flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white tracking-tighter drop-shadow-2xl transition-all">
+    <GlassCard className="h-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-400/20">
+      <div className="h-full flex flex-col items-center justify-center text-center">
+        <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tighter drop-shadow-2xl transition-all">
           {formatTime(date)}
         </h1>
-        <p className="text-xs lg:text-sm text-blue-200 mt-2 font-bold tracking-widest uppercase opacity-80">
+        <p className="text-xs text-blue-200 mt-1 font-bold tracking-widest uppercase opacity-80">
           {formatDate(date)}
         </p>
       </div>

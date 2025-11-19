@@ -250,7 +250,7 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
                 low: low
             });
             processedDays.add(dayKey);
-            if (dailyForecasts.length >= 4) break;
+            if (dailyForecasts.length >= 3) break;
         }
 
         return {

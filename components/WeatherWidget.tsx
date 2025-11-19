@@ -55,27 +55,27 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
   return (
     <GlassCard 
       title="Weather Forecast" 
-      icon={<CloudSun size={20} />} 
+      icon={<CloudSun size={18} />} 
       action={
         <button onClick={loadWeather} className={`text-white/50 hover:text-white ${loading ? 'animate-spin' : ''}`}>
-          <RefreshCw size={16} />
+          <RefreshCw size={14} />
         </button>
       }
       className="h-full"
     >
       {weather ? (
         <div className="flex flex-col h-full justify-between">
-          {/* Top Section: Current Weather */}
-          <div className="flex items-center justify-between mt-0">
+          {/* Top Section: Current Weather - Compacted */}
+          <div className="flex items-center justify-between">
             <div>
-              <div className="text-5xl lg:text-6xl font-bold text-white tracking-tighter">{Math.round(weather.currentTemp)}°</div>
-              <div className="text-white/60 text-sm font-medium capitalize truncate max-w-[120px] flex items-center gap-2">
+              <div className="text-4xl lg:text-5xl font-bold text-white tracking-tighter">{Math.round(weather.currentTemp)}°</div>
+              <div className="text-white/60 text-xs font-medium capitalize truncate max-w-[100px] flex items-center gap-2">
                  {weather.condition}
               </div>
             </div>
             <div className="text-right flex flex-col items-end">
-              <div className="text-white/90 font-medium truncate max-w-[120px] mb-1">{weather.location}</div>
-              <div className="flex gap-3 text-sm text-white/50">
+              <div className="text-white/90 font-medium truncate max-w-[100px] text-xs mb-0.5">{weather.location}</div>
+              <div className="flex gap-2 text-xs text-white/50">
                 <span className="font-medium text-white/80">H: {Math.round(weather.high)}°</span>
                 <span>L: {Math.round(weather.low)}°</span>
               </div>
@@ -83,15 +83,15 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
           </div>
 
           {/* Flexible Spacer */}
-          <div className="mt-auto min-h-[10px]"></div>
+          <div className="mt-auto min-h-[4px]"></div>
 
           {/* Bottom Section: Forecast Grid (Compact) */}
           <div className="grid grid-cols-3 gap-2">
             {weather.forecast.map((day, i) => (
-              <div key={i} className="flex flex-col items-center bg-white/5 rounded-xl p-2">
-                <span className="text-[9px] text-white/40 uppercase font-bold mb-1">{day.day.slice(0,3)}</span>
-                {getWeatherIcon(day.icon, "w-6 h-6")}
-                <div className="mt-0.5 text-sm font-bold text-white">{Math.round(day.high)}°</div>
+              <div key={i} className="flex flex-col items-center bg-white/5 rounded-lg p-1.5">
+                <span className="text-[8px] text-white/40 uppercase font-bold mb-0.5">{day.day.slice(0,3)}</span>
+                {getWeatherIcon(day.icon, "w-5 h-5")}
+                <div className="mt-0.5 text-xs font-bold text-white">{Math.round(day.high)}°</div>
               </div>
             ))}
           </div>
@@ -101,21 +101,21 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
           {loading ? (
              <div className="animate-pulse flex flex-col items-center gap-2">
                 <CloudSun className="animate-bounce" />
-                <span>Forecasting...</span>
+                <span className="text-xs">Forecasting...</span>
              </div>
           ) : error ? (
-             <div className="flex flex-col items-center text-center p-4">
-                <AlertCircle className="mb-2 text-red-400 opacity-80" size={24} />
-                <p className="text-sm text-white/60 mb-3">Unable to load weather</p>
+             <div className="flex flex-col items-center text-center p-2">
+                <AlertCircle className="mb-1 text-red-400 opacity-80" size={20} />
+                <p className="text-xs text-white/60 mb-2">Unable to load</p>
                 <button 
                     onClick={loadWeather} 
-                    className="px-4 py-1.5 bg-white/10 hover:bg-white/20 rounded-full text-xs font-bold text-white transition-colors"
+                    className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full text-[10px] font-bold text-white transition-colors"
                 >
                     Retry
                 </button>
              </div>
           ) : (
-             "Add location in settings"
+             <span className="text-xs">Add location in settings</span>
           )}
         </div>
       )}
