@@ -19,14 +19,18 @@ export const TimeWidget: React.FC = () => {
   };
 
   return (
-    <GlassCard className="h-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-400/20">
+    <GlassCard className="h-full bg-indigo-600 text-white border-none">
       <div className="h-full flex flex-col items-center justify-center text-center">
-        <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-tighter drop-shadow-2xl transition-all">
+        {/* Massive Time */}
+        <h1 className="text-5xl lg:text-6xl font-black tracking-tighter leading-none">
           {formatTime(date)}
         </h1>
-        <p className="text-xs text-blue-200 mt-1 font-bold tracking-widest uppercase opacity-80">
-          {formatDate(date)}
-        </p>
+        {/* Clean Date */}
+        <div className="mt-2 px-4 py-1 bg-black/20 rounded-full">
+            <p className="text-xs font-bold tracking-wide uppercase text-white/90">
+            {formatDate(date)}
+            </p>
+        </div>
       </div>
     </GlassCard>
   );

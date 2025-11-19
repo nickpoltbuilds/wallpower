@@ -18,7 +18,6 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
 
   const today = new Date();
   
-  // Create array of next 4 days
   const days = Array.from({ length: 4 }, (_, i) => {
     const d = new Date();
     d.setDate(today.getDate() + i);
@@ -26,45 +25,32 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
   });
 
   const getEventsForDay = (date: Date) => {
-    // Define the day boundaries
     const dayStart = new Date(date);
     dayStart.setHours(0, 0, 0, 0);
-    
     const dayEnd = new Date(date);
     dayEnd.setHours(23, 59, 59, 999);
 
     return events.filter(e => {
         const eStart = new Date(e.start);
         const eEnd = new Date(e.end);
-
-        // Check for OVERLAP: (StartA <= EndB) and (EndA >= StartB)
-        // Logic: The event matches this day if it starts before the day ends AND ends after the day starts
         return eStart <= dayEnd && eEnd >= dayStart;
     });
   };
 
   const getMultiDayLabel = (event: CalendarEvent, currentDay: Date) => {
-      // Only applicable for all-day or long events
       const start = new Date(event.start);
       start.setHours(0,0,0,0);
-      
       const end = new Date(event.end);
-      end.setHours(0,0,0,0); // Normalize to midnight for day diff calculation
-      
+      end.setHours(0,0,0,0);
       const durationMs = end.getTime() - start.getTime();
       const daysDuration = Math.max(1, Math.ceil(durationMs / (1000 * 60 * 60 * 24)));
-      
       if (daysDuration <= 1) return null;
 
-      // Calculate current day index
       const current = new Date(currentDay);
       current.setHours(0,0,0,0);
-      
       const diffTime = current.getTime() - start.getTime();
       const dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      
       if (dayIndex > daysDuration || dayIndex < 1) return null; 
-
       return `(Day ${dayIndex}/${daysDuration})`;
   };
 
@@ -80,60 +66,61 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
     setIsProcessing(false);
   };
 
+  // Updated solid color pills for the flat design
   const getColorStyles = (color: string) => {
     switch (color) {
-      case 'blue': return 'bg-blue-500/20 border-blue-500/30 text-blue-100';
-      case 'green': return 'bg-green-500/20 border-green-500/30 text-green-100';
-      case 'purple': return 'bg-purple-500/20 border-purple-500/30 text-purple-100';
-      case 'orange': return 'bg-orange-500/20 border-orange-500/30 text-orange-100';
-      case 'red': return 'bg-red-500/20 border-red-500/30 text-red-100';
-      default: return 'bg-white/10 border-white/10 text-gray-200';
+      case 'blue': return 'bg-blue-100 text-blue-900 border-l-4 border-blue-500';
+      case 'green': return 'bg-green-100 text-green-900 border-l-4 border-green-500';
+      case 'purple': return 'bg-purple-100 text-purple-900 border-l-4 border-purple-500';
+      case 'orange': return 'bg-orange-100 text-orange-900 border-l-4 border-orange-500';
+      case 'red': return 'bg-red-100 text-red-900 border-l-4 border-red-500';
+      default: return 'bg-slate-200 text-slate-800 border-l-4 border-slate-500';
     }
   };
 
   return (
     <div className="h-full flex flex-col">
-        {/* Header / Action Bar */}
-        <div className="flex justify-between items-center mb-2 px-1">
-            <div className="flex items-center gap-2 text-white/70">
-                <Calendar size={18} className="text-blue-400" />
-                <h2 className="text-xs font-bold uppercase tracking-widest">
-                    {isGoogleLinked ? 'Google Calendar' : 'Family Calendar'}
+        <div className="flex justify-between items-center mb-3 px-1">
+            <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-white rounded-lg">
+                    <Calendar size={16} className="text-black" />
+                </div>
+                <h2 className="text-sm font-black text-white uppercase tracking-widest">
+                    {isGoogleLinked ? 'Calendar' : 'Family Calendar'}
                 </h2>
             </div>
             {!isGoogleLinked && (
                 <button 
                     onClick={() => setShowInput(!showInput)}
-                    className="flex items-center gap-2 px-2 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-[10px] font-bold text-white"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-black hover:bg-gray-200 transition-colors text-xs font-bold"
                 >
-                    <Plus size={12} /> Add Event
+                    <Plus size={14} /> Add Event
                 </button>
             )}
         </div>
 
-        {/* AI Input for Local Mode */}
         {showInput && !isGoogleLinked && (
-            <div className="mb-4 mx-1 p-3 bg-black/40 rounded-2xl border border-white/10 backdrop-blur-md">
+            <div className="mb-4 mx-1 p-3 bg-white rounded-xl border border-slate-200">
                 <textarea 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="e.g., 'Grandma coming for dinner Sunday at 5pm'"
-                    className="w-full bg-transparent text-white text-md focus:outline-none resize-none placeholder-white/30 mb-2 font-light"
+                    className="w-full bg-transparent text-slate-900 text-md focus:outline-none resize-none placeholder-slate-400 mb-2 font-medium"
                     rows={1}
                 />
                 <div className="flex justify-end">
                     <button 
                         onClick={handleAddEvent}
                         disabled={isProcessing}
-                        className="px-3 py-1.5 rounded-lg bg-blue-600 text-[10px] font-bold text-white hover:bg-blue-500 transition-colors disabled:opacity-50"
+                        className="px-3 py-1.5 rounded-lg bg-black text-xs font-bold text-white hover:bg-gray-800 transition-colors disabled:opacity-50"
                     >
-                        {isProcessing ? 'AI is thinking...' : 'Add to Calendar'}
+                        {isProcessing ? 'Thinking...' : 'Add'}
                     </button>
                 </div>
             </div>
         )}
 
-        {/* 4-Column Grid */}
+        {/* 4-Column Grid - Light Gray Background */}
         <div className="grid grid-cols-4 gap-3 flex-1 min-h-0">
             {days.map((day, i) => {
                 const dayEvents = getEventsForDay(day);
@@ -142,24 +129,23 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                 return (
                     <GlassCard 
                         key={i} 
-                        className={`h-full flex flex-col ${isToday ? 'bg-gradient-to-b from-blue-900/20 to-white/5 border-blue-500/30' : ''}`}
+                        // Solid Light Gray/White Background
+                        className={`h-full flex flex-col ${isToday ? 'bg-white shadow-xl ring-4 ring-indigo-500/20' : 'bg-slate-100'}`}
+                        darkText={true}
                     >
-                        {/* Column Header */}
-                        <div className={`p-3 border-b border-white/5 ${isToday ? 'bg-blue-500/10' : ''}`}>
-                            <h3 className={`text-sm font-bold ${isToday ? 'text-blue-300' : 'text-white'}`}>
+                        <div className="p-3 border-b border-slate-200/50">
+                            <h3 className={`text-sm font-black uppercase ${isToday ? 'text-indigo-600' : 'text-slate-800'}`}>
                                 {i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : day.toLocaleDateString('en-US', { weekday: 'long' })}
                             </h3>
-                            <p className="text-[10px] text-white/50 font-medium uppercase tracking-wider mt-0.5">
+                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">
                                 {day.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                             </p>
                         </div>
 
-                        {/* Events List */}
                         <div className="flex-1 p-2 overflow-y-auto space-y-2 custom-scrollbar">
                             {dayEvents.length === 0 ? (
-                                <div className="h-full flex flex-col items-center justify-center text-white/10">
-                                    <div className="w-1 h-1 bg-white/20 rounded-full mb-2"></div>
-                                    <span className="text-[9px] font-medium uppercase tracking-widest">No Events</span>
+                                <div className="h-full flex flex-col items-center justify-center text-slate-300">
+                                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full mb-2"></div>
                                 </div>
                             ) : (
                                 dayEvents.map((event) => {
@@ -168,20 +154,20 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                                     return (
                                         <div 
                                             key={`${event.id}_${i}`} 
-                                            className={`p-2 rounded-lg border ${getColorStyles(event.color)} relative group transition-all hover:scale-[1.01]`}
+                                            className={`p-2 rounded-lg shadow-sm ${getColorStyles(event.color)} transition-all hover:scale-[1.01]`}
                                         >
-                                            <div className="flex items-start justify-between mb-0.5">
-                                                <div className="flex items-center gap-1 text-[10px] font-bold opacity-80">
-                                                    {!event.isAllDay && <Clock size={9} />}
+                                            <div className="flex items-start justify-between mb-1">
+                                                <div className="flex items-center gap-1 text-[10px] font-bold opacity-70">
+                                                    {!event.isAllDay && <Clock size={10} />}
                                                     <span>
                                                         {event.isAllDay 
-                                                            ? 'All Day' 
+                                                            ? 'ALL DAY' 
                                                             : new Date(event.start).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'})
                                                         }
                                                     </span>
                                                 </div>
                                                 {multiDayLabel && (
-                                                    <span className="text-[8px] opacity-50 bg-black/20 px-1 rounded-sm leading-none py-0.5">
+                                                    <span className="text-[8px] opacity-60 font-bold">
                                                         {multiDayLabel}
                                                     </span>
                                                 )}
@@ -190,8 +176,8 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                                                 {event.title}
                                             </div>
                                             {event.location && (
-                                                <div className="flex items-center gap-1 text-[9px] opacity-60 truncate">
-                                                    <MapPin size={8} />
+                                                <div className="flex items-center gap-1 text-[9px] opacity-70 truncate font-medium">
+                                                    <MapPin size={9} />
                                                     {event.location}
                                                 </div>
                                             )}

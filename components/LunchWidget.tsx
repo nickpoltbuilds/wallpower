@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Utensils, ExternalLink, ChefHat } from 'lucide-react';
+import { Utensils, ExternalLink } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { LunchMenu } from '../types';
 import { fetchSchoolLunch } from '../services/gemini';
@@ -26,12 +26,9 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
   }, [schoolName, schoolId]);
 
   const handleOpenMenu = () => {
-    if (schoolId) {
-      window.open(`https://schools.mealviewer.com/school/${schoolId}`, '_blank');
-    }
+    if (schoolId) window.open(`https://schools.mealviewer.com/school/${schoolId}`, '_blank');
   };
 
-  // Combine main and sides into a single list for display, limited to first 2 items
   const allEntrees = menu && menu.main !== 'Unavailable' 
     ? [menu.main, ...(menu.sides || [])].slice(0, 2)
     : [];
@@ -40,26 +37,26 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
     <GlassCard 
       title="School Lunch" 
       icon={<Utensils size={18} />} 
-      className="h-full bg-gradient-to-br from-green-900/20 to-teal-900/20"
+      // Soft Green Background
+      className="h-full bg-emerald-100"
+      darkText={true}
       action={
         schoolId ? (
-            <button onClick={handleOpenMenu} className="text-white/30 hover:text-white transition-colors">
+            <button onClick={handleOpenMenu} className="text-emerald-600/50 hover:text-emerald-800 transition-colors">
                 <ExternalLink size={14} />
             </button>
         ) : undefined
       }
     >
         {loading ? (
-            <div className="h-full flex items-center justify-center text-white/30 animate-pulse text-xs">Checking menu...</div>
+            <div className="h-full flex items-center justify-center text-emerald-600/50 animate-pulse text-xs font-bold">Loading...</div>
         ) : allEntrees.length > 0 ? (
-            <div className="flex flex-col h-full pt-1">
-                
-                <div className="flex flex-col gap-2 overflow-y-auto pr-1">
+            <div className="flex flex-col h-full pt-2">
+                <div className="flex flex-col gap-3">
                     {allEntrees.map((item, i) => (
-                        <div key={i} className="relative pl-3">
-                            {/* Bullet point line */}
-                            <div className="absolute left-0 top-2 w-1 h-1 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]"></div>
-                            <span className="text-sm font-medium text-white leading-snug block">
+                        <div key={i} className="flex gap-3 items-start">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
+                            <span className="text-sm font-bold text-emerald-900 leading-tight">
                                 {item}
                             </span>
                         </div>
@@ -68,18 +65,16 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
             </div>
         ) : (
             <div className="h-full flex flex-col items-center justify-center text-center p-2">
-                <span className="text-xl mb-1">🍽️</span>
-                <p className="text-white/60 text-xs mb-2">
-                    {menu?.main === 'Unavailable' 
-                        ? "No menu found." 
-                        : "Add school ID"}
+                <span className="text-2xl mb-2 opacity-50">🥗</span>
+                <p className="text-emerald-800 text-xs font-bold mb-2">
+                    {menu?.main === 'Unavailable' ? "Menu Unavailable" : "Add ID"}
                 </p>
                 {schoolId && (
                     <button 
                         onClick={handleOpenMenu}
-                        className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-[10px] font-bold text-white transition-colors border border-white/10"
+                        className="px-3 py-1.5 rounded-lg bg-emerald-200 hover:bg-emerald-300 text-[10px] font-bold text-emerald-800 transition-colors"
                     >
-                        View Menu
+                        View Online
                     </button>
                 )}
             </div>
