@@ -17,12 +17,42 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
   useEffect(() => {
     const loadMenu = async () => {
         if (!schoolName) return;
-        setLoading(true);
+        // Only set loading on initial fetch or if menu is empty to avoid flashing daily
+        setLoading(prev => !prev && !menu); 
         const data = await fetchSchoolLunch(schoolName, schoolId);
         setMenu(data);
         setLoading(false);
     };
+
     loadMenu();
+
+    // Schedule automatic refresh at 5:00 AM
+    let timeoutId: NodeJS.Timeout;
+
+    const scheduleRefresh = () => {
+        const now = new Date();
+        const nextRefresh = new Date();
+        nextRefresh.setHours(5, 0, 0, 0);
+
+        // If 5 AM has passed today, schedule for tomorrow
+        if (now >= nextRefresh) {
+            nextRefresh.setDate(nextRefresh.getDate() + 1);
+        }
+
+        const delay = nextRefresh.getTime() - now.getTime();
+        
+        // Log for debugging (visible in browser console)
+        console.log(`Next lunch refresh scheduled for: ${nextRefresh.toLocaleString()}`);
+
+        timeoutId = setTimeout(() => {
+            loadMenu();
+            scheduleRefresh(); // Reschedule for the next day
+        }, delay);
+    };
+
+    scheduleRefresh();
+
+    return () => clearTimeout(timeoutId);
   }, [schoolName, schoolId]);
 
   const handleOpenMenu = () => {
