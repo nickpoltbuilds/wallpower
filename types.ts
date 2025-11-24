@@ -37,4 +37,5 @@ export interface AppSettings {
   schoolId: string;
   googleCalendarIcalUrl?: string;
   refreshInterval: number; // in minutes
+  theme: 'dark' | 'light' | 'trek' | 'forest' | 'cyber';
 }

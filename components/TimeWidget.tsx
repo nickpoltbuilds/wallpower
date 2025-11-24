@@ -22,7 +22,7 @@ export const TimeWidget: React.FC = () => {
   const monthDay = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
 
   return (
-    <GlassCard className="h-full bg-indigo-600 text-white border-none">
+    <GlassCard className="h-full widget-time">
       <div className="h-full flex flex-col items-center justify-center text-center">
         {/* Massive Time (24h) */}
         <h1 className="text-6xl lg:text-7xl font-black tracking-tighter leading-none mb-1">
@@ -31,10 +31,10 @@ export const TimeWidget: React.FC = () => {
         
         {/* Elegant Date Stack */}
         <div className="flex flex-col items-center">
-            <p className="text-indigo-200 text-xs font-bold tracking-[0.2em] uppercase mb-0.5">
+            <p className="widget-time-sub text-xs font-bold tracking-[0.2em] uppercase mb-0.5">
                 {weekday}
             </p>
-            <p className="text-xl lg:text-2xl font-bold text-white leading-tight">
+            <p className="text-xl lg:text-2xl font-bold leading-tight">
                 {monthDay}
             </p>
         </div>

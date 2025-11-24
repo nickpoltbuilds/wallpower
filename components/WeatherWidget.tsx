@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Cloud, CloudRain, CloudSun, Sun, CloudLightning, Snowflake, RefreshCw, AlertCircle } from 'lucide-react';
+import { Cloud, CloudRain, CloudSun, Sun, CloudLightning, Snowflake, RefreshCw } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { WeatherData } from '../types';
 import { fetchWeather } from '../services/gemini';
@@ -40,64 +40,67 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
     return () => clearInterval(interval);
   }, [location, refreshInterval]);
 
+  // Use currentColor (inherit from parent text color) for icons so they adapt to themes
   const getWeatherIcon = (condition: string, className: string = "w-8 h-8") => {
     const c = condition.toLowerCase();
-    // Darker icons for light background
-    if (c.includes('rain') || c.includes('drizzle')) return <CloudRain className={`${className} text-blue-600`} />;
-    if (c.includes('snow') || c.includes('blizzard')) return <Snowflake className={`${className} text-sky-400`} />;
-    if (c.includes('storm') || c.includes('thunder')) return <CloudLightning className={`${className} text-purple-600`} />;
-    if (c.includes('partly')) return <CloudSun className={`${className} text-orange-500`} />;
-    if (c.includes('cloud') || c.includes('overcast') || c.includes('fog')) return <Cloud className={`${className} text-slate-500`} />;
-    return <Sun className={`${className} text-yellow-500`} />;
+    const baseClass = `${className} opacity-90`; 
+    if (c.includes('rain') || c.includes('drizzle') || c.includes('showers')) return <CloudRain className={baseClass} />;
+    if (c.includes('snow') || c.includes('blizzard') || c.includes('flurries')) return <Snowflake className={baseClass} />;
+    if (c.includes('storm') || c.includes('thunder')) return <CloudLightning className={baseClass} />;
+    if (c.includes('partly') || c.includes('scattered')) return <CloudSun className={baseClass} />;
+    if (c.includes('cloud') || c.includes('overcast') || c.includes('fog') || c.includes('haze')) return <Cloud className={baseClass} />;
+    return <Sun className={baseClass} />;
   };
 
   return (
     <GlassCard 
       title="Forecast" 
       icon={<CloudSun size={18} />} 
-      // Light Blue Background
-      className="h-full bg-sky-100"
-      darkText={true}
+      className="h-full widget-weather"
+      noContentPadding={true}
       action={
-        <button onClick={loadWeather} className={`text-slate-400 hover:text-slate-600 ${loading ? 'animate-spin' : ''}`}>
+        <button onClick={loadWeather} className={`opacity-50 hover:opacity-100 ${loading ? 'animate-spin' : ''}`}>
           <RefreshCw size={14} />
         </button>
       }
     >
       {weather ? (
-        <div className="flex flex-col h-full justify-between">
-          <div className="flex items-start justify-between mt-1">
-            <div>
-              <div className="text-5xl font-black text-slate-800 tracking-tighter leading-none">{Math.round(weather.currentTemp)}°</div>
-              <div className="text-slate-600 text-xs font-bold capitalize mt-1">
-                 {weather.condition}
-              </div>
+        <div className="flex flex-col h-full justify-between px-4 pb-3 pt-1">
+          {/* Top Section: Icon + Temp left, Loc + HL right */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+               {getWeatherIcon(weather.condition, "w-10 h-10 lg:w-12 lg:h-12")}
+               <div className="text-5xl lg:text-6xl font-black tracking-tighter leading-none">
+                  {Math.round(weather.currentTemp)}°
+               </div>
             </div>
-            <div className="text-right">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{weather.location}</div>
-                <div className="inline-flex bg-white/60 rounded-lg px-2 py-1 gap-2 text-xs text-slate-600 font-bold">
-                    <span>H: {Math.round(weather.high)}°</span>
-                    <span className="text-slate-400">|</span>
-                    <span>L: {Math.round(weather.low)}°</span>
+            
+            <div className="text-right flex flex-col items-end justify-center">
+                <div className="text-[10px] font-bold opacity-60 uppercase tracking-wider mb-1 max-w-[80px] truncate">
+                    {weather.location.split(',')[0]}
+                </div>
+                <div className="text-xs font-bold opacity-90 bg-black/5 rounded-md px-2 py-1 whitespace-nowrap">
+                    H:{Math.round(weather.high)}° L:{Math.round(weather.low)}°
                 </div>
             </div>
           </div>
 
-          <div className="mt-auto min-h-[4px]"></div>
+          {/* Flexible Spacer */}
+          <div className="flex-1 min-h-[5px]"></div>
 
-          {/* Forecast Grid */}
+          {/* Forecast Grid - Compact */}
           <div className="grid grid-cols-3 gap-2">
             {weather.forecast.map((day, i) => (
-              <div key={i} className="flex flex-col items-center bg-white rounded-xl p-2 shadow-sm">
-                <span className="text-[9px] text-slate-400 uppercase font-black mb-1">{day.day.slice(0,3)}</span>
-                {getWeatherIcon(day.icon, "w-5 h-5")}
-                <div className="mt-1 text-xs font-bold text-slate-800">{Math.round(day.high)}°</div>
+              <div key={i} className="flex flex-col items-center justify-center bg-white/30 dark:bg-white/10 rounded-lg p-1.5 shadow-sm backdrop-blur-sm">
+                <span className="text-[9px] opacity-70 uppercase font-black mb-0.5">{day.day.slice(0,3)}</span>
+                {getWeatherIcon(day.icon, "w-5 h-5 mb-0.5")}
+                <div className="text-sm font-black">{Math.round(day.high)}°</div>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <div className="h-full flex items-center justify-center text-slate-400">
+        <div className="h-full flex items-center justify-center opacity-50 p-4">
           {loading ? (
              <div className="animate-pulse flex flex-col items-center gap-2">
                 <CloudSun className="animate-bounce" />
@@ -105,7 +108,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
           ) : error ? (
              <div className="flex flex-col items-center text-center">
                 <p className="text-xs font-bold mb-2">Unavailable</p>
-                <button onClick={loadWeather} className="px-3 py-1 bg-slate-200 rounded-full text-[10px] font-bold text-slate-600">Retry</button>
+                <button onClick={loadWeather} className="px-3 py-1 bg-current bg-opacity-10 rounded-full text-[10px] font-bold">Retry</button>
              </div>
           ) : null}
         </div>

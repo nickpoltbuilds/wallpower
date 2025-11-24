@@ -3,11 +3,160 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --- THEME DEFINITIONS --- */
+
+:root {
+  /* Default: Modern Dark */
+  --bg-app: #000000;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --header-text: #ffffff;
+  --header-accent: #818cf8; /* indigo-400 */
+  --border-radius: 2rem;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  /* Widgets */
+  --bg-time: #4f46e5; --text-time: #ffffff; --text-time-sub: #c7d2fe;
+  --bg-weather: #e0f2fe; --text-weather: #1e293b; --text-weather-sub: #64748b;
+  --bg-lunch: #d1fae5; --text-lunch: #064e3b; --accent-lunch: #10b981;
+  --bg-joke: #fde047; --text-joke: #422006;
+  
+  /* Calendar */
+  --bg-cal-col: #171717; /* neutral-900 */
+  --bg-cal-today: #262626; /* neutral-800 */
+  --ring-cal-today: #6366f1; /* indigo-500 */
+  --text-cal-header: #ffffff;
+  --text-cal-subheader: #a3a3a3;
+  --text-cal-today: #818cf8;
+
+  /* Event Colors (Dark Mode Defaults) */
+  --evt-blue-bg: rgba(30, 58, 138, 0.4); --evt-blue-text: #dbeafe; --evt-blue-border: #3b82f6;
+  --evt-green-bg: rgba(20, 83, 45, 0.4); --evt-green-text: #dcfce7; --evt-green-border: #22c55e;
+  --evt-purple-bg: rgba(88, 28, 135, 0.4); --evt-purple-text: #f3e8ff; --evt-purple-border: #a855f7;
+  --evt-orange-bg: rgba(124, 45, 18, 0.4); --evt-orange-text: #ffedd5; --evt-orange-border: #f97316;
+  --evt-red-bg: rgba(127, 29, 29, 0.4); --evt-red-text: #fee2e2; --evt-red-border: #ef4444;
+}
+
+[data-theme='light'] {
+  --bg-app: #f1f5f9; /* slate-100 */
+  --header-text: #0f172a;
+  --header-accent: #4f46e5;
+  
+  /* Widgets (Pastels) */
+  --bg-time: #ffffff; --text-time: #1e293b; --text-time-sub: #64748b;
+  --bg-weather: #ffffff; --text-weather: #1e293b; --text-weather-sub: #64748b;
+  --bg-lunch: #ffffff; --text-lunch: #064e3b; --accent-lunch: #10b981;
+  --bg-joke: #ffffff; --text-joke: #422006;
+
+  /* Calendar */
+  --bg-cal-col: #ffffff;
+  --bg-cal-today: #eff6ff; /* blue-50 */
+  --ring-cal-today: #bfdbfe;
+  --text-cal-header: #1e293b;
+  --text-cal-subheader: #64748b;
+  --text-cal-today: #2563eb;
+
+  /* Event Colors (Light Mode) */
+  --evt-blue-bg: #eff6ff; --evt-blue-text: #1e40af; --evt-blue-border: #3b82f6;
+  --evt-green-bg: #f0fdf4; --evt-green-text: #166534; --evt-green-border: #22c55e;
+  --evt-purple-bg: #faf5ff; --evt-purple-text: #6b21a8; --evt-purple-border: #a855f7;
+  --evt-orange-bg: #fff7ed; --evt-orange-text: #9a3412; --evt-orange-border: #f97316;
+  --evt-red-bg: #fef2f2; --evt-red-text: #991b1b; --evt-red-border: #ef4444;
+}
+
+[data-theme='trek'] {
+  --bg-app: #000000;
+  --font-main: 'Antonio', sans-serif;
+  --header-text: #ff9900;
+  --header-accent: #cc99cc;
+  --border-radius: 100px; /* Pill shapes */
+  
+  /* LCARS Palette: #ff9900 (Orange), #cc99cc (Purple), #9999cc (Blue), #ffcc99 (Peach) */
+
+  --bg-time: #ff9900; --text-time: #000000; --text-time-sub: #000000;
+  --bg-weather: #cc99cc; --text-weather: #000000; --text-weather-sub: #000000;
+  --bg-lunch: #9999cc; --text-lunch: #000000; --accent-lunch: #000000;
+  --bg-joke: #ffcc99; --text-joke: #000000;
+
+  --bg-cal-col: #000000;
+  --bg-cal-today: #000000;
+  --ring-cal-today: #ff9900;
+  --text-cal-header: #ff9900;
+  --text-cal-subheader: #cc99cc;
+  --text-cal-today: #ffffff;
+
+  /* Events - Flat solid blocks */
+  --evt-blue-bg: #9999cc; --evt-blue-text: #000000; --evt-blue-border: transparent;
+  --evt-green-bg: #99cc99; --evt-green-text: #000000; --evt-green-border: transparent;
+  --evt-purple-bg: #cc99cc; --evt-purple-text: #000000; --evt-purple-border: transparent;
+  --evt-orange-bg: #ff9900; --evt-orange-text: #000000; --evt-orange-border: transparent;
+  --evt-red-bg: #cc6666; --evt-red-text: #000000; --evt-red-border: transparent;
+}
+
+[data-theme='forest'] {
+  --bg-app: #1a2f23; /* Dark Green */
+  --font-main: 'Crimson Text', serif;
+  --header-text: #e2e8f0;
+  --header-accent: #86efac;
+  --border-radius: 1rem;
+
+  /* Earth Tones */
+  --bg-time: #3f6212; --text-time: #ecfccb; --text-time-sub: #d9f99d;
+  --bg-weather: #f0fdf4; --text-weather: #14532d; --text-weather-sub: #166534;
+  --bg-lunch: #78350f; --text-lunch: #fef3c7; --accent-lunch: #fde68a;
+  --bg-joke: #fef3c7; --text-joke: #451a03;
+
+  --bg-cal-col: #25382c;
+  --bg-cal-today: #2f4538;
+  --ring-cal-today: #86efac;
+  --text-cal-header: #f0fdf4;
+  --text-cal-subheader: #86efac;
+  --text-cal-today: #ffffff;
+
+  --evt-blue-bg: rgba(6, 182, 212, 0.2); --evt-blue-text: #cffafe; --evt-blue-border: #06b6d4;
+  --evt-green-bg: rgba(34, 197, 94, 0.2); --evt-green-text: #dcfce7; --evt-green-border: #22c55e;
+  --evt-purple-bg: rgba(168, 85, 247, 0.2); --evt-purple-text: #f3e8ff; --evt-purple-border: #a855f7;
+  --evt-orange-bg: rgba(249, 115, 22, 0.2); --evt-orange-text: #ffedd5; --evt-orange-border: #f97316;
+  --evt-red-bg: rgba(239, 68, 68, 0.2); --evt-red-text: #fee2e2; --evt-red-border: #ef4444;
+}
+
+[data-theme='cyber'] {
+  --bg-app: #050505;
+  --font-main: 'Orbitron', sans-serif;
+  --header-text: #00ff41; /* Matrix Green */
+  --header-accent: #fcee0a; /* Cyber Yellow */
+  --border-radius: 0px; /* Sharp edges */
+  --card-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+
+  /* Neon Palette */
+  --bg-time: #000000; --text-time: #00ff41; --text-time-sub: #008f11;
+  --bg-weather: #000000; --text-weather: #00e5ff; --text-weather-sub: #008f11;
+  --bg-lunch: #000000; --text-lunch: #ff00ff; --accent-lunch: #ff00ff;
+  --bg-joke: #000000; --text-joke: #fcee0a;
+
+  /* Calendar */
+  --bg-cal-col: #0a0a0a;
+  --bg-cal-today: #000000;
+  --ring-cal-today: #00ff41;
+  --text-cal-header: #00ff41;
+  --text-cal-subheader: #008f11;
+  --text-cal-today: #fcee0a;
+
+  /* Events - Outlines only */
+  --evt-blue-bg: transparent; --evt-blue-text: #00e5ff; --evt-blue-border: #00e5ff;
+  --evt-green-bg: transparent; --evt-green-text: #00ff41; --evt-green-border: #00ff41;
+  --evt-purple-bg: transparent; --evt-purple-text: #bd00ff; --evt-purple-border: #bd00ff;
+  --evt-orange-bg: transparent; --evt-orange-text: #ff9900; --evt-orange-border: #ff9900;
+  --evt-red-bg: transparent; --evt-red-text: #ff003c; --evt-red-border: #ff003c;
+}
+
+/* --- APP BASE --- */
+
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: #000000; /* Deep Black for contrast */
-  color: #1e293b; /* Default text dark slate */
+  font-family: var(--font-main);
+  background-color: var(--bg-app);
+  color: var(--text-main);
   overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Mobile scrolling override */
@@ -17,19 +166,70 @@ body {
   }
 }
 
-/* Global Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+/* --- SEMANTIC CLASSES --- */
+
+.app-header-text { color: var(--header-text); }
+.app-header-accent { color: var(--header-accent); }
+
+.widget-card {
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  transition: all 0.3s ease;
 }
 
-/* Custom Scrollbar for Dark Containers (Calendar) */
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+.widget-time {
+  background-color: var(--bg-time);
+  color: var(--text-time);
 }
+.widget-time-sub { color: var(--text-time-sub); }
+
+.widget-weather {
+  background-color: var(--bg-weather);
+  color: var(--text-weather);
+}
+.widget-weather-sub { color: var(--text-weather-sub); }
+
+.widget-lunch {
+  background-color: var(--bg-lunch);
+  color: var(--text-lunch);
+}
+.widget-lunch-accent { background-color: var(--accent-lunch); }
+
+.widget-joke {
+  background-color: var(--bg-joke);
+  color: var(--text-joke);
+}
+
+.widget-calendar-col { background-color: var(--bg-cal-col); }
+.widget-calendar-today { 
+  background-color: var(--bg-cal-today); 
+  --tw-ring-color: var(--ring-cal-today); 
+}
+.widget-calendar-text-header { color: var(--text-cal-header); }
+.widget-calendar-text-sub { color: var(--text-cal-subheader); }
+.widget-calendar-text-today { color: var(--text-cal-today); }
+
+/* Event Cards */
+.event-card {
+  border-left-width: 4px;
+  background-color: var(--bg-cal-col); /* Default fallback */
+}
+.event-card.blue { background-color: var(--evt-blue-bg); color: var(--evt-blue-text); border-left-color: var(--evt-blue-border); }
+.event-card.green { background-color: var(--evt-green-bg); color: var(--evt-green-text); border-left-color: var(--evt-green-border); }
+.event-card.purple { background-color: var(--evt-purple-bg); color: var(--evt-purple-text); border-left-color: var(--evt-purple-border); }
+.event-card.orange { background-color: var(--evt-orange-bg); color: var(--evt-orange-text); border-left-color: var(--evt-orange-border); }
+.event-card.red { background-color: var(--evt-red-bg); color: var(--evt-red-text); border-left-color: var(--evt-red-border); }
+
+/* Cyberpunk specific borders */
+[data-theme='cyber'] .widget-card {
+  border: 1px solid var(--text-weather);
+}
+[data-theme='cyber'] .widget-calendar-today {
+  border: 1px solid var(--ring-cal-today);
+  box-shadow: 0 0 15px var(--ring-cal-today);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(128, 128, 128, 0.2); border-radius: 10px; }

@@ -25,17 +25,15 @@ export const DadJokeWidget: React.FC = () => {
     <GlassCard 
       title="Dad Joke" 
       icon={<Smile size={18} />} 
-      // Vibrant Yellow Background
-      className="h-full bg-yellow-300"
-      darkText={true}
+      className="h-full widget-joke"
       action={
-        <button onClick={loadJoke} className={`text-yellow-800/50 hover:text-yellow-900 ${loading ? 'animate-spin' : ''}`}>
+        <button onClick={loadJoke} className={`opacity-50 hover:opacity-100 ${loading ? 'animate-spin' : ''}`}>
           <RefreshCw size={14} />
         </button>
       }
     >
       <div className="h-full flex items-center justify-center p-2 text-center">
-        <p className="text-sm md:text-base font-bold text-yellow-950 leading-snug">
+        <p className="text-sm md:text-base font-bold leading-snug opacity-90">
             {joke ? `"${joke}"` : "Thinking..."}
         </p>
       </div>

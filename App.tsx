@@ -23,17 +23,18 @@ const App: React.FC = () => {
         schoolName: 'East Silver Spring Elementary',
         schoolId: 'EastSilverSpringES',
         googleCalendarIcalUrl: 'https://calendar.google.com/calendar/ical/nicholaspolt%40gmail.com/private-d92d7d00ac0f9415e38c6e1be652dfca/basic.ics',
-        refreshInterval: 5 
+        refreshInterval: 5,
+        theme: 'dark'
     };
 
     try {
         const saved = localStorage.getItem('familyHubSettings');
         if (saved) {
             const parsed = JSON.parse(saved);
-            if (!parsed.googleCalendarIcalUrl && defaults.googleCalendarIcalUrl) {
-                parsed.googleCalendarIcalUrl = defaults.googleCalendarIcalUrl;
-            }
+            // Merge checks
+            if (!parsed.googleCalendarIcalUrl && defaults.googleCalendarIcalUrl) parsed.googleCalendarIcalUrl = defaults.googleCalendarIcalUrl;
             if (!parsed.refreshInterval) parsed.refreshInterval = defaults.refreshInterval;
+            if (!parsed.theme) parsed.theme = defaults.theme;
             return { ...defaults, ...parsed };
         }
     } catch (e) {
@@ -89,18 +90,18 @@ const App: React.FC = () => {
   }, [isGoogleLinked, settings.refreshInterval]);
 
   return (
-    <div className="h-screen w-full p-4 md:p-6 relative flex flex-col bg-black">
+    <div className="h-screen w-full p-4 md:p-6 relative flex flex-col bg-app" data-theme={settings.theme || 'dark'}>
       
       {/* Header */}
       <header className="flex justify-between items-end mb-4 flex-shrink-0">
         <div>
-            <h1 className="text-4xl font-black text-white tracking-tighter">
-                {greeting}, <span className="text-indigo-400">{settings.familyName}</span>
+            <h1 className="text-4xl font-black app-header-text tracking-tighter">
+                {greeting}, <span className="app-header-accent">{settings.familyName}</span>
             </h1>
         </div>
         <button 
             onClick={() => setIsSettingsOpen(true)}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white text-white hover:text-black transition-all"
+            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all"
         >
             <Settings size={20} />
         </button>
