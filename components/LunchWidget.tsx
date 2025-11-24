@@ -27,7 +27,7 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
     loadMenu();
 
     // Schedule automatic refresh at 5:00 AM
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: ReturnType<typeof setTimeout>;
 
     const scheduleRefresh = () => {
         const now = new Date();

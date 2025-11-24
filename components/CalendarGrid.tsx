@@ -33,7 +33,10 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
     return events.filter(e => {
         const eStart = new Date(e.start);
         const eEnd = new Date(e.end);
-        return eStart <= dayEnd && eEnd >= dayStart;
+        // Fix: Use strictly greater than for End Date comparison.
+        // iCal End Dates are exclusive (e.g. 00:00 of the next day).
+        // eEnd > dayStart ensures an event ending at midnight doesn't appear on that new day.
+        return eStart <= dayEnd && eEnd > dayStart;
     });
   };
 

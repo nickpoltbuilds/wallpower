@@ -11,24 +11,31 @@ export const TimeWidget: React.FC = () => {
   }, []);
 
   const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    return date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: false 
+    });
   };
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-  };
+  const weekday = date.toLocaleDateString('en-US', { weekday: 'long' });
+  const monthDay = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
 
   return (
     <GlassCard className="h-full bg-indigo-600 text-white border-none">
       <div className="h-full flex flex-col items-center justify-center text-center">
-        {/* Massive Time */}
-        <h1 className="text-5xl lg:text-6xl font-black tracking-tighter leading-none">
+        {/* Massive Time (24h) */}
+        <h1 className="text-6xl lg:text-7xl font-black tracking-tighter leading-none mb-1">
           {formatTime(date)}
         </h1>
-        {/* Clean Date */}
-        <div className="mt-2 px-4 py-1 bg-black/20 rounded-full">
-            <p className="text-xs font-bold tracking-wide uppercase text-white/90">
-            {formatDate(date)}
+        
+        {/* Elegant Date Stack */}
+        <div className="flex flex-col items-center">
+            <p className="text-indigo-200 text-xs font-bold tracking-[0.2em] uppercase mb-0.5">
+                {weekday}
+            </p>
+            <p className="text-xl lg:text-2xl font-bold text-white leading-tight">
+                {monthDay}
             </p>
         </div>
       </div>
