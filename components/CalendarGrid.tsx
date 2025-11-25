@@ -161,7 +161,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="font-bold text-sm leading-tight mb-0.5">
+                                                <div className="font-bold text-lg leading-tight mb-0.5">
                                                     {event.title}
                                                 </div>
                                                 {event.location && (

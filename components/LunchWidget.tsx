@@ -70,8 +70,8 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
                 <div className="flex flex-col gap-3">
                     {allEntrees.map((item, i) => (
                         <div key={i} className="flex gap-3 items-start">
-                            <div className="w-1.5 h-1.5 rounded-full widget-lunch-accent mt-1.5 flex-shrink-0" />
-                            <span className="text-sm font-bold leading-tight">
+                            <div className="w-1.5 h-1.5 rounded-full widget-lunch-accent mt-2 flex-shrink-0" />
+                            <span className="text-xl font-bold leading-tight">
                                 {item}
                             </span>
                         </div>
