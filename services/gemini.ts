@@ -160,10 +160,7 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
     if (!coords) return null;
 
     const city = coords.name || locationQuery.split(',')[0];
-    const state = coords.admin1 || '';
-    // Simply format location based on available data
-    const locString = locationQuery; 
-
+    
     // --- Strategy 1: NOAA (via Proxy rotation) ---
     try {
         // Proxy rotation for NOAA because it's flaky with CORS and headers
@@ -193,10 +190,14 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
 
         if (!pointsData) throw lastError || new Error("All NOAA proxies failed for Points");
         
-        // Step 2: Get Forecast
+        // Step 2: Get Forecast (Daily) AND Hourly
         const forecastUrlRaw = pointsData.properties.forecast;
-        let forecastData: any = null;
+        const forecastHourlyUrlRaw = pointsData.properties.forecastHourly;
 
+        let forecastData: any = null;
+        let hourlyData: any = null;
+
+        // Fetch Daily Forecast
         for (const proxyFn of proxies) {
             try {
                 const forecastUrl = proxyFn(forecastUrlRaw);
@@ -213,12 +214,35 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
 
         if (!forecastData) throw new Error("All NOAA proxies failed for Forecast");
 
+        // Fetch Hourly Forecast (for accurate current temp)
+        if (forecastHourlyUrlRaw) {
+            for (const proxyFn of proxies) {
+                try {
+                    const hourlyUrl = proxyFn(forecastHourlyUrlRaw);
+                    const res = await fetch(hourlyUrl, {
+                         headers: { 'User-Agent': 'FamilyHub/1.0 (familyhub@example.com)' }
+                    });
+                    if (!res.ok) throw new Error(`Hourly ${res.status}`);
+                    hourlyData = await res.json();
+                    break;
+                } catch (e) {
+                    console.warn("Hourly forecast fetch failed:", e);
+                    continue;
+                }
+            }
+        }
+
         const periods = forecastData.properties.periods;
         if (!periods || periods.length === 0) throw new Error("No NOAA periods");
 
         console.log("Weather Source: NOAA");
 
         // Process NOAA Data
+        // Use Hourly for current temp if available, otherwise fallback to first Daily period (which is High or Low)
+        const currentPeriod = hourlyData?.properties?.periods?.[0] || periods[0];
+        const currentTemp = currentPeriod.temperature;
+        const currentCondition = currentPeriod.shortForecast;
+
         const dailyForecasts: any[] = [];
         const processedDays = new Set();
 
@@ -254,8 +278,8 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
         }
 
         return {
-            currentTemp: periods[0].temperature,
-            condition: periods[0].shortForecast,
+            currentTemp: currentTemp,
+            condition: currentCondition,
             high: dailyForecasts[0]?.high || periods[0].temperature,
             low: dailyForecasts[0]?.low || periods[0].temperature,
             location: city,
