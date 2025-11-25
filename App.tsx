@@ -110,7 +110,7 @@ const App: React.FC = () => {
       <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
         
         {/* Top Row: Status Widgets */}
-        <div className="h-[28%] grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="h-[240px] md:h-[28%] flex-shrink-0 min-h-[240px] grid grid-cols-1 md:grid-cols-4 gap-4">
             <TimeWidget />
             <WeatherWidget 
                 location={settings.location} 
