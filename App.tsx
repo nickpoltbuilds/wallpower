@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Settings } from 'lucide-react';
+import { Settings, Loader2, AlertCircle } from 'lucide-react';
 import { TimeWidget } from './components/TimeWidget';
 import { WeatherWidget } from './components/WeatherWidget';
 import { CalendarGrid } from './components/CalendarGrid';
@@ -26,26 +26,18 @@ const App: React.FC = () => {
         refreshInterval: 5,
         theme: 'dark'
     };
-
     try {
         const saved = localStorage.getItem('familyHubSettings');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            // Merge checks
-            if (!parsed.googleCalendarIcalUrl && defaults.googleCalendarIcalUrl) parsed.googleCalendarIcalUrl = defaults.googleCalendarIcalUrl;
-            if (!parsed.refreshInterval) parsed.refreshInterval = defaults.refreshInterval;
-            if (!parsed.theme) parsed.theme = defaults.theme;
-            return { ...defaults, ...parsed };
-        }
-    } catch (e) {
-        console.error("Failed to load settings:", e);
-    }
+        if (saved) return { ...defaults, ...JSON.parse(saved) };
+    } catch (e) {}
     return defaults;
   });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [events, setEvents] = useState<CalendarEvent[]>(DEFAULT_EVENTS);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isGoogleLinked, setIsGoogleLinked] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncFailed, setSyncFailed] = useState(false);
   const [greeting, setGreeting] = useState("Good Morning");
 
   useEffect(() => {
@@ -56,7 +48,7 @@ const App: React.FC = () => {
           else setGreeting("Good Evening");
       };
       updateGreeting();
-      const timer = setInterval(updateGreeting, 60 * 60 * 1000); 
+      const timer = setInterval(updateGreeting, 3600000); 
       return () => clearInterval(timer);
   }, []);
 
@@ -64,78 +56,85 @@ const App: React.FC = () => {
     localStorage.setItem('familyHubSettings', JSON.stringify(settings));
   }, [settings]);
 
-  useEffect(() => {
-    if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 10) {
-        setIsGoogleLinked(true);
-        loadGoogleEvents();
-    } else {
-        setIsGoogleLinked(false);
-    }
-  }, [settings.googleCalendarIcalUrl]);
-
   const loadGoogleEvents = async () => {
-      if (settings.googleCalendarIcalUrl) {
-          const googleEvents = await fetchGoogleCalendarEvents(settings.googleCalendarIcalUrl);
-          if (googleEvents.length > 0) {
-              setEvents(googleEvents);
+      if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 20) {
+          setIsSyncing(true);
+          setSyncFailed(false);
+          try {
+            const googleEvents = await fetchGoogleCalendarEvents(settings.googleCalendarIcalUrl);
+            if (googleEvents && googleEvents.length > 0) {
+                setEvents(googleEvents);
+            } else {
+                // If we get 0 events back, only clear if we had nothing before
+                // Otherwise keep existing data to avoid blinking empty screens on proxy errors
+                if (events.length === 0) setEvents([]);
+                setSyncFailed(true);
+            }
+          } catch (e) {
+            setSyncFailed(true);
           }
+          setIsSyncing(false);
+      } else {
+          setEvents(DEFAULT_EVENTS);
+          setSyncFailed(false);
       }
   };
 
   useEffect(() => {
+    if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 20) {
+        setIsGoogleLinked(true);
+        loadGoogleEvents();
+    } else {
+        setIsGoogleLinked(false);
+        setEvents(DEFAULT_EVENTS);
+        setSyncFailed(false);
+    }
+  }, [settings.googleCalendarIcalUrl]);
+
+  useEffect(() => {
       if (!isGoogleLinked) return;
-      const intervalMs = settings.refreshInterval * 60 * 1000;
-      const interval = setInterval(loadGoogleEvents, intervalMs);
+      const interval = setInterval(loadGoogleEvents, settings.refreshInterval * 60000);
       return () => clearInterval(interval);
-  }, [isGoogleLinked, settings.refreshInterval]);
+  }, [isGoogleLinked, settings.refreshInterval, settings.googleCalendarIcalUrl]);
 
   return (
     <div className="h-screen w-full p-4 md:p-6 relative flex flex-col bg-app" data-theme={settings.theme || 'dark'}>
-      
-      {/* Header */}
       <header className="flex justify-between items-end mb-4 flex-shrink-0">
-        <div>
+        <div className="flex items-center gap-3">
             <h1 className="text-4xl font-black app-header-text tracking-tighter">
                 {greeting}, <span className="app-header-accent">{settings.familyName}</span>
             </h1>
+            {isSyncing && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold app-header-text animate-pulse">
+                    <Loader2 size={12} className="animate-spin" />
+                    SYNCING
+                </div>
+            )}
+            {syncFailed && !isSyncing && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-[10px] font-bold">
+                    <AlertCircle size={12} />
+                    SYNC ERROR
+                </div>
+            )}
         </div>
-        <button 
-            onClick={() => setIsSettingsOpen(true)}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all"
-        >
+        <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all">
             <Settings size={20} />
         </button>
       </header>
 
       <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
-        
-        {/* Top Row: Status Widgets */}
         <div className="h-[240px] md:h-[28%] flex-shrink-0 min-h-[240px] grid grid-cols-1 md:grid-cols-4 gap-4">
             <TimeWidget />
-            <WeatherWidget 
-                location={settings.location} 
-                refreshInterval={settings.refreshInterval} 
-            />
+            <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} />
             <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
             <DadJokeWidget />
         </div>
-
-        {/* Bottom Row: Calendar Grid */}
         <div className="flex-1 min-h-0">
-            <CalendarGrid 
-                events={events} 
-                setEvents={setEvents} 
-                isGoogleLinked={isGoogleLinked} 
-            />
+            <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
         </div>
       </div>
 
-      <SettingsModal 
-        isOpen={isSettingsOpen} 
-        onClose={() => setIsSettingsOpen(false)} 
-        settings={settings}
-        onSave={setSettings}
-      />
+      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} settings={settings} onSave={setSettings} />
     </div>
   );
 };
