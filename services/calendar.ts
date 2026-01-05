@@ -2,8 +2,7 @@
 import { CalendarEvent } from "../types";
 
 /**
- * Standard iCal unfolding: lines starting with a space/tab are continuations of the previous line.
- * Uses a more robust regex for splitting to handle different line ending styles.
+ * Standard iCal unfolding: lines starting with a space/tab are continuations.
  */
 const unfoldIcsLines = (icsData: string): string[] => {
   const rawLines = icsData.split(/\r\n|\n|\r/);
@@ -23,19 +22,13 @@ const unfoldIcsLines = (icsData: string): string[] => {
 };
 
 /**
- * Robust iCal date parser. 
- * Correctly handles:
- * - DTSTART;TZID=America/New_York:20231025T170000
- * - DTSTART;VALUE=DATE:20231025
- * - DTSTART:20231025T170000Z
+ * Parses iCal date strings into Javascript Date objects.
  */
 const parseIcsDateValue = (line: string): Date | null => {
-  // Extract value after the first colon
   const colonIndex = line.indexOf(':');
   if (colonIndex === -1) return null;
   const value = line.substring(colonIndex + 1).trim();
   
-  // Extract just the numbers/letters for the date match
   const match = value.match(/(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?/);
   if (!match) return null;
 
@@ -45,7 +38,6 @@ const parseIcsDateValue = (line: string): Date | null => {
   const d = parseInt(day);
 
   if (!hour) {
-    // All day event: Treat as local midnight on that date
     return new Date(y, m, d, 0, 0, 0);
   }
 
@@ -57,8 +49,16 @@ const parseIcsDateValue = (line: string): Date | null => {
     return new Date(Date.UTC(y, m, d, h, mi, s));
   }
   
-  // Floating time: No timezone info, assume local device time
   return new Date(y, m, d, h, mi, s);
+};
+
+/**
+ * Normalizes a date string for exclusion matching.
+ */
+const getExclusionKey = (date: Date): string => {
+    // Format: YYYYMMDDTHHMMSS (ignoring 'Z' for local/UTC agnostic matching in some cases)
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}`;
 };
 
 const parseIcsDuration = (durationStr: string): number => {
@@ -91,7 +91,7 @@ interface ExpansionRules {
     BYDAY?: string;
 }
 
-const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdates?: string[] })[], windowStart: Date, windowEnd: Date): CalendarEvent[] => {
+const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdates?: string[], uid?: string })[], windowStart: Date, windowEnd: Date, exclusionsMap: Map<string, Set<string>>): CalendarEvent[] => {
   const expanded: CalendarEvent[] = [];
   const dayNames = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
   
@@ -102,7 +102,7 @@ const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdate
     
     const duration = eventEnd.getTime() - eventStart.getTime();
 
-    // Base event
+    // Add base event if it fits in window
     if (eventEnd >= windowStart && eventStart <= windowEnd) {
         expanded.push(event);
     }
@@ -120,16 +120,17 @@ const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdate
     const count = rules.COUNT ? parseInt(rules.COUNT) : Infinity;
     const untilDate = rules.UNTIL ? parseIcsDateValue(`UNTIL:${rules.UNTIL}`) : null;
     const byDay = rules.BYDAY ? rules.BYDAY.split(',') : null;
-    const exdates = new Set(event.exdates || []);
+    
+    // Get all exclusions for this specific event UID
+    const specificExclusions = exclusionsMap.get(event.uid || event.id) || new Set<string>();
 
     let d = new Date(eventStart);
     let instancesFound = 0;
     
-    // Skip-ahead logic
+    // Skip-ahead logic for efficiency
     if (!rules.COUNT && d < windowStart) {
         const msInDay = 86400000;
         const timeDiff = windowStart.getTime() - d.getTime();
-        
         if (freq === 'DAILY') {
             const skip = Math.floor(timeDiff / (msInDay * interval)) * interval;
             d.setDate(d.getDate() + Math.max(0, skip - interval));
@@ -148,9 +149,7 @@ const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdate
     }
 
     let iterations = 0;
-    const maxIterations = 2000; 
-
-    while (d <= windowEnd && iterations < maxIterations) {
+    while (d <= windowEnd && iterations < 2000) {
         iterations++;
         if (untilDate && d > untilDate) break;
 
@@ -189,12 +188,16 @@ const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdate
             instanceStart.setHours(eventStart.getHours(), eventStart.getMinutes(), eventStart.getSeconds());
             const instanceEnd = new Date(instanceStart.getTime() + duration);
             
+            // Exclude if it's the base event (already added) or if it's explicitly excluded
             const isNotBaseEvent = Math.abs(instanceStart.getTime() - eventStart.getTime()) > 5000;
             const isInWindow = instanceEnd >= windowStart && instanceStart <= windowEnd;
-            const exKey = instanceStart.toISOString().split('T')[0].replace(/-/g, '');
-            const isNotExcluded = !exdates.has(exKey);
+            
+            // Exclusion check (both date-only and date-time keys)
+            const dateTimeKey = getExclusionKey(instanceStart);
+            const dateOnlyKey = dateTimeKey.split('T')[0];
+            const isExcluded = specificExclusions.has(dateTimeKey) || specificExclusions.has(dateOnlyKey);
 
-            if (isInWindow && isNotBaseEvent && isNotExcluded) {
+            if (isInWindow && isNotBaseEvent && !isExcluded) {
                 expanded.push({ 
                     ...event, 
                     id: `${event.id}_${instanceStart.getTime()}`, 
@@ -204,13 +207,9 @@ const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdate
             }
         }
         
-        if (freq === 'MONTHLY' && !byDay) {
-            d.setMonth(d.getMonth() + 1);
-        } else if (freq === 'YEARLY') {
-            d.setFullYear(d.getFullYear() + 1);
-        } else {
-            d.setDate(d.getDate() + 1);
-        }
+        if (freq === 'MONTHLY' && !byDay) d.setMonth(d.getMonth() + 1);
+        else if (freq === 'YEARLY') d.setFullYear(d.getFullYear() + 1);
+        else d.setDate(d.getDate() + 1);
     }
   });
 
@@ -221,29 +220,21 @@ export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<{ even
     if (!icalUrl || icalUrl.length < 15) return { events: [], success: false, message: "Invalid URL" };
     
     let targetUrl = icalUrl.trim();
-    if (targetUrl.startsWith('webcal://')) {
-        targetUrl = 'https://' + targetUrl.substring(9);
-    }
+    if (targetUrl.startsWith('webcal://')) targetUrl = 'https://' + targetUrl.substring(9);
     
-    if (!targetUrl.startsWith('http')) return { events: [], success: false, message: "Invalid URL protocol" };
-
-    // Use a unique cache buster per request
     const urlWithBuster = targetUrl + (targetUrl.includes('?') ? '&' : '?') + 'cachebust=' + Date.now();
-    
-    let icsData = '';
     const proxies = [
         `https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithBuster)}`,
         `https://corsproxy.io/?url=${encodeURIComponent(urlWithBuster)}`,
-        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(urlWithBuster)}`,
-        `https://proxy.cors.sh/${urlWithBuster}` // Fallback proxy
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(urlWithBuster)}`
     ];
 
+    let icsData = '';
     let success = false;
     let errorMsg = "Network timeout";
 
     for (const p of proxies) {
         try {
-            console.log(`Syncing via: ${p}`);
             const res = await fetch(p);
             if (res.ok) { 
                 const text = await res.text();
@@ -251,23 +242,17 @@ export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<{ even
                     icsData = text;
                     success = true;
                     break; 
-                } else {
-                    errorMsg = "Proxy returned non-calendar data";
                 }
-            } else {
-                errorMsg = `Proxy error: ${res.status}`;
             }
-        } catch (e) {
-            console.warn(`Proxy ${p} failed.`);
-            errorMsg = "Network connection failed";
-        }
+        } catch (e) {}
     }
 
     if (!success || !icsData) return { events: [], success: false, message: errorMsg };
 
-    const events: (CalendarEvent & { rrule?: string, exdates?: string[] })[] = [];
+    const events: (CalendarEvent & { rrule?: string, exdates?: string[], uid?: string })[] = [];
+    const exclusionsMap = new Map<string, Set<string>>();
     const lines = unfoldIcsLines(icsData);
-    let current: Partial<CalendarEvent> & { rrule?: string, exdates?: string[], duration?: string } = {};
+    let current: any = {};
     let inEvent = false;
 
     lines.forEach(line => {
@@ -290,19 +275,23 @@ export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<{ even
                 }
                 current.id = current.id || Math.random().toString(36).substring(2, 11);
                 current.color = assignColor(current.title);
-                events.push(current as CalendarEvent);
+                
+                // If this is a RECURRENCE-ID instance, mark the original slot as excluded in the series
+                if (current.recurrenceId && current.uid) {
+                    const exSet = exclusionsMap.get(current.uid) || new Set<string>();
+                    exSet.add(getExclusionKey(new Date(current.recurrenceId)));
+                    exclusionsMap.set(current.uid, exSet);
+                }
+                
+                events.push(current as any);
             }
         } else if (inEvent) {
-            if (key === 'SUMMARY') {
-                current.title = value.replace(/\\,/g, ',').replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
-            }
+            if (key === 'SUMMARY') current.title = value.replace(/\\,/g, ',').replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
             else if (key === 'DTSTART') {
               const d = parseIcsDateValue(line);
               if (d) {
                   current.start = d.toISOString();
-                  if (keyPart.includes('VALUE=DATE')) {
-                      current.isAllDay = true;
-                  }
+                  if (keyPart.includes('VALUE=DATE')) current.isAllDay = true;
               }
             }
             else if (key === 'DTEND') {
@@ -312,14 +301,22 @@ export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<{ even
             else if (key === 'DURATION') current.duration = value;
             else if (key === 'RRULE') current.rrule = value;
             else if (key === 'EXDATE') {
-              const parts = value.split(',');
-              current.exdates = (current.exdates || []).concat(parts.map(p => p.split('T')[0]));
+              const uid = current.uid || current.id || "temp";
+              const exSet = exclusionsMap.get(uid) || new Set<string>();
+              value.split(',').forEach(p => {
+                  const d = parseIcsDateValue(`EXDATE:${p}`);
+                  if (d) exSet.add(getExclusionKey(d));
+              });
+              exclusionsMap.set(uid, exSet);
             }
-            else if (key === 'LOCATION') {
-                current.location = value.replace(/\\,/g, ',').replace(/\\n/g, ' ').replace(/\\\\/g, '\\');
-            }
+            else if (key === 'LOCATION') current.location = value.replace(/\\,/g, ',').replace(/\\n/g, ' ').replace(/\\\\/g, '\\');
             else if (key === 'UID') {
+                current.uid = value;
                 current.id = value;
+            }
+            else if (key === 'RECURRENCE-ID') {
+                const d = parseIcsDateValue(line);
+                if (d) current.recurrenceId = d.toISOString();
             }
         }
     });
@@ -328,9 +325,8 @@ export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<{ even
     const winS = new Date(now); winS.setDate(now.getDate() - 3); winS.setHours(0,0,0,0);
     const winE = new Date(now); winE.setDate(now.getDate() + 30); winE.setHours(23,59,59,999);
     
-    const expanded = expandRecurringEvents(events, winS, winE);
+    const expanded = expandRecurringEvents(events, winS, winE, exclusionsMap);
     
-    // Final deduplication and sorting
     const uniqueMap = new Map();
     expanded.forEach(item => {
         const key = `${item.id}_${item.start}`;
