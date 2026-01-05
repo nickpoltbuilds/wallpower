@@ -1,199 +1,344 @@
 
 import { CalendarEvent } from "../types";
 
+/**
+ * Standard iCal unfolding: lines starting with a space/tab are continuations of the previous line.
+ * Uses a more robust regex for splitting to handle different line ending styles.
+ */
 const unfoldIcsLines = (icsData: string): string[] => {
   const rawLines = icsData.split(/\r\n|\n|\r/);
   const unfolded: string[] = [];
-  for (const line of rawLines) {
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i];
     if (line.length === 0) continue;
     if (line.startsWith(' ') || line.startsWith('\t')) {
-      if (unfolded.length > 0) unfolded[unfolded.length - 1] += line.substring(1);
-    } else unfolded.push(line);
+      if (unfolded.length > 0) {
+        unfolded[unfolded.length - 1] += line.substring(1);
+      }
+    } else {
+      unfolded.push(line);
+    }
   }
   return unfolded;
 };
 
-const parseIcsDate = (dateStr: string): Date => {
-  if (!dateStr) return new Date();
-  const cleanStr = dateStr.includes(':') ? dateStr.split(':').pop()! : dateStr;
+/**
+ * Robust iCal date parser. 
+ * Correctly handles:
+ * - DTSTART;TZID=America/New_York:20231025T170000
+ * - DTSTART;VALUE=DATE:20231025
+ * - DTSTART:20231025T170000Z
+ */
+const parseIcsDateValue = (line: string): Date | null => {
+  // Extract value after the first colon
+  const colonIndex = line.indexOf(':');
+  if (colonIndex === -1) return null;
+  const value = line.substring(colonIndex + 1).trim();
   
-  const year = parseInt(cleanStr.substring(0, 4));
-  const month = parseInt(cleanStr.substring(4, 6)) - 1;
-  const day = parseInt(cleanStr.substring(6, 8));
+  // Extract just the numbers/letters for the date match
+  const match = value.match(/(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?/);
+  if (!match) return null;
 
-  if (cleanStr.length === 8) {
-    return new Date(year, month, day);
+  const [_, year, month, day, hour, min, sec, isUtc] = match;
+  const y = parseInt(year);
+  const m = parseInt(month) - 1;
+  const d = parseInt(day);
+
+  if (!hour) {
+    // All day event: Treat as local midnight on that date
+    return new Date(y, m, d, 0, 0, 0);
   }
 
-  if (cleanStr.includes('T')) {
-    const timePart = cleanStr.split('T')[1];
-    const hour = parseInt(timePart.substring(0, 2));
-    const minute = parseInt(timePart.substring(2, 4));
-    const second = parseInt(timePart.substring(4, 6));
+  const h = parseInt(hour);
+  const mi = parseInt(min);
+  const s = parseInt(sec);
 
-    if (cleanStr.endsWith('Z')) {
-      return new Date(Date.UTC(year, month, day, hour, minute, second));
-    }
-    return new Date(year, month, day, hour, minute, second);
+  if (isUtc) {
+    return new Date(Date.UTC(y, m, d, h, mi, s));
   }
-  return new Date();
+  
+  // Floating time: No timezone info, assume local device time
+  return new Date(y, m, d, h, mi, s);
+};
+
+const parseIcsDuration = (durationStr: string): number => {
+  const regex = /P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?/;
+  const matches = durationStr.match(regex);
+  if (!matches) return 3600000;
+  
+  const days = parseInt(matches[1] || '0');
+  const hours = parseInt(matches[2] || '0');
+  const minutes = parseInt(matches[3] || '0');
+  const seconds = parseInt(matches[4] || '0');
+  
+  return (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000;
 };
 
 const assignColor = (title: string): CalendarEvent['color'] => {
-    const lower = title.toLowerCase();
-    if (lower.includes('birthday') || lower.includes('party') || lower.includes('dinner')) return 'purple';
-    if (lower.includes('soccer') || lower.includes('gym') || lower.includes('sport') || lower.includes('game') || lower.includes('practice')) return 'orange';
-    if (lower.includes('school') || lower.includes('class') || lower.includes('no school')) return 'green';
-    if (lower.includes('trash') || lower.includes('pickup') || lower.includes('doctor') || lower.includes('dentist')) return 'red';
-    return 'blue';
+    const lower = (title || "").toLowerCase();
+    if (lower.includes('birthday') || lower.includes('party') || lower.includes('dinner') || lower.includes('anniversary')) return 'purple';
+    if (lower.includes('soccer') || lower.includes('gym') || lower.includes('sport') || lower.includes('game') || lower.includes('practice') || lower.includes('ballet') || lower.includes('swim') || lower.includes('tennis')) return 'orange';
+    if (lower.includes('school') || lower.includes('class') || lower.includes('no school') || lower.includes('early dismissal') || lower.includes('work') || lower.includes('meeting')) return 'blue';
+    if (lower.includes('trash') || lower.includes('pickup') || lower.includes('doctor') || lower.includes('dentist') || lower.includes('vet') || lower.includes('appointment')) return 'red';
+    return 'green';
 };
 
-const expandRecurringEvents = (events: CalendarEvent[], windowStart: Date, windowEnd: Date): CalendarEvent[] => {
+interface ExpansionRules {
+    FREQ?: string;
+    INTERVAL?: string;
+    UNTIL?: string;
+    COUNT?: string;
+    BYDAY?: string;
+}
+
+const expandRecurringEvents = (events: (CalendarEvent & { rrule?: string, exdates?: string[] })[], windowStart: Date, windowEnd: Date): CalendarEvent[] => {
   const expanded: CalendarEvent[] = [];
+  const dayNames = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
   
   events.forEach(event => {
     const eventStart = new Date(event.start);
     const eventEnd = new Date(event.end);
+    if (isNaN(eventStart.getTime())) return;
+    
     const duration = eventEnd.getTime() - eventStart.getTime();
 
+    // Base event
     if (eventEnd >= windowStart && eventStart <= windowEnd) {
         expanded.push(event);
     }
 
     if (!event.rrule) return;
 
-    const rules = event.rrule.split(';').reduce((acc, part) => {
+    const rules: ExpansionRules = event.rrule.split(';').reduce((acc, part) => {
         const [k, v] = part.split('=');
-        if (k && v) acc[k] = v;
+        if (k && v) acc[k.toUpperCase() as keyof ExpansionRules] = v.toUpperCase();
         return acc;
     }, {} as any);
 
     const freq = rules.FREQ;
     const interval = parseInt(rules.INTERVAL || '1');
-    const count = rules.COUNT ? parseInt(rules.COUNT) : null;
-    let untilDate = rules.UNTIL ? parseIcsDate(rules.UNTIL) : null;
-    if (untilDate) untilDate.setHours(23, 59, 59);
+    const count = rules.COUNT ? parseInt(rules.COUNT) : Infinity;
+    const untilDate = rules.UNTIL ? parseIcsDateValue(`UNTIL:${rules.UNTIL}`) : null;
+    const byDay = rules.BYDAY ? rules.BYDAY.split(',') : null;
+    const exdates = new Set(event.exdates || []);
 
     let d = new Date(eventStart);
-    let instancesFound = 1;
-
-    if (!count && d < windowStart) {
-        const oneDay = 1000 * 60 * 60 * 24;
-        const dist = windowStart.getTime() - d.getTime();
-        if (freq === 'DAILY') d.setDate(d.getDate() + Math.floor((dist / oneDay) / interval) * interval);
-        else if (freq === 'WEEKLY') d.setDate(d.getDate() + Math.floor((dist / (oneDay * 7)) / interval) * 7 * interval);
-        d.setDate(d.getDate() - 7);
+    let instancesFound = 0;
+    
+    // Skip-ahead logic
+    if (!rules.COUNT && d < windowStart) {
+        const msInDay = 86400000;
+        const timeDiff = windowStart.getTime() - d.getTime();
+        
+        if (freq === 'DAILY') {
+            const skip = Math.floor(timeDiff / (msInDay * interval)) * interval;
+            d.setDate(d.getDate() + Math.max(0, skip - interval));
+        } else if (freq === 'WEEKLY') {
+            const skip = Math.floor(timeDiff / (msInDay * 7 * interval)) * interval;
+            d.setDate(d.getDate() + Math.max(0, skip - 1) * 7);
+        } else if (freq === 'MONTHLY') {
+            const monthsDiff = (windowStart.getFullYear() - d.getFullYear()) * 12 + (windowStart.getMonth() - d.getMonth());
+            const skip = Math.floor(monthsDiff / interval) * interval;
+            d.setMonth(d.getMonth() + Math.max(0, skip - interval));
+        } else if (freq === 'YEARLY') {
+            const yearsDiff = windowStart.getFullYear() - d.getFullYear();
+            const skip = Math.floor(yearsDiff / interval) * interval;
+            d.setFullYear(d.getFullYear() + Math.max(0, skip - interval));
+        }
     }
 
     let iterations = 0;
-    while (d <= windowEnd && iterations < 500) {
+    const maxIterations = 2000; 
+
+    while (d <= windowEnd && iterations < maxIterations) {
         iterations++;
         if (untilDate && d > untilDate) break;
-        if (count && instancesFound >= count) break;
 
         let isMatch = false;
         if (freq === 'DAILY') {
-            const dayDiff = Math.round((d.getTime() - eventStart.getTime()) / (1000 * 60 * 60 * 24));
-            if (dayDiff > 0 && dayDiff % interval === 0) isMatch = true;
+            const dayDiff = Math.round((d.getTime() - eventStart.getTime()) / 86400000);
+            if (dayDiff >= 0 && dayDiff % interval === 0) isMatch = true;
         } else if (freq === 'WEEKLY') {
-            const dayDiff = Math.round((d.getTime() - eventStart.getTime()) / (1000 * 60 * 60 * 24));
-            if (dayDiff > 0 && dayDiff % (7 * interval) === 0) isMatch = true;
+            const dayDiff = Math.round((d.getTime() - eventStart.getTime()) / 86400000);
+            const weekDiff = Math.floor(dayDiff / 7);
+            if (weekDiff >= 0 && weekDiff % interval === 0) {
+                if (byDay) {
+                    const currentDayName = dayNames[d.getDay()];
+                    if (byDay.some(bd => bd.includes(currentDayName))) isMatch = true;
+                } else if (d.getDay() === eventStart.getDay()) {
+                    isMatch = true;
+                }
+            }
+        } else if (freq === 'MONTHLY') {
+            const monthDiff = (d.getFullYear() - eventStart.getFullYear()) * 12 + (d.getMonth() - eventStart.getMonth());
+            if (monthDiff >= 0 && monthDiff % interval === 0 && d.getDate() === eventStart.getDate()) {
+                isMatch = true;
+            }
+        } else if (freq === 'YEARLY') {
+            const yearDiff = d.getFullYear() - eventStart.getFullYear();
+            if (yearDiff >= 0 && yearDiff % interval === 0 && d.getMonth() === eventStart.getMonth() && d.getDate() === eventStart.getDate()) {
+                isMatch = true;
+            }
         }
 
         if (isMatch) {
             instancesFound++;
+            if (instancesFound > count) break;
+
             const instanceStart = new Date(d);
             instanceStart.setHours(eventStart.getHours(), eventStart.getMinutes(), eventStart.getSeconds());
             const instanceEnd = new Date(instanceStart.getTime() + duration);
             
-            if (instanceEnd >= windowStart && instanceStart <= windowEnd) {
-                expanded.push({ ...event, id: `${event.id}_${d.getTime()}`, start: instanceStart.toISOString(), end: instanceEnd.toISOString() });
+            const isNotBaseEvent = Math.abs(instanceStart.getTime() - eventStart.getTime()) > 5000;
+            const isInWindow = instanceEnd >= windowStart && instanceStart <= windowEnd;
+            const exKey = instanceStart.toISOString().split('T')[0].replace(/-/g, '');
+            const isNotExcluded = !exdates.has(exKey);
+
+            if (isInWindow && isNotBaseEvent && isNotExcluded) {
+                expanded.push({ 
+                    ...event, 
+                    id: `${event.id}_${instanceStart.getTime()}`, 
+                    start: instanceStart.toISOString(), 
+                    end: instanceEnd.toISOString() 
+                });
             }
         }
-        d.setDate(d.getDate() + 1);
+        
+        if (freq === 'MONTHLY' && !byDay) {
+            d.setMonth(d.getMonth() + 1);
+        } else if (freq === 'YEARLY') {
+            d.setFullYear(d.getFullYear() + 1);
+        } else {
+            d.setDate(d.getDate() + 1);
+        }
     }
   });
 
   return expanded;
 };
 
-export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<CalendarEvent[]> => {
-    if (!icalUrl || !icalUrl.startsWith('http')) {
-        console.warn("Invalid Calendar URL provided.");
-        return [];
+export const fetchGoogleCalendarEvents = async (icalUrl: string): Promise<{ events: CalendarEvent[], success: boolean, message?: string }> => {
+    if (!icalUrl || icalUrl.length < 15) return { events: [], success: false, message: "Invalid URL" };
+    
+    let targetUrl = icalUrl.trim();
+    if (targetUrl.startsWith('webcal://')) {
+        targetUrl = 'https://' + targetUrl.substring(9);
     }
     
+    if (!targetUrl.startsWith('http')) return { events: [], success: false, message: "Invalid URL protocol" };
+
+    // Use a unique cache buster per request
+    const urlWithBuster = targetUrl + (targetUrl.includes('?') ? '&' : '?') + 'cachebust=' + Date.now();
+    
     let icsData = '';
-    // We try 'raw' proxies first as they are most likely to return plain text ICS
     const proxies = [
-        `https://api.allorigins.win/raw?url=${encodeURIComponent(icalUrl)}`,
-        `https://corsproxy.io/?${encodeURIComponent(icalUrl)}`,
-        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(icalUrl)}`,
-        `https://thingproxy.freeboard.io/fetch/${icalUrl}`
+        `https://api.allorigins.win/raw?url=${encodeURIComponent(urlWithBuster)}`,
+        `https://corsproxy.io/?url=${encodeURIComponent(urlWithBuster)}`,
+        `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(urlWithBuster)}`,
+        `https://proxy.cors.sh/${urlWithBuster}` // Fallback proxy
     ];
 
     let success = false;
+    let errorMsg = "Network timeout";
+
     for (const p of proxies) {
         try {
-            console.log(`Attempting calendar fetch via: ${p}`);
+            console.log(`Syncing via: ${p}`);
             const res = await fetch(p);
             if (res.ok) { 
                 const text = await res.text();
-                // Check if the response is actually an ICS file
-                if (text && text.includes('BEGIN:VCALENDAR')) {
+                if (text && text.toUpperCase().includes('BEGIN:VCALENDAR')) {
                     icsData = text;
                     success = true;
-                    console.log("Successfully retrieved ICS data.");
                     break; 
                 } else {
-                    console.warn(`Proxy ${p} returned non-ICS data or empty response.`);
+                    errorMsg = "Proxy returned non-calendar data";
                 }
+            } else {
+                errorMsg = `Proxy error: ${res.status}`;
             }
-        } catch (e) { 
-            console.error(`Proxy ${p} failed fetch check.`);
+        } catch (e) {
+            console.warn(`Proxy ${p} failed.`);
+            errorMsg = "Network connection failed";
         }
     }
 
-    if (!success || !icsData) {
-        console.error("Critical: All calendar proxies failed. Please check your Secret iCal URL.");
-        return [];
-    }
+    if (!success || !icsData) return { events: [], success: false, message: errorMsg };
 
-    const events: CalendarEvent[] = [];
+    const events: (CalendarEvent & { rrule?: string, exdates?: string[] })[] = [];
     const lines = unfoldIcsLines(icsData);
-    let current: Partial<CalendarEvent> & { rrule?: string } = {};
+    let current: Partial<CalendarEvent> & { rrule?: string, exdates?: string[], duration?: string } = {};
     let inEvent = false;
 
     lines.forEach(line => {
-        if (line === 'BEGIN:VEVENT') { inEvent = true; current = {}; }
-        else if (line === 'END:VEVENT') {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex === -1) return;
+        
+        const keyPart = line.substring(0, colonIndex);
+        const value = line.substring(colonIndex + 1);
+        const key = keyPart.split(';')[0].toUpperCase();
+
+        if (key === 'BEGIN' && value === 'VEVENT') {
+            inEvent = true;
+            current = {};
+        } else if (key === 'END' && value === 'VEVENT') {
             inEvent = false;
             if (current.title && current.start) {
-                if (!current.end) current.end = new Date(new Date(current.start).getTime() + 3600000).toISOString();
-                current.id = current.id || Math.random().toString(36).substr(2, 9);
+                if (!current.end) {
+                    const durationMs = current.duration ? parseIcsDuration(current.duration) : 3600000;
+                    current.end = new Date(new Date(current.start).getTime() + durationMs).toISOString();
+                }
+                current.id = current.id || Math.random().toString(36).substring(2, 11);
                 current.color = assignColor(current.title);
                 events.push(current as CalendarEvent);
             }
         } else if (inEvent) {
-            const idx = line.indexOf(':');
-            if (idx === -1) return;
-            const keyPart = line.substring(0, idx);
-            const val = line.substring(idx + 1);
-            const key = keyPart.split(';')[0];
-            if (key === 'SUMMARY') current.title = val.replace(/\\,/g, ',');
-            else if (key === 'DTSTART') current.start = parseIcsDate(val).toISOString();
-            else if (key === 'DTEND') current.end = parseIcsDate(val).toISOString();
-            else if (key === 'RRULE') current.rrule = val;
-            else if (key === 'LOCATION') current.location = val.replace(/\\,/g, ',');
-            else if (key === 'UID') current.id = val;
+            if (key === 'SUMMARY') {
+                current.title = value.replace(/\\,/g, ',').replace(/\\n/g, '\n').replace(/\\\\/g, '\\');
+            }
+            else if (key === 'DTSTART') {
+              const d = parseIcsDateValue(line);
+              if (d) {
+                  current.start = d.toISOString();
+                  if (keyPart.includes('VALUE=DATE')) {
+                      current.isAllDay = true;
+                  }
+              }
+            }
+            else if (key === 'DTEND') {
+              const d = parseIcsDateValue(line);
+              if (d) current.end = d.toISOString();
+            }
+            else if (key === 'DURATION') current.duration = value;
+            else if (key === 'RRULE') current.rrule = value;
+            else if (key === 'EXDATE') {
+              const parts = value.split(',');
+              current.exdates = (current.exdates || []).concat(parts.map(p => p.split('T')[0]));
+            }
+            else if (key === 'LOCATION') {
+                current.location = value.replace(/\\,/g, ',').replace(/\\n/g, ' ').replace(/\\\\/g, '\\');
+            }
+            else if (key === 'UID') {
+                current.id = value;
+            }
         }
     });
 
     const now = new Date();
-    const winS = new Date(now); winS.setDate(now.getDate() - 1); winS.setHours(0,0,0,0);
-    const winE = new Date(now); winE.setDate(now.getDate() + 14); winE.setHours(23,59,59,999);
+    const winS = new Date(now); winS.setDate(now.getDate() - 3); winS.setHours(0,0,0,0);
+    const winE = new Date(now); winE.setDate(now.getDate() + 30); winE.setHours(23,59,59,999);
     
     const expanded = expandRecurringEvents(events, winS, winE);
-    const unique = Array.from(new Map(expanded.map(item => [`${item.title}_${item.start}`, item])).values());
-    return unique.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+    
+    // Final deduplication and sorting
+    const uniqueMap = new Map();
+    expanded.forEach(item => {
+        const key = `${item.id}_${item.start}`;
+        if (!uniqueMap.has(key)) uniqueMap.set(key, item);
+    });
+    
+    return { 
+        events: Array.from(uniqueMap.values()).sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()),
+        success: true 
+    };
 };

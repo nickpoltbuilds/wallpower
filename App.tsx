@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Loader2, AlertCircle } from 'lucide-react';
+import { Settings, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { TimeWidget } from './components/TimeWidget';
 import { WeatherWidget } from './components/WeatherWidget';
 import { CalendarGrid } from './components/CalendarGrid';
@@ -22,7 +22,7 @@ const App: React.FC = () => {
         location: 'Silver Spring, MD',
         schoolName: 'East Silver Spring Elementary',
         schoolId: 'EastSilverSpringES',
-        googleCalendarIcalUrl: 'https://calendar.google.com/calendar/ical/nicholaspolt%40gmail.com/private-d92d7d00ac0f9415e38c6e1be652dfca/basic.ics',
+        googleCalendarIcalUrl: '',
         refreshInterval: 5,
         theme: 'dark'
     };
@@ -37,7 +37,8 @@ const App: React.FC = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isGoogleLinked, setIsGoogleLinked] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [syncFailed, setSyncFailed] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const [greeting, setGreeting] = useState("Good Morning");
 
   useEffect(() => {
@@ -57,37 +58,38 @@ const App: React.FC = () => {
   }, [settings]);
 
   const loadGoogleEvents = async () => {
-      if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 20) {
+      const url = settings.googleCalendarIcalUrl;
+      if (url && url.length > 15) {
           setIsSyncing(true);
-          setSyncFailed(false);
           try {
-            const googleEvents = await fetchGoogleCalendarEvents(settings.googleCalendarIcalUrl);
-            if (googleEvents && googleEvents.length > 0) {
-                setEvents(googleEvents);
+            const result = await fetchGoogleCalendarEvents(url);
+            if (result.success) {
+                setEvents(result.events);
+                setSyncError(null);
+                setLastSyncTime(new Date());
             } else {
-                // If we get 0 events back, only clear if we had nothing before
-                // Otherwise keep existing data to avoid blinking empty screens on proxy errors
-                if (events.length === 0) setEvents([]);
-                setSyncFailed(true);
+                setSyncError(result.message || "Sync Failed");
             }
           } catch (e) {
-            setSyncFailed(true);
+            setSyncError("Connection Error");
           }
           setIsSyncing(false);
       } else {
           setEvents(DEFAULT_EVENTS);
-          setSyncFailed(false);
+          setSyncError(null);
+          setLastSyncTime(null);
       }
   };
 
   useEffect(() => {
-    if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 20) {
+    if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 15) {
         setIsGoogleLinked(true);
         loadGoogleEvents();
     } else {
         setIsGoogleLinked(false);
         setEvents(DEFAULT_EVENTS);
-        setSyncFailed(false);
+        setSyncError(null);
+        setLastSyncTime(null);
     }
   }, [settings.googleCalendarIcalUrl]);
 
@@ -100,22 +102,29 @@ const App: React.FC = () => {
   return (
     <div className="h-screen w-full p-4 md:p-6 relative flex flex-col bg-app" data-theme={settings.theme || 'dark'}>
       <header className="flex justify-between items-end mb-4 flex-shrink-0">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
             <h1 className="text-4xl font-black app-header-text tracking-tighter">
                 {greeting}, <span className="app-header-accent">{settings.familyName}</span>
             </h1>
-            {isSyncing && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold app-header-text animate-pulse">
-                    <Loader2 size={12} className="animate-spin" />
-                    SYNCING
-                </div>
-            )}
-            {syncFailed && !isSyncing && (
-                <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-[10px] font-bold">
-                    <AlertCircle size={12} />
-                    SYNC ERROR
-                </div>
-            )}
+            
+            <div className="flex items-center gap-2">
+                {isSyncing ? (
+                    <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold app-header-text animate-pulse">
+                        <Loader2 size={12} className="animate-spin" />
+                        SYNCING
+                    </div>
+                ) : syncError ? (
+                    <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-[10px] font-bold">
+                        <AlertCircle size={12} />
+                        {syncError.toUpperCase()}
+                    </div>
+                ) : lastSyncTime ? (
+                    <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-[10px] font-bold">
+                        <CheckCircle2 size={12} />
+                        {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                ) : null}
+            </div>
         </div>
         <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all">
             <Settings size={20} />

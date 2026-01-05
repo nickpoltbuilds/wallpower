@@ -31,34 +31,50 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
     dayEnd.setHours(23, 59, 59, 999);
 
     return events.filter(e => {
-        const eStart = new Date(e.start);
-        const eEnd = new Date(e.end);
-        return eStart <= dayEnd && eEnd > dayStart;
+        try {
+            const eStart = new Date(e.start);
+            const eEnd = new Date(e.end);
+            if (isNaN(eStart.getTime())) return false;
+            
+            // Overlap logic: Event starts before the day ends AND event ends after the day starts.
+            // Using strict comparison (eEnd > dayStart) ensures all-day events that end at 00:00:00 
+            // of Day 2 are NOT shown on Day 2.
+            return eStart < dayEnd && eEnd > dayStart;
+        } catch { return false; }
     });
   };
 
   const getMultiDayLabel = (event: CalendarEvent, currentDay: Date) => {
-      const start = new Date(event.start);
-      start.setHours(0,0,0,0);
-      const end = new Date(event.end);
-      end.setHours(0,0,0,0);
-      const durationMs = end.getTime() - start.getTime();
-      const daysDuration = Math.max(1, Math.ceil(durationMs / (1000 * 60 * 60 * 24)));
-      if (daysDuration <= 1) return null;
+      try {
+          const start = new Date(event.start);
+          start.setHours(0,0,0,0);
+          const end = new Date(event.end);
+          // If the event ends at exactly midnight, treat the previous day as the real end
+          if (end.getHours() === 0 && end.getMinutes() === 0) {
+              end.setMilliseconds(-1);
+          }
+          end.setHours(0,0,0,0);
+          
+          const durationMs = end.getTime() - start.getTime();
+          const daysDuration = Math.max(1, Math.ceil(durationMs / (1000 * 60 * 60 * 24)) + 1);
+          
+          if (daysDuration <= 1) return null;
 
-      const current = new Date(currentDay);
-      current.setHours(0,0,0,0);
-      const diffTime = current.getTime() - start.getTime();
-      const dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      if (dayIndex > daysDuration || dayIndex < 1) return null; 
-      return `(Day ${dayIndex}/${daysDuration})`;
+          const current = new Date(currentDay);
+          current.setHours(0,0,0,0);
+          const diffTime = current.getTime() - start.getTime();
+          const dayIndex = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+          
+          if (dayIndex > daysDuration || dayIndex < 1) return null; 
+          return `(Day ${dayIndex}/${daysDuration})`;
+      } catch { return null; }
   };
 
   const handleAddEvent = async () => {
     if (!input.trim()) return;
     setIsProcessing(true);
     const newEvents = await generateCalendarEvents(input, new Date().toISOString());
-    if (newEvents.length > 0) {
+    if (newEvents && newEvents.length > 0) {
         setEvents(prev => [...prev, ...newEvents].sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()));
         setInput('');
         setShowInput(false);
@@ -74,7 +90,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                     <Calendar size={16} className="app-header-text" />
                 </div>
                 <h2 className="text-sm font-black app-header-text uppercase tracking-widest">
-                    {isGoogleLinked ? 'Google Calendar' : 'Family Calendar'}
+                    {isGoogleLinked ? 'Family Schedule' : 'Family Calendar'}
                 </h2>
             </div>
             {!isGoogleLinked && (
@@ -131,29 +147,31 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
 
                         <div className="flex-1 p-0 overflow-y-auto custom-scrollbar">
                             {dayEvents.length === 0 ? (
-                                <div className="h-full flex flex-col items-center justify-center">
-                                    <div className="w-1.5 h-1.5 bg-current opacity-20 rounded-full mb-2"></div>
+                                <div className="h-full flex flex-col items-center justify-center opacity-10">
+                                    <div className="w-1.5 h-1.5 bg-current rounded-full mb-2"></div>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-[1px]">
-                                    {dayEvents.map((event) => {
+                                    {dayEvents.map((event, idx) => {
                                         const multiDayLabel = getMultiDayLabel(event, day);
                                         const colorClass = event.color || 'blue';
+                                        let timeString = 'ALL DAY';
+                                        
+                                        if (!event.isAllDay) {
+                                            try {
+                                                timeString = new Date(event.start).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
+                                            } catch { timeString = '---'; }
+                                        }
                                         
                                         return (
                                             <div 
-                                                key={`${event.id}_${i}`} 
+                                                key={`${event.id}_${i}_${idx}`} 
                                                 className={`p-3 event-card ${colorClass} transition-all hover:bg-opacity-60`}
                                             >
                                                 <div className="flex items-start justify-between mb-1">
                                                     <div className="flex items-center gap-1 text-[10px] font-bold opacity-80">
                                                         {!event.isAllDay && <Clock size={10} />}
-                                                        <span>
-                                                            {event.isAllDay 
-                                                                ? 'ALL DAY' 
-                                                                : new Date(event.start).toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'})
-                                                            }
-                                                        </span>
+                                                        <span>{timeString}</span>
                                                     </div>
                                                     {multiDayLabel && (
                                                         <span className="text-[8px] opacity-70 font-bold">
