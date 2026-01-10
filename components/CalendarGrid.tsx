@@ -37,8 +37,6 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
             if (isNaN(eStart.getTime())) return false;
             
             // Overlap logic: Event starts before the day ends AND event ends after the day starts.
-            // Using strict comparison (eEnd > dayStart) ensures all-day events that end at 00:00:00 
-            // of Day 2 are NOT shown on Day 2.
             return eStart < dayEnd && eEnd > dayStart;
         } catch { return false; }
     });
@@ -49,7 +47,6 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
           const start = new Date(event.start);
           start.setHours(0,0,0,0);
           const end = new Date(event.end);
-          // If the event ends at exactly midnight, treat the previous day as the real end
           if (end.getHours() === 0 && end.getMinutes() === 0) {
               end.setMilliseconds(-1);
           }
@@ -124,7 +121,6 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
             </div>
         )}
 
-        {/* 4-Column Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 min-h-0">
             {days.map((day, i) => {
                 const dayEvents = getEventsForDay(day);
@@ -168,23 +164,23 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                                                 key={`${event.id}_${i}_${idx}`} 
                                                 className={`p-3 event-card ${colorClass} transition-all hover:bg-opacity-60`}
                                             >
-                                                <div className="flex items-start justify-between mb-1">
-                                                    <div className="flex items-center gap-1 text-[10px] font-bold opacity-80">
-                                                        {!event.isAllDay && <Clock size={10} />}
+                                                <div className="flex items-start justify-between mb-0.5">
+                                                    <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-tight">
+                                                        {!event.isAllDay && <Clock size={12} strokeWidth={3} />}
                                                         <span>{timeString}</span>
                                                     </div>
                                                     {multiDayLabel && (
-                                                        <span className="text-[8px] opacity-70 font-bold">
+                                                        <span className="text-[10px] opacity-80 font-black uppercase tracking-tighter">
                                                             {multiDayLabel}
                                                         </span>
                                                     )}
                                                 </div>
-                                                <div className="font-bold text-lg leading-tight mb-0.5">
+                                                <div className="font-bold text-lg leading-tight">
                                                     {event.title}
                                                 </div>
                                                 {event.location && (
-                                                    <div className="flex items-center gap-1 text-[9px] opacity-70 truncate font-medium mt-1">
-                                                        <MapPin size={9} />
+                                                    <div className="flex items-center gap-1 text-[10px] font-bold mt-1 opacity-90 truncate">
+                                                        <MapPin size={10} strokeWidth={2.5} />
                                                         {event.location}
                                                     </div>
                                                 )}

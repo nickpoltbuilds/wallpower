@@ -99,47 +99,72 @@ const App: React.FC = () => {
       return () => clearInterval(interval);
   }, [isGoogleLinked, settings.refreshInterval, settings.googleCalendarIcalUrl]);
 
-  return (
-    <div className="h-screen w-full p-4 md:p-6 relative flex flex-col bg-app" data-theme={settings.theme || 'dark'}>
-      <header className="flex justify-between items-end mb-4 flex-shrink-0">
-        <div className="flex items-center gap-4">
-            <h1 className="text-4xl font-black app-header-text tracking-tighter">
-                {greeting}, <span className="app-header-accent">{settings.familyName}</span>
-            </h1>
-            
-            <div className="flex items-center gap-2">
-                {isSyncing ? (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold app-header-text animate-pulse">
-                        <Loader2 size={12} className="animate-spin" />
-                        SYNCING
-                    </div>
-                ) : syncError ? (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-[10px] font-bold">
-                        <AlertCircle size={12} />
-                        {syncError.toUpperCase()}
-                    </div>
-                ) : lastSyncTime ? (
-                    <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-[10px] font-bold">
-                        <CheckCircle2 size={12} />
-                        {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                ) : null}
-            </div>
-        </div>
-        <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all">
-            <Settings size={20} />
-        </button>
-      </header>
+  const isTrek = settings.theme === 'trek';
 
-      <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
-        <div className="h-[240px] md:h-[28%] flex-shrink-0 min-h-[240px] grid grid-cols-1 md:grid-cols-4 gap-4">
-            <TimeWidget />
-            <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} />
-            <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
-            <DadJokeWidget />
+  return (
+    <div className={`h-screen w-full p-4 md:p-6 relative flex bg-app ${isTrek ? 'overflow-hidden' : 'flex-col'}`} data-theme={settings.theme || 'dark'}>
+      
+      {/* LCARS Sidebar for Trek Theme */}
+      {isTrek && (
+        <div className="hidden lg:flex flex-col w-[160px] flex-shrink-0">
+          <div className="lcars-elbow-top w-full mb-3 flex items-end justify-end px-3 pb-1">
+            <span className="text-black font-black text-xs">COM: ACCESS</span>
+          </div>
+          <div className="flex-1 lcars-sidebar flex flex-col p-4 justify-between">
+            <div className="flex flex-col gap-2">
+              <div className="bg-lcars-blue h-12 rounded-sm flex items-center justify-center text-black font-black text-sm">02-441</div>
+              <div className="bg-lcars-peach h-8 rounded-sm"></div>
+              <div className="bg-lcars-red h-24 rounded-sm flex items-end justify-center pb-2 text-black font-black text-xs rotate-180 [writing-mode:vertical-lr]">SECTOR 7G</div>
+            </div>
+            <div className="bg-black/20 p-2 rounded-sm text-[10px] text-black font-black leading-tight">
+              STARDATE: {Math.floor(Date.now() / 1000000)}<br/>
+              SECURE LINK: ACTIVE
+            </div>
+          </div>
         </div>
-        <div className="flex-1 min-h-0">
-            <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
+      )}
+
+      <div className={`flex-1 flex flex-col ${isTrek ? 'mt-2' : ''}`}>
+        <header className="flex justify-between items-end mb-4 flex-shrink-0">
+          <div className="flex items-center gap-4">
+              <h1 className={`${isTrek ? 'text-5xl font-bold uppercase italic' : 'text-4xl font-black'} app-header-text tracking-tighter`}>
+                  {greeting}, <span className="app-header-accent">{settings.familyName}</span>
+              </h1>
+              
+              <div className="flex items-center gap-2">
+                  {isSyncing ? (
+                      <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold app-header-text animate-pulse">
+                          <Loader2 size={12} className="animate-spin" />
+                          SYNCING
+                      </div>
+                  ) : syncError ? (
+                      <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-[10px] font-bold">
+                          <AlertCircle size={12} />
+                          {syncError.toUpperCase()}
+                      </div>
+                  ) : lastSyncTime ? (
+                      <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-[10px] font-bold">
+                          <CheckCircle2 size={12} />
+                          {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                  ) : null}
+              </div>
+          </div>
+          <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all">
+              <Settings size={20} />
+          </button>
+        </header>
+
+        <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
+          <div className="h-[240px] md:h-[28%] flex-shrink-0 min-h-[240px] grid grid-cols-1 md:grid-cols-4 gap-4">
+              <TimeWidget />
+              <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} />
+              <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
+              <DadJokeWidget />
+          </div>
+          <div className="flex-1 min-h-0">
+              <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
+          </div>
         </div>
       </div>
 

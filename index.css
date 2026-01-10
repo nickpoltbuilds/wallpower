@@ -66,25 +66,29 @@
 [data-theme='trek'] {
   --bg-app: #000000;
   --font-main: 'Antonio', sans-serif;
-  --header-text: #ff9900;
+  --header-text: #ffcc00;
   --header-accent: #cc99cc;
-  --border-radius: 100px; /* Pill shapes */
+  --border-radius: 0.25rem;
   
-  /* LCARS Palette: #ff9900 (Orange), #cc99cc (Purple), #9999cc (Blue), #ffcc99 (Peach) */
+  --lcars-orange: #ff9900;
+  --lcars-purple: #cc99cc;
+  --lcars-blue: #9999cc;
+  --lcars-peach: #ffcc99;
+  --lcars-red: #cc6666;
 
-  --bg-time: #ff9900; --text-time: #000000; --text-time-sub: #000000;
-  --bg-weather: #cc99cc; --text-weather: #000000; --text-weather-sub: #000000;
-  --bg-lunch: #9999cc; --text-lunch: #000000; --accent-lunch: #000000;
-  --bg-joke: #ffcc99; --text-joke: #000000;
+  --bg-time: var(--lcars-orange); --text-time: #000000; --text-time-sub: #000000;
+  --bg-weather: var(--lcars-purple); --text-weather: #000000; --text-weather-sub: #000000;
+  --bg-lunch: var(--lcars-blue); --text-lunch: #000000; --accent-lunch: #000000;
+  --bg-joke: var(--lcars-peach); --text-joke: #000000;
 
-  --bg-cal-col: #000000;
-  --bg-cal-today: #000000;
-  --ring-cal-today: #ff9900;
-  --text-cal-header: #ff9900;
-  --text-cal-subheader: #cc99cc;
+  --bg-cal-col: #111111;
+  --bg-cal-today: #1a1a1a;
+  --ring-cal-today: var(--lcars-orange);
+  --text-cal-header: var(--lcars-orange);
+  --text-cal-subheader: var(--lcars-purple);
   --text-cal-today: #ffffff;
 
-  /* Events - Flat solid blocks */
+  /* LCARS events are high-contrast blocks */
   --evt-blue-bg: #9999cc; --evt-blue-text: #000000; --evt-blue-border: transparent;
   --evt-green-bg: #99cc99; --evt-green-text: #000000; --evt-green-border: transparent;
   --evt-purple-bg: #cc99cc; --evt-purple-text: #000000; --evt-purple-border: transparent;
@@ -92,61 +96,23 @@
   --evt-red-bg: #cc6666; --evt-red-text: #000000; --evt-red-border: transparent;
 }
 
-[data-theme='forest'] {
-  --bg-app: #1a2f23; /* Dark Green */
-  --font-main: 'Crimson Text', serif;
-  --header-text: #e2e8f0;
-  --header-accent: #86efac;
-  --border-radius: 1rem;
-
-  /* Earth Tones */
-  --bg-time: #3f6212; --text-time: #ecfccb; --text-time-sub: #d9f99d;
-  --bg-weather: #f0fdf4; --text-weather: #14532d; --text-weather-sub: #166534;
-  --bg-lunch: #78350f; --text-lunch: #fef3c7; --accent-lunch: #fde68a;
-  --bg-joke: #fef3c7; --text-joke: #451a03;
-
-  --bg-cal-col: #25382c;
-  --bg-cal-today: #2f4538;
-  --ring-cal-today: #86efac;
-  --text-cal-header: #f0fdf4;
-  --text-cal-subheader: #86efac;
-  --text-cal-today: #ffffff;
-
-  --evt-blue-bg: rgba(6, 182, 212, 0.2); --evt-blue-text: #cffafe; --evt-blue-border: #06b6d4;
-  --evt-green-bg: rgba(34, 197, 94, 0.2); --evt-green-text: #dcfce7; --evt-green-border: #22c55e;
-  --evt-purple-bg: rgba(168, 85, 247, 0.2); --evt-purple-text: #f3e8ff; --evt-purple-border: #a855f7;
-  --evt-orange-bg: rgba(249, 115, 22, 0.2); --evt-orange-text: #ffedd5; --evt-orange-border: #f97316;
-  --evt-red-bg: rgba(239, 68, 68, 0.2); --evt-red-text: #fee2e2; --evt-red-border: #ef4444;
+/* LCARS Specific Frame Styles */
+.lcars-elbow-top {
+  border-top-left-radius: 40px;
+  background-color: var(--lcars-purple);
+  height: 60px;
 }
 
-[data-theme='cyber'] {
-  --bg-app: #050505;
-  --font-main: 'Orbitron', sans-serif;
-  --header-text: #00ff41; /* Matrix Green */
-  --header-accent: #fcee0a; /* Cyber Yellow */
-  --border-radius: 0px; /* Sharp edges */
-  --card-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+.lcars-sidebar {
+  width: 140px;
+  background-color: var(--lcars-orange);
+  border-bottom-left-radius: 40px;
+  margin-right: 15px;
+}
 
-  /* Neon Palette */
-  --bg-time: #000000; --text-time: #00ff41; --text-time-sub: #008f11;
-  --bg-weather: #000000; --text-weather: #00e5ff; --text-weather-sub: #008f11;
-  --bg-lunch: #000000; --text-lunch: #ff00ff; --accent-lunch: #ff00ff;
-  --bg-joke: #000000; --text-joke: #fcee0a;
-
-  /* Calendar */
-  --bg-cal-col: #0a0a0a;
-  --bg-cal-today: #000000;
-  --ring-cal-today: #00ff41;
-  --text-cal-header: #00ff41;
-  --text-cal-subheader: #008f11;
-  --text-cal-today: #fcee0a;
-
-  /* Events - Outlines only */
-  --evt-blue-bg: transparent; --evt-blue-text: #00e5ff; --evt-blue-border: #00e5ff;
-  --evt-green-bg: transparent; --evt-green-text: #00ff41; --evt-green-border: #00ff41;
-  --evt-purple-bg: transparent; --evt-purple-text: #bd00ff; --evt-purple-border: #bd00ff;
-  --evt-orange-bg: transparent; --evt-orange-text: #ff9900; --evt-orange-border: #ff9900;
-  --evt-red-bg: transparent; --evt-red-text: #ff003c; --evt-red-border: #ff003c;
+.lcars-bar-seg {
+  height: 30px;
+  margin-bottom: 5px;
 }
 
 /* --- APP BASE --- */
@@ -159,11 +125,8 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Mobile scrolling override */
 @media (max-width: 768px) {
-  body {
-    overflow-y: auto;
-  }
+  body { overflow-y: auto; }
 }
 
 /* --- SEMANTIC CLASSES --- */
@@ -175,6 +138,10 @@ body {
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
   transition: all 0.3s ease;
+}
+
+[data-theme='trek'] .widget-card {
+    box-shadow: none; /* Authentic LCARS is flat */
 }
 
 .widget-time {
@@ -212,7 +179,7 @@ body {
 /* Event Cards */
 .event-card {
   border-left-width: 4px;
-  background-color: var(--bg-cal-col); /* Default fallback */
+  background-color: var(--bg-cal-col);
 }
 .event-card.blue { background-color: var(--evt-blue-bg); color: var(--evt-blue-text); border-left-color: var(--evt-blue-border); }
 .event-card.green { background-color: var(--evt-green-bg); color: var(--evt-green-text); border-left-color: var(--evt-green-border); }
@@ -220,16 +187,16 @@ body {
 .event-card.orange { background-color: var(--evt-orange-bg); color: var(--evt-orange-text); border-left-color: var(--evt-orange-border); }
 .event-card.red { background-color: var(--evt-red-bg); color: var(--evt-red-text); border-left-color: var(--evt-red-border); }
 
-/* Cyberpunk specific borders */
-[data-theme='cyber'] .widget-card {
-  border: 1px solid var(--text-weather);
-}
-[data-theme='cyber'] .widget-calendar-today {
-  border: 1px solid var(--ring-cal-today);
-  box-shadow: 0 0 15px var(--ring-cal-today);
-}
-
 /* Scrollbars */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(128, 128, 128, 0.2); border-radius: 10px; }
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.02); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s infinite ease-in-out;
+}

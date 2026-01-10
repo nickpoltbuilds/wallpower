@@ -40,7 +40,6 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
     return () => clearInterval(interval);
   }, [location, refreshInterval]);
 
-  // Use currentColor (inherit from parent text color) for icons so they adapt to themes
   const getWeatherIcon = (condition: string, className: string = "w-8 h-8") => {
     const c = condition.toLowerCase();
     const baseClass = `${className} opacity-90`; 
@@ -66,27 +65,25 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
     >
       {weather ? (
         <div className="flex flex-col h-full justify-between px-4 pb-3 pt-1">
-          {/* Top Section: Icon + Temp left, Loc + HL right */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-               {getWeatherIcon(weather.condition, "w-10 h-10 lg:w-12 lg:h-12")}
-               <div className="text-5xl lg:text-6xl font-black tracking-tighter leading-none">
-                  {Math.round(weather.currentTemp)}°
-               </div>
-            </div>
-            
-            <div className="text-right flex flex-col items-end justify-center">
-                <div className="text-[10px] font-bold opacity-60 uppercase tracking-wider mb-1 max-w-[80px] truncate">
-                    {weather.location.split(',')[0]}
-                </div>
-                <div className="text-xs font-bold opacity-90 bg-black/5 rounded-md px-2 py-1 whitespace-nowrap">
-                    H:{Math.round(weather.high)}° L:{Math.round(weather.low)}°
-                </div>
-            </div>
+          {/* Main Temperature Section */}
+          <div className="flex items-center gap-4 pt-1">
+             {getWeatherIcon(weather.condition, "w-12 h-12 lg:w-14 lg:h-14")}
+             <div className="text-6xl lg:text-7xl font-black tracking-tighter leading-none">
+                {Math.round(weather.currentTemp)}°
+             </div>
           </div>
 
-          {/* Flexible Spacer */}
-          <div className="flex-1 min-h-[5px]"></div>
+          {/* Details Section: Location and H/L summary */}
+          <div className="flex items-center justify-between px-0.5 my-1">
+              <div className="text-[11px] font-black opacity-70 uppercase tracking-widest truncate max-w-[130px]">
+                  {weather.location.split(',')[0]}
+              </div>
+              <div className="text-[11px] font-black opacity-100 bg-black/10 dark:bg-white/10 rounded-md px-2 py-1 flex gap-2">
+                  <span>H:{Math.round(weather.high)}°</span>
+                  <span className="opacity-30">/</span>
+                  <span>L:{Math.round(weather.low)}°</span>
+              </div>
+          </div>
 
           {/* Forecast Grid - Compact */}
           <div className="grid grid-cols-3 gap-2">
