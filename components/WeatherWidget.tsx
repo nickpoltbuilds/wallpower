@@ -67,18 +67,18 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
         <div className="flex flex-col h-full justify-between px-4 pb-3 pt-1">
           {/* Main Temperature Section */}
           <div className="flex items-center gap-4 pt-1">
-             {getWeatherIcon(weather.condition, "w-12 h-12 lg:w-14 lg:h-14")}
-             <div className="text-6xl lg:text-7xl font-black tracking-tighter leading-none">
+             {getWeatherIcon(weather.condition, "w-[clamp(40px,8vmin,56px)] h-[clamp(40px,8vmin,56px)]")}
+             <div className="text-fluid-4xl font-black tracking-tighter leading-none">
                 {Math.round(weather.currentTemp)}°
              </div>
           </div>
 
           {/* Details Section: Location and H/L summary */}
           <div className="flex items-center justify-between px-0.5 my-1">
-              <div className="text-[11px] font-black opacity-70 uppercase tracking-widest truncate max-w-[130px]">
+              <div className="text-fluid-xs font-black opacity-70 uppercase tracking-widest truncate max-w-[45%]">
                   {weather.location.split(',')[0]}
               </div>
-              <div className="text-[11px] font-black opacity-100 bg-black/10 dark:bg-white/10 rounded-md px-2 py-1 flex gap-2">
+              <div className="text-fluid-xs font-black opacity-100 bg-black/10 dark:bg-white/10 rounded-md px-2 py-1 flex gap-2">
                   <span>H:{Math.round(weather.high)}°</span>
                   <span className="opacity-30">/</span>
                   <span>L:{Math.round(weather.low)}°</span>
@@ -89,7 +89,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
           <div className="grid grid-cols-3 gap-2">
             {weather.forecast.map((day, i) => (
               <div key={i} className="flex flex-col items-center justify-center bg-white/30 dark:bg-white/10 rounded-lg p-1.5 shadow-sm backdrop-blur-sm">
-                <span className="text-[9px] opacity-70 uppercase font-black mb-0.5">{day.day.slice(0,3)}</span>
+                <span className="text-[clamp(8px,1.5vmin,11px)] opacity-70 uppercase font-black mb-0.5">{day.day.slice(0,3)}</span>
                 {getWeatherIcon(day.icon, "w-5 h-5 mb-0.5")}
                 <div className="text-sm font-black">{Math.round(day.high)}°</div>
               </div>

@@ -102,11 +102,11 @@ const App: React.FC = () => {
   const isTrek = settings.theme === 'trek';
 
   return (
-    <div className={`h-screen w-full p-4 md:p-6 relative flex bg-app ${isTrek ? 'overflow-hidden' : 'flex-col'}`} data-theme={settings.theme || 'dark'}>
+    <div className={`min-h-screen w-full p-3 sm:p-4 md:p-5 lg:p-6 relative flex bg-app ${isTrek ? 'overflow-hidden' : 'flex-col'} short-landscape:overflow-y-auto short-landscape:h-auto`} data-theme={settings.theme || 'dark'}>
       
       {/* LCARS Sidebar for Trek Theme */}
       {isTrek && (
-        <div className="hidden lg:flex flex-col w-[160px] flex-shrink-0">
+        <div className="hidden lg:flex flex-col w-[clamp(120px,12vw,180px)] flex-shrink-0 ipad-landscape:hidden xl:flex">
           <div className="lcars-elbow-top w-full mb-3 flex items-end justify-end px-3 pb-1">
             <span className="text-black font-black text-xs">COM: ACCESS</span>
           </div>
@@ -156,7 +156,7 @@ const App: React.FC = () => {
         </header>
 
         <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
-          <div className="h-[240px] md:h-[28%] flex-shrink-0 min-h-[240px] grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[180px] sm:auto-rows-[160px] md:auto-rows-auto md:h-widget-row ipad-landscape:h-widget-row-short tablet-landscape:h-widget-row-short">
               <TimeWidget />
               <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} />
               <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />

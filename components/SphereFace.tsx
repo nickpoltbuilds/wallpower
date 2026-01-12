@@ -39,7 +39,7 @@ export const SphereFace: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative w-32 h-32 lg:w-40 lg:h-40 flex items-center justify-center">
+    <div className="relative aspect-square w-[clamp(72px,18vmin,160px)] flex items-center justify-center">
       {/* The Sphere Body */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-b from-[#ffcc33] via-[#ff9900] to-[#cc6600] shadow-[0_0_40px_rgba(255,153,0,0.4)] animate-pulse-slow">
          {/* Subtle Surface Texture/Glow */}
