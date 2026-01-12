@@ -157,13 +157,13 @@ const App: React.FC = () => {
         </header>
 
         <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
-          <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 h-[30vh] sm:h-[26vh] tablet-landscape:h-[20vh] ipad-landscape:h-[20vh] lg:h-[22vh]">
+          <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               <TimeWidget weatherCondition={weatherCondition} />
               <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} onWeatherUpdate={setWeatherCondition} />
               <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
               <DadJokeWidget />
           </div>
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 overflow-y-auto">
               <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
           </div>
         </div>
