@@ -4,6 +4,7 @@ import { Utensils, ExternalLink } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { LunchMenu } from '../types';
 import { fetchSchoolLunch } from '../services/gemini';
+import { getFoodEmoji } from '../services/foodEmoji';
 
 interface LunchWidgetProps {
   schoolName: string;
@@ -68,14 +69,19 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
         ) : allEntrees.length > 0 ? (
             <div className="flex flex-col h-full pt-2">
                 <div className="flex flex-col gap-3">
-                    {allEntrees.map((item, i) => (
-                        <div key={i} className="flex gap-3 items-start">
-                            <div className="w-1.5 h-1.5 rounded-full widget-lunch-accent mt-2 flex-shrink-0" />
-                            <span className="text-xl font-bold leading-tight">
-                                {item}
-                            </span>
-                        </div>
-                    ))}
+                    {allEntrees.map((item, i) => {
+                        const emoji = getFoodEmoji(item);
+                        return (
+                            <div key={i} className="flex gap-3 items-start group">
+                                <span className="text-3xl flex-shrink-0 lunch-emoji transition-transform duration-300 group-hover:scale-110">
+                                    {emoji}
+                                </span>
+                                <span className="text-lg font-bold leading-tight pt-1">
+                                    {item}
+                                </span>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         ) : (
