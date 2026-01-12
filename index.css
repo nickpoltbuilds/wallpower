@@ -286,6 +286,188 @@ body {
   animation: pulse-slow 8s infinite ease-in-out;
 }
 
+/* === SPHERE FACE ANIMATIONS === */
+
+/* Organic breathing - subtle life pulse */
+@keyframes sphere-breathe {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+  }
+  30% {
+    transform: scale(1.015, 0.99) translateY(1px);
+  }
+  60% {
+    transform: scale(0.99, 1.01) translateY(-1px);
+  }
+}
+
+.sphere-breathe {
+  animation: sphere-breathe 4s ease-in-out infinite;
+}
+
+/* Gentle floating/hovering motion */
+@keyframes sphere-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-3px) rotate(0.5deg);
+  }
+  50% {
+    transform: translateY(-1px) rotate(0deg);
+  }
+  75% {
+    transform: translateY(-4px) rotate(-0.5deg);
+  }
+}
+
+.sphere-float {
+  animation: sphere-float 6s ease-in-out infinite;
+}
+
+/* Excited wiggle */
+@keyframes sphere-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  10% { transform: rotate(-3deg) scale(1.02); }
+  20% { transform: rotate(3deg) scale(0.98); }
+  30% { transform: rotate(-2deg) scale(1.01); }
+  40% { transform: rotate(2deg) scale(0.99); }
+  50% { transform: rotate(0deg) scale(1); }
+}
+
+.sphere-wiggle {
+  animation: sphere-wiggle 0.6s ease-in-out;
+}
+
+/* Squash and stretch for bouncing */
+@keyframes sphere-bounce-squash {
+  0% { transform: scaleY(1) scaleX(1) translateY(0); }
+  15% { transform: scaleY(0.85) scaleX(1.15) translateY(5px); }
+  30% { transform: scaleY(1.15) scaleX(0.9) translateY(-10px); }
+  45% { transform: scaleY(0.95) scaleX(1.05) translateY(2px); }
+  60% { transform: scaleY(1.05) scaleX(0.97) translateY(-4px); }
+  75% { transform: scaleY(0.98) scaleX(1.02) translateY(1px); }
+  100% { transform: scaleY(1) scaleX(1) translateY(0); }
+}
+
+.sphere-bounce-squash {
+  animation: sphere-bounce-squash 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Sleepy head bob */
+@keyframes sphere-sleepy-bob {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30% { transform: rotate(5deg) translateY(2px); }
+  60% { transform: rotate(-3deg) translateY(1px); }
+}
+
+.sphere-sleepy {
+  animation: sphere-sleepy-bob 3s ease-in-out infinite;
+}
+
+/* Eye sparkle effect */
+@keyframes eye-sparkle {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.3); }
+}
+
+.eye-sparkle {
+  animation: eye-sparkle 2s ease-in-out infinite;
+}
+
+/* Raindrop falling */
+@keyframes raindrop-fall {
+  0% {
+    transform: translateY(-20px) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(120px) translateX(-10px);
+    opacity: 0;
+  }
+}
+
+/* Snowflake drift */
+@keyframes snowflake-drift {
+  0% {
+    transform: translateY(-15px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.9; }
+  100% {
+    transform: translateY(100px) translateX(20px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Sun ray pulse */
+@keyframes sun-ray-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1) rotate(15deg);
+  }
+}
+
+/* Storm lightning flash */
+@keyframes lightning-flash {
+  0%, 100% { opacity: 0; }
+  5% { opacity: 0.8; }
+  10% { opacity: 0; }
+  12% { opacity: 0.6; }
+  15% { opacity: 0; }
+}
+
+/* Eyebrow raise animation */
+@keyframes eyebrow-raise {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Cheek puff */
+@keyframes cheek-puff {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Tongue peek */
+@keyframes tongue-peek {
+  0% { transform: translateY(0) scaleY(0); }
+  20% { transform: translateY(2px) scaleY(1); }
+  80% { transform: translateY(2px) scaleY(1); }
+  100% { transform: translateY(0) scaleY(0); }
+}
+
+/* Blush fade in */
+@keyframes blush-appear {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+
+/* Glow pulse for the sphere body */
+@keyframes glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px var(--sphere-glow, rgba(255,153,0,0.4)));
+  }
+  50% {
+    filter: drop-shadow(0 0 25px var(--sphere-glow, rgba(255,153,0,0.6)));
+  }
+}
+
+.sphere-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
 /* Widget entrance animations */
 @keyframes widget-enter {
   0% {
