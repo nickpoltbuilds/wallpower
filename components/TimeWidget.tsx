@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { GlassCard } from './GlassCard';
 import { SphereFace } from './SphereFace';
 
-export const TimeWidget: React.FC = () => {
+interface TimeWidgetProps {
+  weatherCondition?: string;
+}
+
+export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = 'clear' }) => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
@@ -25,15 +29,15 @@ export const TimeWidget: React.FC = () => {
   return (
     <GlassCard className="h-full widget-time relative overflow-hidden" noContentPadding={true}>
       <div className="h-full flex flex-col items-center justify-between py-3 px-4">
-        {/* Sphere Buddy Section - Scaled slightly down to ensure space */}
+        {/* Sphere Buddy Section */}
         <div className="flex-1 flex items-center justify-center min-h-0">
-            <SphereFace />
+            <SphereFace weatherCondition={weatherCondition} />
         </div>
 
         {/* Clock & Date Section - More integrated and compact */}
         <div className="flex flex-col items-center w-full mt-1">
             <div className="flex flex-col items-center gap-0">
-                <h1 className="text-fluid-4xl font-black tracking-tighter leading-none">
+                <h1 className="text-[clamp(2.5rem,7vmin,4rem)] font-black tracking-tighter leading-none">
                   {formatTime(date)}
                 </h1>
                 

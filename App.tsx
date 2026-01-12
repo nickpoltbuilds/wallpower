@@ -40,6 +40,7 @@ const App: React.FC = () => {
   const [syncError, setSyncError] = useState<string | null>(null);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
   const [greeting, setGreeting] = useState("Good Morning");
+  const [weatherCondition, setWeatherCondition] = useState<string>('clear');
 
   useEffect(() => {
       const updateGreeting = () => {
@@ -157,8 +158,8 @@ const App: React.FC = () => {
 
         <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
           <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[180px] sm:auto-rows-[160px] md:auto-rows-auto md:h-widget-row ipad-landscape:h-widget-row-short tablet-landscape:h-widget-row-short">
-              <TimeWidget />
-              <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} />
+              <TimeWidget weatherCondition={weatherCondition} />
+              <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} onWeatherUpdate={setWeatherCondition} />
               <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
               <DadJokeWidget />
           </div>

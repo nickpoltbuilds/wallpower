@@ -8,9 +8,10 @@ import { fetchWeather } from '../services/gemini';
 interface WeatherWidgetProps {
   location: string;
   refreshInterval: number;
+  onWeatherUpdate?: (condition: string) => void;
 }
 
-export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshInterval }) => {
+export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshInterval, onWeatherUpdate }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -23,6 +24,7 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
         const data = await fetchWeather(location);
         if (data) {
             setWeather(data);
+            onWeatherUpdate?.(data.condition);
         } else {
             setError(true);
         }
@@ -66,16 +68,16 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
       {weather ? (
         <div className="flex flex-col h-full justify-between px-4 pb-3 pt-1">
           {/* Main Temperature Section */}
-          <div className="flex items-center gap-4 pt-1">
-             {getWeatherIcon(weather.condition, "w-[clamp(40px,8vmin,56px)] h-[clamp(40px,8vmin,56px)]")}
-             <div className="text-fluid-4xl font-black tracking-tighter leading-none">
+          <div className="flex items-center gap-3 pt-1">
+             {getWeatherIcon(weather.condition, "w-[clamp(48px,10vmin,72px)] h-[clamp(48px,10vmin,72px)]")}
+             <div className="text-[clamp(3rem,8vmin,5rem)] font-black tracking-tighter leading-none">
                 {Math.round(weather.currentTemp)}°
              </div>
           </div>
 
           {/* Details Section: Location and H/L summary */}
           <div className="flex items-center justify-between px-0.5 my-1">
-              <div className="text-fluid-xs font-black opacity-70 uppercase tracking-widest truncate max-w-[45%]">
+              <div className="text-fluid-xs font-black opacity-70 uppercase tracking-widest">
                   {weather.location.split(',')[0]}
               </div>
               <div className="text-fluid-xs font-black opacity-100 bg-black/10 dark:bg-white/10 rounded-md px-2 py-1 flex gap-2">
