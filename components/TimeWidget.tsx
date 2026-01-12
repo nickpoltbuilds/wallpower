@@ -27,24 +27,22 @@ export const TimeWidget: React.FC = () => {
       <div className="h-full flex flex-col items-center justify-between py-3 px-4">
         {/* Sphere Buddy Section - Scaled slightly down to ensure space */}
         <div className="flex-1 flex items-center justify-center min-h-0">
-            <div className="scale-90 lg:scale-100 origin-center">
-              <SphereFace />
-            </div>
+            <SphereFace />
         </div>
 
         {/* Clock & Date Section - More integrated and compact */}
         <div className="flex flex-col items-center w-full mt-1">
             <div className="flex flex-col items-center gap-0">
-                <h1 className="text-4xl lg:text-5xl font-black tracking-tighter leading-none">
+                <h1 className="text-fluid-4xl font-black tracking-tighter leading-none">
                   {formatTime(date)}
                 </h1>
                 
                 <div className="mt-1 px-3 py-1 rounded-full bg-black/10 dark:bg-white/10 flex items-center gap-2">
-                    <span className="widget-time-sub text-[10px] font-black tracking-wider uppercase">
+                    <span className="widget-time-sub text-fluid-xs font-black tracking-wider uppercase">
                         {weekday}
                     </span>
                     <span className="w-1 h-1 rounded-full bg-current opacity-20" />
-                    <span className="text-[11px] font-black uppercase tracking-tight">
+                    <span className="text-fluid-xs font-black uppercase tracking-tight">
                         {monthDay}
                     </span>
                 </div>

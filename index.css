@@ -96,6 +96,76 @@
   --evt-red-bg: #cc6666; --evt-red-text: #000000; --evt-red-border: transparent;
 }
 
+/* Forest Theme - Cozy, nature-inspired */
+[data-theme='forest'] {
+  --bg-app: #1a2f1a;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --header-text: #c8e6c9;
+  --header-accent: #81c784;
+  --border-radius: 1.5rem;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  /* Widgets */
+  --bg-time: #2e7d32; --text-time: #ffffff; --text-time-sub: #c8e6c9;
+  --bg-weather: #43a047; --text-weather: #ffffff; --text-weather-sub: #e8f5e9;
+  --bg-lunch: #66bb6a; --text-lunch: #1b5e20; --accent-lunch: #2e7d32;
+  --bg-joke: #a5d6a7; --text-joke: #1b5e20;
+
+  /* Calendar */
+  --bg-cal-col: #1b3d1b;
+  --bg-cal-today: #2e5a2e;
+  --ring-cal-today: #81c784;
+  --text-cal-header: #c8e6c9;
+  --text-cal-subheader: #a5d6a7;
+  --text-cal-today: #81c784;
+
+  /* Event Colors */
+  --evt-blue-bg: rgba(46, 125, 50, 0.4); --evt-blue-text: #c8e6c9; --evt-blue-border: #66bb6a;
+  --evt-green-bg: rgba(76, 175, 80, 0.4); --evt-green-text: #e8f5e9; --evt-green-border: #a5d6a7;
+  --evt-purple-bg: rgba(123, 31, 162, 0.4); --evt-purple-text: #e1bee7; --evt-purple-border: #ab47bc;
+  --evt-orange-bg: rgba(230, 126, 34, 0.4); --evt-orange-text: #ffe0b2; --evt-orange-border: #ffa726;
+  --evt-red-bg: rgba(198, 40, 40, 0.4); --evt-red-text: #ffcdd2; --evt-red-border: #ef5350;
+}
+
+/* Cyber Theme - Neon cyberpunk aesthetic */
+[data-theme='cyber'] {
+  --bg-app: #0a0a0f;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --header-text: #00ffff;
+  --header-accent: #ff00ff;
+  --border-radius: 0.5rem;
+  --card-shadow: 0 0 20px rgba(0, 255, 255, 0.15), inset 0 0 20px rgba(0, 255, 255, 0.03);
+
+  /* Widgets */
+  --bg-time: #1a1a2e; --text-time: #00ffff; --text-time-sub: #7fdbff;
+  --bg-weather: #16213e; --text-weather: #ff00ff; --text-weather-sub: #ff79c6;
+  --bg-lunch: #0f3460; --text-lunch: #39ff14; --accent-lunch: #00ff00;
+  --bg-joke: #2d132c; --text-joke: #ffff00;
+
+  /* Calendar */
+  --bg-cal-col: #0f0f1a;
+  --bg-cal-today: #1a1a30;
+  --ring-cal-today: #00ffff;
+  --text-cal-header: #00ffff;
+  --text-cal-subheader: #7fdbff;
+  --text-cal-today: #ff00ff;
+
+  /* Event Colors - Neon style */
+  --evt-blue-bg: rgba(0, 255, 255, 0.15); --evt-blue-text: #00ffff; --evt-blue-border: #00ffff;
+  --evt-green-bg: rgba(57, 255, 20, 0.15); --evt-green-text: #39ff14; --evt-green-border: #39ff14;
+  --evt-purple-bg: rgba(255, 0, 255, 0.15); --evt-purple-text: #ff00ff; --evt-purple-border: #ff00ff;
+  --evt-orange-bg: rgba(255, 165, 0, 0.15); --evt-orange-text: #ffa500; --evt-orange-border: #ffa500;
+  --evt-red-bg: rgba(255, 0, 0, 0.15); --evt-red-text: #ff4136; --evt-red-border: #ff4136;
+}
+
+/* Cyber theme specific effects */
+[data-theme='cyber'] .widget-card {
+  border: 1px solid rgba(0, 255, 255, 0.2);
+}
+[data-theme='cyber'] .widget-card:hover {
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.25), inset 0 0 20px rgba(0, 255, 255, 0.05);
+}
+
 /* LCARS Specific Frame Styles */
 .lcars-elbow-top {
   border-top-left-radius: 40px;
@@ -125,8 +195,13 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@media (max-width: 768px) {
-  body { overflow-y: auto; }
+/* Allow scroll on small screens OR short landscape screens */
+@media (max-width: 767px),
+       (max-height: 600px) and (orientation: landscape) {
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
 /* --- SEMANTIC CLASSES --- */
@@ -199,4 +274,69 @@ body {
 
 .animate-pulse-slow {
   animation: pulse-slow 8s infinite ease-in-out;
+}
+
+/* --- MISSING UTILITY CLASSES --- */
+
+/* Background app class for Tailwind usage */
+.bg-app {
+  background-color: var(--bg-app);
+}
+
+/* Custom scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.5);
+}
+/* Firefox scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.3) transparent;
+}
+
+/* Trek theme-specific visibility and styling classes */
+.trek-icon-hide,
+.trek-action-hide {
+  /* Default: visible */
+}
+[data-theme='trek'] .trek-icon-hide,
+[data-theme='trek'] .trek-action-hide {
+  display: none;
+}
+[data-theme='trek'] .trek-title-style {
+  font-family: 'Antonio', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lcars-orange);
+}
+
+/* --- RESPONSIVE LAYOUT UTILITIES --- */
+
+/* Widget row height with orientation awareness */
+.widget-row-height {
+  height: clamp(160px, 24vh, 280px);
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .widget-row-height {
+    height: clamp(140px, 20vh, 200px);
+  }
+}
+
+/* Hide elements on short landscape screens */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hide-short-landscape {
+    display: none !important;
+  }
 }

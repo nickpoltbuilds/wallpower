@@ -121,7 +121,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
             </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 flex-1 min-h-0">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 tablet-landscape:grid-cols-4 gap-2 sm:gap-3 flex-1 min-h-0">
             {days.map((day, i) => {
                 const dayEvents = getEventsForDay(day);
                 const isToday = i === 0;
@@ -136,7 +136,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                             <h3 className={`text-sm font-black uppercase ${isToday ? 'widget-calendar-text-today' : 'widget-calendar-text-header'}`}>
                                 {i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : day.toLocaleDateString('en-US', { weekday: 'long' })}
                             </h3>
-                            <p className="text-[10px] widget-calendar-text-sub font-bold uppercase tracking-wider mt-0.5">
+                            <p className="text-fluid-xs widget-calendar-text-sub font-bold uppercase tracking-wider mt-0.5">
                                 {day.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                             </p>
                         </div>
