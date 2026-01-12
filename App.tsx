@@ -104,6 +104,9 @@ const App: React.FC = () => {
 
   return (
     <div className={`h-screen w-full p-3 sm:p-4 md:p-5 lg:p-6 relative flex bg-app ${isTrek ? 'overflow-hidden' : 'flex-col'}`} data-theme={settings.theme || 'dark'}>
+      <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all absolute top-4 right-4 z-50">
+          <Settings size={20} />
+      </button>
       
       {/* LCARS Sidebar for Trek Theme */}
       {isTrek && (
@@ -126,35 +129,6 @@ const App: React.FC = () => {
       )}
 
       <div className={`flex-1 flex flex-col ${isTrek ? 'mt-2' : ''}`}>
-        <header className="flex justify-between items-end mb-4 flex-shrink-0">
-          <div className="flex items-center gap-4">
-              <h1 className={`${isTrek ? 'text-5xl font-bold uppercase italic' : 'text-4xl font-black'} app-header-text tracking-tighter`}>
-                  {greeting}, <span className="app-header-accent">{settings.familyName}</span>
-              </h1>
-              
-              <div className="flex items-center gap-2">
-                  {isSyncing ? (
-                      <div className="flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold app-header-text animate-pulse">
-                          <Loader2 size={12} className="animate-spin" />
-                          SYNCING
-                      </div>
-                  ) : syncError ? (
-                      <div className="flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-[10px] font-bold">
-                          <AlertCircle size={12} />
-                          {syncError.toUpperCase()}
-                      </div>
-                  ) : lastSyncTime ? (
-                      <div className="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-[10px] font-bold">
-                          <CheckCircle2 size={12} />
-                          {lastSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                  ) : null}
-              </div>
-          </div>
-          <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all">
-              <Settings size={20} />
-          </button>
-        </header>
 
         <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
           <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-h-[50%] tablet-landscape:max-h-[40%] ipad-landscape:max-h-[40%]">

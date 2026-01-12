@@ -81,24 +81,6 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
 
   return (
     <div className="h-full flex flex-col">
-        <div className="flex justify-between items-center mb-3 px-1">
-            <div className="flex items-center gap-2">
-                <div className="p-1.5 bg-white/10 rounded-lg">
-                    <Calendar size={16} className="app-header-text" />
-                </div>
-                <h2 className="text-sm font-black app-header-text uppercase tracking-widest">
-                    {isGoogleLinked ? 'Family Schedule' : 'Family Calendar'}
-                </h2>
-            </div>
-            {!isGoogleLinked && (
-                <button 
-                    onClick={() => setShowInput(!showInput)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 app-header-text hover:bg-white/20 transition-colors text-xs font-bold"
-                >
-                    <Plus size={14} /> Add Event
-                </button>
-            )}
-        </div>
 
         {showInput && !isGoogleLinked && (
             <div className="mb-4 mx-1 p-3 bg-neutral-800 rounded-xl border border-neutral-700">
