@@ -6,61 +6,78 @@
 /* --- THEME DEFINITIONS --- */
 
 :root {
-  /* Default: Modern Dark */
-  --bg-app: #000000;
+  /* Default: Modern Dark - Refined with depth */
+  --bg-app: #0d1117;
   --font-main: 'Plus Jakarta Sans', sans-serif;
-  --header-text: #ffffff;
-  --header-accent: #818cf8; /* indigo-400 */
-  --border-radius: 2rem;
-  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --header-text: #f0f6fc;
+  --header-accent: #a371f7;
+  --border-radius: 1.25rem;
+  --card-shadow: 0 8px 32px rgba(139, 92, 246, 0.12), 0 4px 16px rgba(0, 0, 0, 0.2);
 
-  /* Widgets */
-  --bg-time: #4f46e5; --text-time: #ffffff; --text-time-sub: #c7d2fe;
-  --bg-weather: #e0f2fe; --text-weather: #1e293b; --text-weather-sub: #64748b;
-  --bg-lunch: #d1fae5; --text-lunch: #064e3b; --accent-lunch: #10b981;
-  --bg-joke: #fde047; --text-joke: #422006;
-  
-  /* Calendar */
-  --bg-cal-col: #171717; /* neutral-900 */
-  --bg-cal-today: #262626; /* neutral-800 */
-  --ring-cal-today: #6366f1; /* indigo-500 */
-  --text-cal-header: #ffffff;
-  --text-cal-subheader: #a3a3a3;
-  --text-cal-today: #818cf8;
+  /* Widgets - Harmonized gradients */
+  --bg-time: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --text-time: #ffffff;
+  --text-time-sub: #e0e7ff;
 
-  /* Event Colors (Dark Mode Defaults) */
-  --evt-blue-bg: rgba(30, 58, 138, 0.4); --evt-blue-text: #dbeafe; --evt-blue-border: #3b82f6;
-  --evt-green-bg: rgba(20, 83, 45, 0.4); --evt-green-text: #dcfce7; --evt-green-border: #22c55e;
-  --evt-purple-bg: rgba(88, 28, 135, 0.4); --evt-purple-text: #f3e8ff; --evt-purple-border: #a855f7;
-  --evt-orange-bg: rgba(124, 45, 18, 0.4); --evt-orange-text: #ffedd5; --evt-orange-border: #f97316;
-  --evt-red-bg: rgba(127, 29, 29, 0.4); --evt-red-text: #fee2e2; --evt-red-border: #ef4444;
+  --bg-weather: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --text-weather: #ffffff;
+  --text-weather-sub: #e0f2fe;
+
+  --bg-lunch: linear-gradient(135deg, #10b981 0%, #14b8a6 100%);
+  --text-lunch: #ffffff;
+  --accent-lunch: #6ee7b7;
+
+  --bg-joke: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --text-joke: #ffffff;
+
+  /* Calendar - Elevated with subtle tint */
+  --bg-cal-col: #161b22;
+  --bg-cal-today: #1f2937;
+  --ring-cal-today: #a371f7;
+  --text-cal-header: #f0f6fc;
+  --text-cal-subheader: #8b949e;
+  --text-cal-today: #a371f7;
+
+  /* Event Colors - Modern with proper transparency */
+  --evt-blue-bg: rgba(59, 130, 246, 0.15); --evt-blue-text: #93c5fd; --evt-blue-border: #3b82f6;
+  --evt-green-bg: rgba(16, 185, 129, 0.15); --evt-green-text: #6ee7b7; --evt-green-border: #10b981;
+  --evt-purple-bg: rgba(168, 85, 247, 0.15); --evt-purple-text: #c084fc; --evt-purple-border: #a855f7;
+  --evt-orange-bg: rgba(249, 115, 22, 0.15); --evt-orange-text: #fdba74; --evt-orange-border: #f97316;
+  --evt-red-bg: rgba(239, 68, 68, 0.15); --evt-red-text: #fca5a5; --evt-red-border: #ef4444;
 }
 
 [data-theme='light'] {
-  --bg-app: #f1f5f9; /* slate-100 */
-  --header-text: #0f172a;
-  --header-accent: #4f46e5;
-  
-  /* Widgets (Pastels) */
-  --bg-time: #ffffff; --text-time: #1e293b; --text-time-sub: #64748b;
-  --bg-weather: #ffffff; --text-weather: #1e293b; --text-weather-sub: #64748b;
-  --bg-lunch: #ffffff; --text-lunch: #064e3b; --accent-lunch: #10b981;
-  --bg-joke: #ffffff; --text-joke: #422006;
+  --bg-app: #fafaf9;
+  --header-text: #1c1917;
+  --header-accent: #7c3aed;
+  --border-radius: 1.5rem;
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
 
-  /* Calendar */
+  /* Widgets - Distinct colored backgrounds */
+  --bg-time: #f5f3ff; --text-time: #5b21b6; --text-time-sub: #7c3aed;
+  --bg-weather: #eff6ff; --text-weather: #1e40af; --text-weather-sub: #2563eb;
+  --bg-lunch: #ecfdf5; --text-lunch: #065f46; --accent-lunch: #10b981;
+  --bg-joke: #fffbeb; --text-joke: #78350f;
+
+  /* Calendar - Subtle elevation */
   --bg-cal-col: #ffffff;
-  --bg-cal-today: #eff6ff; /* blue-50 */
-  --ring-cal-today: #bfdbfe;
-  --text-cal-header: #1e293b;
-  --text-cal-subheader: #64748b;
-  --text-cal-today: #2563eb;
+  --bg-cal-today: #f5f3ff;
+  --ring-cal-today: #7c3aed;
+  --text-cal-header: #1c1917;
+  --text-cal-subheader: #78716c;
+  --text-cal-today: #5b21b6;
 
-  /* Event Colors (Light Mode) */
-  --evt-blue-bg: #eff6ff; --evt-blue-text: #1e40af; --evt-blue-border: #3b82f6;
-  --evt-green-bg: #f0fdf4; --evt-green-text: #166534; --evt-green-border: #22c55e;
-  --evt-purple-bg: #faf5ff; --evt-purple-text: #6b21a8; --evt-purple-border: #a855f7;
-  --evt-orange-bg: #fff7ed; --evt-orange-text: #9a3412; --evt-orange-border: #f97316;
-  --evt-red-bg: #fef2f2; --evt-red-text: #991b1b; --evt-red-border: #ef4444;
+  /* Event Colors - Light pastels */
+  --evt-blue-bg: #dbeafe; --evt-blue-text: #1e40af; --evt-blue-border: #3b82f6;
+  --evt-green-bg: #d1fae5; --evt-green-text: #166534; --evt-green-border: #22c55e;
+  --evt-purple-bg: #f3e8ff; --evt-purple-text: #6b21a8; --evt-purple-border: #a855f7;
+  --evt-orange-bg: #ffedd5; --evt-orange-text: #9a3412; --evt-orange-border: #f97316;
+  --evt-red-bg: #fee2e2; --evt-red-text: #991b1b; --evt-red-border: #ef4444;
+}
+
+/* Light theme hover effect */
+[data-theme='light'] .widget-card:hover {
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 [data-theme='trek'] {
@@ -69,17 +86,19 @@
   --header-text: #ffcc00;
   --header-accent: #cc99cc;
   --border-radius: 0.25rem;
-  
-  --lcars-orange: #ff9900;
+  --card-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  --lcars-orange: #ff9966;
   --lcars-purple: #cc99cc;
-  --lcars-blue: #9999cc;
+  --lcars-blue: #9999ff;
   --lcars-peach: #ffcc99;
   --lcars-red: #cc6666;
+  --lcars-tan: #cc9966;
 
-  --bg-time: var(--lcars-orange); --text-time: #000000; --text-time-sub: #000000;
-  --bg-weather: var(--lcars-purple); --text-weather: #000000; --text-weather-sub: #000000;
-  --bg-lunch: var(--lcars-blue); --text-lunch: #000000; --accent-lunch: #000000;
-  --bg-joke: var(--lcars-peach); --text-joke: #000000;
+  --bg-time: var(--lcars-orange); --text-time: #1a1a1a; --text-time-sub: #2a2a2a;
+  --bg-weather: var(--lcars-purple); --text-weather: #1a1a1a; --text-weather-sub: #2a2a2a;
+  --bg-lunch: var(--lcars-blue); --text-lunch: #1a1a1a; --accent-lunch: #2a2a2a;
+  --bg-joke: var(--lcars-peach); --text-joke: #1a1a1a;
 
   --bg-cal-col: #111111;
   --bg-cal-today: #1a1a1a;
@@ -88,61 +107,66 @@
   --text-cal-subheader: var(--lcars-purple);
   --text-cal-today: #ffffff;
 
-  /* LCARS events are high-contrast blocks */
-  --evt-blue-bg: #9999cc; --evt-blue-text: #000000; --evt-blue-border: transparent;
-  --evt-green-bg: #99cc99; --evt-green-text: #000000; --evt-green-border: transparent;
-  --evt-purple-bg: #cc99cc; --evt-purple-text: #000000; --evt-purple-border: transparent;
-  --evt-orange-bg: #ff9900; --evt-orange-text: #000000; --evt-orange-border: transparent;
-  --evt-red-bg: #cc6666; --evt-red-text: #000000; --evt-red-border: transparent;
+  /* LCARS events - High-contrast blocks */
+  --evt-blue-bg: #9999ff; --evt-blue-text: #1a1a1a; --evt-blue-border: transparent;
+  --evt-green-bg: #99cc99; --evt-green-text: #1a1a1a; --evt-green-border: transparent;
+  --evt-purple-bg: #cc99cc; --evt-purple-text: #1a1a1a; --evt-purple-border: transparent;
+  --evt-orange-bg: #ff9966; --evt-orange-text: #1a1a1a; --evt-orange-border: transparent;
+  --evt-red-bg: #cc6666; --evt-red-text: #1a1a1a; --evt-red-border: transparent;
 }
 
-/* Forest Theme - Cozy, nature-inspired */
+/* Forest Theme - Cozy nature with warm accents */
 [data-theme='forest'] {
-  --bg-app: #1a2f1a;
+  --bg-app: #1f2d1f;
   --font-main: 'Plus Jakarta Sans', sans-serif;
-  --header-text: #c8e6c9;
-  --header-accent: #81c784;
-  --border-radius: 1.5rem;
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --header-text: #e8f5e9;
+  --header-accent: #ffb74d;
+  --border-radius: 1.75rem;
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(255, 183, 77, 0.08);
 
-  /* Widgets */
-  --bg-time: #2e7d32; --text-time: #ffffff; --text-time-sub: #c8e6c9;
-  --bg-weather: #43a047; --text-weather: #ffffff; --text-weather-sub: #e8f5e9;
-  --bg-lunch: #66bb6a; --text-lunch: #1b5e20; --accent-lunch: #2e7d32;
-  --bg-joke: #a5d6a7; --text-joke: #1b5e20;
+  /* Widgets - Nature palette with variety */
+  --bg-time: #5d4037; --text-time: #ffccbc; --text-time-sub: #bcaaa4;
+  --bg-weather: #1e88e5; --text-weather: #e1f5fe; --text-weather-sub: #b3e5fc;
+  --bg-lunch: #558b2f; --text-lunch: #ffffff; --accent-lunch: #9ccc65;
+  --bg-joke: #ffb74d; --text-joke: #3e2723;
 
-  /* Calendar */
-  --bg-cal-col: #1b3d1b;
-  --bg-cal-today: #2e5a2e;
-  --ring-cal-today: #81c784;
-  --text-cal-header: #c8e6c9;
+  /* Calendar - Warm wood tones */
+  --bg-cal-col: #2a3a2a;
+  --bg-cal-today: #3e5a3e;
+  --ring-cal-today: #ffb74d;
+  --text-cal-header: #e8f5e9;
   --text-cal-subheader: #a5d6a7;
-  --text-cal-today: #81c784;
+  --text-cal-today: #ffb74d;
 
-  /* Event Colors */
-  --evt-blue-bg: rgba(46, 125, 50, 0.4); --evt-blue-text: #c8e6c9; --evt-blue-border: #66bb6a;
-  --evt-green-bg: rgba(76, 175, 80, 0.4); --evt-green-text: #e8f5e9; --evt-green-border: #a5d6a7;
-  --evt-purple-bg: rgba(123, 31, 162, 0.4); --evt-purple-text: #e1bee7; --evt-purple-border: #ab47bc;
-  --evt-orange-bg: rgba(230, 126, 34, 0.4); --evt-orange-text: #ffe0b2; --evt-orange-border: #ffa726;
-  --evt-red-bg: rgba(198, 40, 40, 0.4); --evt-red-text: #ffcdd2; --evt-red-border: #ef5350;
+  /* Event Colors - Natural palette */
+  --evt-blue-bg: rgba(30, 136, 229, 0.3); --evt-blue-text: #e1f5fe; --evt-blue-border: #42a5f5;
+  --evt-green-bg: rgba(85, 139, 47, 0.3); --evt-green-text: #c5e1a5; --evt-green-border: #9ccc65;
+  --evt-purple-bg: rgba(142, 36, 170, 0.3); --evt-purple-text: #e1bee7; --evt-purple-border: #ab47bc;
+  --evt-orange-bg: rgba(255, 183, 77, 0.3); --evt-orange-text: #ffe0b2; --evt-orange-border: #ffa726;
+  --evt-red-bg: rgba(198, 40, 40, 0.3); --evt-red-text: #ffcdd2; --evt-red-border: #ef5350;
 }
 
-/* Cyber Theme - Neon cyberpunk aesthetic */
+/* Forest theme texture overlay */
+[data-theme='forest'] .widget-card {
+  background-image: radial-gradient(circle at 20% 50%, rgba(255, 183, 77, 0.05) 0%, transparent 50%);
+}
+
+/* Cyber Theme - Enhanced neon cyberpunk */
 [data-theme='cyber'] {
-  --bg-app: #0a0a0f;
+  --bg-app: #06060c;
   --font-main: 'Plus Jakarta Sans', sans-serif;
   --header-text: #00ffff;
   --header-accent: #ff00ff;
   --border-radius: 0.5rem;
-  --card-shadow: 0 0 20px rgba(0, 255, 255, 0.15), inset 0 0 20px rgba(0, 255, 255, 0.03);
+  --card-shadow: 0 0 40px rgba(0, 255, 255, 0.2), 0 0 20px rgba(255, 0, 255, 0.1), inset 0 0 30px rgba(0, 255, 255, 0.05);
 
-  /* Widgets */
-  --bg-time: #1a1a2e; --text-time: #00ffff; --text-time-sub: #7fdbff;
-  --bg-weather: #16213e; --text-weather: #ff00ff; --text-weather-sub: #ff79c6;
-  --bg-lunch: #0f3460; --text-lunch: #39ff14; --accent-lunch: #00ff00;
-  --bg-joke: #2d132c; --text-joke: #ffff00;
+  /* Widgets - High contrast neon */
+  --bg-time: #0a0a0f; --text-time: #00ffff; --text-time-sub: #7fdbff;
+  --bg-weather: #0a0a0f; --text-weather: #ff00ff; --text-weather-sub: #ff79c6;
+  --bg-lunch: #0a0a0f; --text-lunch: #39ff14; --accent-lunch: #7fff00;
+  --bg-joke: #0a0a0f; --text-joke: #ffff00;
 
-  /* Calendar */
+  /* Calendar - Dark with neon highlights */
   --bg-cal-col: #0f0f1a;
   --bg-cal-today: #1a1a30;
   --ring-cal-today: #00ffff;
@@ -150,7 +174,7 @@
   --text-cal-subheader: #7fdbff;
   --text-cal-today: #ff00ff;
 
-  /* Event Colors - Neon style */
+  /* Event Colors - Pure neon */
   --evt-blue-bg: rgba(0, 255, 255, 0.15); --evt-blue-text: #00ffff; --evt-blue-border: #00ffff;
   --evt-green-bg: rgba(57, 255, 20, 0.15); --evt-green-text: #39ff14; --evt-green-border: #39ff14;
   --evt-purple-bg: rgba(255, 0, 255, 0.15); --evt-purple-text: #ff00ff; --evt-purple-border: #ff00ff;
@@ -160,10 +184,166 @@
 
 /* Cyber theme specific effects */
 [data-theme='cyber'] .widget-card {
-  border: 1px solid rgba(0, 255, 255, 0.2);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  animation: cyber-pulse 4s ease-in-out infinite;
 }
+
 [data-theme='cyber'] .widget-card:hover {
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.25), inset 0 0 20px rgba(0, 255, 255, 0.05);
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), 0 0 25px rgba(255, 0, 255, 0.2), inset 0 0 30px rgba(0, 255, 255, 0.08);
+}
+
+@keyframes cyber-pulse {
+  0%, 100% {
+    border-color: rgba(0, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+  }
+  50% {
+    border-color: rgba(255, 0, 255, 0.4);
+    box-shadow: 0 0 40px rgba(255, 0, 255, 0.25);
+  }
+}
+
+/* Nordic Theme - Minimalist Scandinavian */
+[data-theme='nordic'] {
+  --bg-app: #eceff4;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --header-text: #2e3440;
+  --header-accent: #5e81ac;
+  --border-radius: 0.75rem;
+  --card-shadow: 0 2px 8px rgba(46, 52, 64, 0.08);
+
+  /* Widgets - Subtle monochrome */
+  --bg-time: #d8dee9; --text-time: #2e3440; --text-time-sub: #4c566a;
+  --bg-weather: #e5e9f0; --text-weather: #2e3440; --text-weather-sub: #4c566a;
+  --bg-lunch: #eceff4; --text-lunch: #2e3440; --accent-lunch: #a3be8c;
+  --bg-joke: #d8dee9; --text-joke: #2e3440;
+
+  /* Calendar - Minimal */
+  --bg-cal-col: #ffffff;
+  --bg-cal-today: #d8dee9;
+  --ring-cal-today: #5e81ac;
+  --text-cal-header: #2e3440;
+  --text-cal-subheader: #4c566a;
+  --text-cal-today: #5e81ac;
+
+  /* Event Colors - Soft pastels */
+  --evt-blue-bg: #d8dee9; --evt-blue-text: #5e81ac; --evt-blue-border: #81a1c1;
+  --evt-green-bg: #d8dee9; --evt-green-text: #a3be8c; --evt-green-border: #a3be8c;
+  --evt-purple-bg: #d8dee9; --evt-purple-text: #b48ead; --evt-purple-border: #b48ead;
+  --evt-orange-bg: #d8dee9; --evt-orange-text: #d08770; --evt-orange-border: #d08770;
+  --evt-red-bg: #d8dee9; --evt-red-text: #bf616a; --evt-red-border: #bf616a;
+}
+
+/* Nordic theme minimal styling */
+[data-theme='nordic'] .widget-card {
+  border: 1px solid #d8dee9;
+}
+
+[data-theme='nordic'] .widget-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(46, 52, 64, 0.12);
+}
+
+/* Sunset Theme - Warm gradient paradise */
+[data-theme='sunset'] {
+  --bg-app: linear-gradient(180deg, #fff5e6 0%, #ffe4e1 50%, #ffd4e5 100%);
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --header-text: #8b3a3a;
+  --header-accent: #ff6b6b;
+  --border-radius: 2rem;
+  --card-shadow: 0 8px 32px rgba(255, 107, 107, 0.15), 0 4px 16px rgba(0, 0, 0, 0.05);
+
+  /* Widgets - Warm gradients */
+  --bg-time: linear-gradient(135deg, #ff6b6b 0%, #ffa07a 100%);
+  --text-time: #ffffff;
+  --text-time-sub: #ffe4e1;
+
+  --bg-weather: linear-gradient(135deg, #ffa07a 0%, #ffb347 100%);
+  --text-weather: #ffffff;
+  --text-weather-sub: #fff5e6;
+
+  --bg-lunch: linear-gradient(135deg, #ffb347 0%, #ffd700 100%);
+  --text-lunch: #8b4513;
+  --accent-lunch: #ff8c00;
+
+  --bg-joke: linear-gradient(135deg, #ffd700 0%, #ffec8b 100%);
+  --text-joke: #8b6914;
+
+  /* Calendar - Peach tones */
+  --bg-cal-col: #fff5ee;
+  --bg-cal-today: #ffe4e1;
+  --ring-cal-today: #ff6b6b;
+  --text-cal-header: #8b3a3a;
+  --text-cal-subheader: #cd5c5c;
+  --text-cal-today: #ff6b6b;
+
+  /* Event Colors - Warm palette */
+  --evt-blue-bg: #e6f3ff; --evt-blue-text: #4682b4; --evt-blue-border: #4682b4;
+  --evt-green-bg: #e8f5e9; --evt-green-text: #689f38; --evt-green-border: #689f38;
+  --evt-purple-bg: #f3e5f5; --evt-purple-text: #8e24aa; --evt-purple-border: #8e24aa;
+  --evt-orange-bg: #fff3e0; --evt-orange-text: #f57c00; --evt-orange-border: #f57c00;
+  --evt-red-bg: #ffebee; --evt-red-text: #c62828; --evt-red-border: #c62828;
+}
+
+/* Sunset theme warm glow */
+[data-theme='sunset'] .widget-card {
+  box-shadow: 0 8px 32px rgba(255, 107, 107, 0.15), 0 4px 16px rgba(255, 160, 122, 0.1);
+}
+
+[data-theme='sunset'] .widget-card:hover {
+  box-shadow: 0 12px 48px rgba(255, 107, 107, 0.2), 0 6px 24px rgba(255, 160, 122, 0.15);
+}
+
+/* Midnight Theme - Premium dark with navy and gold */
+[data-theme='midnight'] {
+  --bg-app: linear-gradient(180deg, #0a1929 0%, #001e3c 100%);
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --header-text: #e3f2fd;
+  --header-accent: #ffd700;
+  --border-radius: 1rem;
+  --card-shadow: 0 8px 32px rgba(0, 30, 60, 0.4), 0 4px 16px rgba(255, 215, 0, 0.05);
+
+  /* Widgets - Deep blue with gold */
+  --bg-time: linear-gradient(135deg, #1e3a5f 0%, #2c5aa0 100%);
+  --text-time: #e3f2fd;
+  --text-time-sub: #90caf9;
+
+  --bg-weather: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+  --text-weather: #e3f2fd;
+  --text-weather-sub: #bbdefb;
+
+  --bg-lunch: linear-gradient(135deg, #004d40 0%, #00695c 100%);
+  --text-lunch: #e0f2f1;
+  --accent-lunch: #26a69a;
+
+  --bg-joke: linear-gradient(135deg, #c2941c 0%, #ffd700 100%);
+  --text-joke: #0a1929;
+
+  /* Calendar - Navy with gold highlights */
+  --bg-cal-col: #0d1b2a;
+  --bg-cal-today: #1b2838;
+  --ring-cal-today: #ffd700;
+  --text-cal-header: #e3f2fd;
+  --text-cal-subheader: #90caf9;
+  --text-cal-today: #ffd700;
+
+  /* Event Colors - Rich darks */
+  --evt-blue-bg: rgba(30, 58, 95, 0.5); --evt-blue-text: #90caf9; --evt-blue-border: #42a5f5;
+  --evt-green-bg: rgba(0, 77, 64, 0.5); --evt-green-text: #80cbc4; --evt-green-border: #26a69a;
+  --evt-purple-bg: rgba(74, 20, 140, 0.5); --evt-purple-text: #ce93d8; --evt-purple-border: #ab47bc;
+  --evt-orange-bg: rgba(194, 148, 28, 0.5); --evt-orange-text: #ffe082; --evt-orange-border: #ffd700;
+  --evt-red-bg: rgba(198, 40, 40, 0.5); --evt-red-text: #ef9a9a; --evt-red-border: #ef5350;
+}
+
+/* Midnight theme premium feel */
+[data-theme='midnight'] .widget-card {
+  border: 1px solid rgba(255, 215, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 30, 60, 0.4), 0 1px 2px rgba(255, 215, 0, 0.1);
+}
+
+[data-theme='midnight'] .widget-card:hover {
+  border-color: rgba(255, 215, 0, 0.2);
+  box-shadow: 0 12px 48px rgba(0, 30, 60, 0.5), 0 2px 4px rgba(255, 215, 0, 0.15);
 }
 
 /* LCARS Specific Frame Styles */
@@ -230,25 +410,25 @@ body {
 }
 
 .widget-time {
-  background-color: var(--bg-time);
+  background: var(--bg-time);
   color: var(--text-time);
 }
 .widget-time-sub { color: var(--text-time-sub); }
 
 .widget-weather {
-  background-color: var(--bg-weather);
+  background: var(--bg-weather);
   color: var(--text-weather);
 }
 .widget-weather-sub { color: var(--text-weather-sub); }
 
 .widget-lunch {
-  background-color: var(--bg-lunch);
+  background: var(--bg-lunch);
   color: var(--text-lunch);
 }
-.widget-lunch-accent { background-color: var(--accent-lunch); }
+.widget-lunch-accent { background: var(--accent-lunch); }
 
 .widget-joke {
-  background-color: var(--bg-joke);
+  background: var(--bg-joke);
   color: var(--text-joke);
 }
 

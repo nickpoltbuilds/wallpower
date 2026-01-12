@@ -65,6 +65,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
                         <option value="trek">Star Trek (LCARS)</option>
                         <option value="forest">Cozy Forest</option>
                         <option value="cyber">Cyberpunk</option>
+                        <option value="nordic">Nordic Minimal</option>
+                        <option value="sunset">Sunset Warmth</option>
+                        <option value="midnight">Midnight Premium</option>
                     </select>
                 </div>
             </div>
