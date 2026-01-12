@@ -95,7 +95,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                     <button 
                         onClick={handleAddEvent}
                         disabled={isProcessing}
-                        className="px-3 py-1.5 rounded-lg bg-blue-600 text-xs font-bold text-white hover:bg-blue-500 transition-colors disabled:opacity-50"
+                        className="px-3 py-1.5 rounded-lg bg-blue-600 text-xs font-bold text-white transition-colors disabled:opacity-50"
                     >
                         {isProcessing ? 'Thinking...' : 'Add'}
                     </button>
@@ -116,11 +116,8 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                     >
                         <div className="p-3 border-b border-current border-opacity-10">
                             <h3 className={`text-sm font-black uppercase ${isToday ? 'widget-calendar-text-today' : 'widget-calendar-text-header'}`}>
-                                {i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : day.toLocaleDateString('en-US', { weekday: 'long' })}
+                                {i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : day.toLocaleDateString('en-US', { weekday: 'long' })}, {day.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                             </h3>
-                            <p className="text-fluid-xs widget-calendar-text-sub font-bold uppercase tracking-wider mt-0.5">
-                                {day.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
-                            </p>
                         </div>
 
                         <div className="flex-1 p-0 overflow-y-auto custom-scrollbar">
@@ -144,7 +141,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                                         return (
                                             <div 
                                                 key={`${event.id}_${i}_${idx}`} 
-                                                className={`p-3 event-card ${colorClass} transition-all hover:bg-opacity-60`}
+                                                className={`p-3 event-card ${colorClass} transition-all`}
                                             >
                                                 <div className="flex items-start justify-between mb-0.5">
                                                     <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-tight">
