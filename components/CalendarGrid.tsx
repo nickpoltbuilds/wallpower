@@ -111,7 +111,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, setEvents, i
                 return (
                     <GlassCard 
                         key={i} 
-                        className={`h-full flex flex-col ${isToday ? 'widget-calendar-today shadow-2xl ring-2' : 'widget-calendar-col'}`}
+                        className={`h-full flex flex-col ${isToday ? 'widget-calendar-today' : 'widget-calendar-col'}`}
                         noContentPadding={true}
                     >
                         <div className="p-3 border-b border-current border-opacity-10">
