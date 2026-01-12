@@ -57,8 +57,8 @@ export default {
       },
       // Widget height utilities
       height: {
-        'widget-row': 'clamp(160px, 24vh, 280px)',
-        'widget-row-short': 'clamp(140px, 20vh, 200px)',
+        'widget-row': 'clamp(200px, 30vh, 340px)',
+        'widget-row-short': 'clamp(180px, 26vh, 280px)',
       },
       // Min heights
       minHeight: {

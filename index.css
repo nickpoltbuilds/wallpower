@@ -191,7 +191,8 @@ body {
   font-family: var(--font-main);
   background-color: var(--bg-app);
   color: var(--text-main);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -212,11 +213,20 @@ body {
 .widget-card {
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
-  transition: all 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.widget-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow), 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
 [data-theme='trek'] .widget-card {
     box-shadow: none; /* Authentic LCARS is flat */
+}
+[data-theme='trek'] .widget-card:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 .widget-time {
@@ -276,6 +286,39 @@ body {
   animation: pulse-slow 8s infinite ease-in-out;
 }
 
+/* Widget entrance animations */
+@keyframes widget-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.widget-card {
+  animation: widget-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* Staggered delays for top row widgets */
+.widget-card:nth-child(1) { animation-delay: 0ms; }
+.widget-card:nth-child(2) { animation-delay: 60ms; }
+.widget-card:nth-child(3) { animation-delay: 120ms; }
+.widget-card:nth-child(4) { animation-delay: 180ms; }
+
+/* Calendar columns get slightly later stagger */
+.widget-calendar-col,
+.widget-calendar-today {
+  animation: widget-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: 250ms;
+}
+.widget-calendar-col:nth-child(2),
+.widget-calendar-today:nth-child(2) { animation-delay: 310ms; }
+.widget-calendar-col:nth-child(3) { animation-delay: 370ms; }
+.widget-calendar-col:nth-child(4) { animation-delay: 430ms; }
+
 /* --- MISSING UTILITY CLASSES --- */
 
 /* Background app class for Tailwind usage */
@@ -325,12 +368,12 @@ body {
 
 /* Widget row height with orientation awareness */
 .widget-row-height {
-  height: clamp(160px, 24vh, 280px);
+  height: clamp(200px, 30vh, 340px);
 }
 
 @media (max-height: 700px) and (orientation: landscape) {
   .widget-row-height {
-    height: clamp(140px, 20vh, 200px);
+    height: clamp(180px, 26vh, 280px);
   }
 }
 

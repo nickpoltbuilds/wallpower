@@ -19,7 +19,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   noContentPadding = false
 }) => {
   return (
-    <div className={`widget-card relative overflow-hidden flex flex-col border-0 ${className}`}>
+    <div className={`widget-card relative overflow-hidden flex flex-col border-0 min-h-0 ${className}`}>
       {(title || icon) && (
         <div className="flex items-center justify-between px-6 pt-5 pb-2 opacity-90">
           <div className="flex items-center gap-3">
