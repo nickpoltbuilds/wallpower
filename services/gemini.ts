@@ -284,17 +284,33 @@ export const fetchSchoolLunch = async (schoolName: string, schoolId?: string): P
     try {
         let rawData: any = null;
 
-        for (const proxyFn of LUNCH_PROXIES) {
-            try {
-                const res = await fetch(proxyFn(apiUrl), {
-                    headers: { 'Accept': 'application/json' },
-                    signal: AbortSignal.timeout(8000),
-                });
-                if (res.ok) {
-                    rawData = await res.json();
-                    break;
-                }
-            } catch (e) { continue; }
+        // Try our own serverless proxy first (works on Vercel, no CORS issues)
+        try {
+            const res = await fetch(`/api/lunch?schoolId=${encodeURIComponent(schoolId)}&date=${encodeURIComponent(dateStr)}`, {
+                headers: { 'Accept': 'application/json' },
+                signal: AbortSignal.timeout(10000),
+            });
+            if (res.ok) {
+                rawData = await res.json();
+            }
+        } catch (e) {
+            console.warn('Serverless proxy unavailable, falling back to CORS proxies');
+        }
+
+        // Fallback: third-party CORS proxies (for local dev or if serverless proxy fails)
+        if (!rawData) {
+            for (const proxyFn of LUNCH_PROXIES) {
+                try {
+                    const res = await fetch(proxyFn(apiUrl), {
+                        headers: { 'Accept': 'application/json' },
+                        signal: AbortSignal.timeout(8000),
+                    });
+                    if (res.ok) {
+                        rawData = await res.json();
+                        break;
+                    }
+                } catch (e) { continue; }
+            }
         }
 
         if (!rawData || !rawData.menuSchedules) {
