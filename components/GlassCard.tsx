@@ -10,26 +10,30 @@ interface GlassCardProps {
   noContentPadding?: boolean;
 }
 
-export const GlassCard: React.FC<GlassCardProps> = ({ 
-  children, 
-  className = '', 
-  title, 
-  icon, 
-  action, 
-  noContentPadding = false
+export const GlassCard: React.FC<GlassCardProps> = ({
+  children,
+  className = '',
+  title,
+  icon,
+  action,
+  noContentPadding = false,
 }) => {
   return (
-    <div className={`widget-card relative overflow-hidden flex flex-col border-0 min-h-0 ${className}`}>
-      {(title || icon) && (
-        <div className="flex items-center justify-between px-6 pt-5 pb-2 opacity-90">
-          <div className="flex items-center gap-3">
-            {icon && <span className="trek-icon-hide">{icon}</span>}
-            <h2 className="text-xs font-extrabold tracking-widest uppercase opacity-80 trek-title-style">{title}</h2>
+    <div className={`widget-card relative flex flex-col min-h-0 ${className}`}>
+      {(title || icon || action) && (
+        <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0">
+          <div className="flex items-center gap-2 opacity-70">
+            {icon && <span className="flex-shrink-0">{icon}</span>}
+            {title && (
+              <h2 className="text-[10px] font-black tracking-[0.12em] uppercase">
+                {title}
+              </h2>
+            )}
           </div>
-          {action && <div className="trek-action-hide">{action}</div>}
+          {action && <div className="flex-shrink-0">{action}</div>}
         </div>
       )}
-      <div className={`flex-1 relative z-10 ${noContentPadding ? '' : 'px-6 pb-5 pt-0'}`}>
+      <div className={`flex-1 min-h-0 relative ${noContentPadding ? '' : 'px-4 pb-4 pt-1'}`}>
         {children}
       </div>
     </div>

@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from 'react';
-import { Utensils, ExternalLink } from 'lucide-react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Utensils, ExternalLink, RefreshCw } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { LunchMenu } from '../types';
 import { fetchSchoolLunch } from '../services/gemini';
@@ -10,90 +10,130 @@ interface LunchWidgetProps {
   schoolId?: string;
 }
 
+const SkeletonLunch = () => (
+  <div className="flex flex-col gap-3 pt-2">
+    <div className="skeleton h-6 w-4/5 rounded-lg" />
+    <div className="skeleton h-6 w-3/5 rounded-lg" />
+  </div>
+);
+
 export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }) => {
   const [menu, setMenu] = useState<LunchMenu | null>(null);
   const [loading, setLoading] = useState(false);
+  const [spinning, setSpinning] = useState(false);
+
+  const loadMenu = useCallback(async () => {
+    if (!schoolName) return;
+    setLoading(true);
+    const data = await fetchSchoolLunch(schoolName, schoolId);
+    setMenu(data);
+    setLoading(false);
+  }, [schoolName, schoolId]);
 
   useEffect(() => {
-    const loadMenu = async () => {
-        if (!schoolName) return;
-        setLoading(prev => !prev && !menu); 
-        const data = await fetchSchoolLunch(schoolName, schoolId);
-        setMenu(data);
-        setLoading(false);
-    };
-
     loadMenu();
 
+    // Refresh at 5am each day
     let timeoutId: ReturnType<typeof setTimeout>;
     const scheduleRefresh = () => {
-        const now = new Date();
-        const nextRefresh = new Date();
-        nextRefresh.setHours(5, 0, 0, 0);
-        if (now >= nextRefresh) nextRefresh.setDate(nextRefresh.getDate() + 1);
-        const delay = nextRefresh.getTime() - now.getTime();
-        console.log(`Next lunch refresh scheduled for: ${nextRefresh.toLocaleString()}`);
-        timeoutId = setTimeout(() => {
-            loadMenu();
-            scheduleRefresh();
-        }, delay);
+      const now = new Date();
+      const next = new Date();
+      next.setHours(5, 0, 0, 0);
+      if (now >= next) next.setDate(next.getDate() + 1);
+      timeoutId = setTimeout(() => { loadMenu(); scheduleRefresh(); }, next.getTime() - now.getTime());
     };
     scheduleRefresh();
     return () => clearTimeout(timeoutId);
-  }, [schoolName, schoolId]);
+  }, [loadMenu]);
 
   const handleOpenMenu = () => {
     if (schoolId) window.open(`https://schools.mealviewer.com/school/${schoolId}`, '_blank');
   };
 
-  const allEntrees = menu && menu.main !== 'Unavailable' 
-    ? [menu.main, ...(menu.sides || [])].slice(0, 2)
+  const handleRefresh = () => {
+    setSpinning(true);
+    setTimeout(() => setSpinning(false), 500);
+    loadMenu();
+  };
+
+  const allEntrees = menu && menu.main !== 'Unavailable' && !menu.isWeekend
+    ? [menu.main, ...(menu.sides || [])].slice(0, 3)
     : [];
 
+  const isWeekend = menu?.isWeekend === true;
+  const isUnavailable = !loading && menu?.main === 'Unavailable' && !isWeekend;
+  const noId = !schoolId;
+
   return (
-    <GlassCard 
-      title="School Lunch" 
-      icon={<Utensils size={18} />} 
+    <GlassCard
+      title="School Lunch"
+      icon={<Utensils size={14} />}
       className="h-full widget-lunch"
       action={
-        schoolId ? (
-            <button onClick={handleOpenMenu} className="opacity-50 hover:opacity-100 transition-colors">
-                <ExternalLink size={14} />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefresh}
+            className="opacity-40 hover:opacity-80 transition-opacity"
+          >
+            <RefreshCw
+              size={12}
+              style={{
+                transform: spinning ? 'rotate(360deg)' : 'rotate(0deg)',
+                transition: spinning ? 'transform 0.5s ease' : 'none',
+              }}
+            />
+          </button>
+          {schoolId && (
+            <button onClick={handleOpenMenu} className="opacity-40 hover:opacity-80 transition-opacity">
+              <ExternalLink size={12} />
             </button>
-        ) : undefined
+          )}
+        </div>
       }
     >
-        {loading ? (
-            <div className="h-full flex items-center justify-center opacity-50 animate-pulse text-xs font-bold">Loading...</div>
-        ) : allEntrees.length > 0 ? (
-            <div className="flex flex-col h-full pt-2">
-                <div className="flex flex-col gap-3">
-                    {allEntrees.map((item, i) => (
-                        <div key={i} className="flex gap-3 items-start">
-                            <div className="w-1.5 h-1.5 rounded-full widget-lunch-accent mt-2 flex-shrink-0" />
-                            <span className="text-xl font-bold leading-tight">
-                                {item}
-                            </span>
-                        </div>
-                    ))}
-                </div>
+      {loading && !menu ? (
+        <SkeletonLunch />
+      ) : isWeekend ? (
+        <div className="h-full flex flex-col items-center justify-center text-center gap-1 pb-2">
+          <span className="text-3xl">🏫</span>
+          <p className="text-xs font-black uppercase tracking-widest opacity-60 mt-1">No school today</p>
+        </div>
+      ) : noId ? (
+        <div className="h-full flex flex-col items-center justify-center text-center gap-2 pb-2">
+          <span className="text-2xl opacity-40">🥗</span>
+          <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Add school ID in settings</p>
+        </div>
+      ) : allEntrees.length > 0 ? (
+        <div className="flex flex-col gap-2.5 pt-1">
+          {allEntrees.map((item, i) => (
+            <div key={i} className="flex gap-2.5 items-start">
+              <div
+                className="w-1.5 h-1.5 rounded-full widget-lunch-accent mt-[6px] flex-shrink-0"
+              />
+              <span
+                className="font-bold leading-tight"
+                style={{ fontSize: 'clamp(0.85rem, 2vmin, 1.1rem)' }}
+              >
+                {item}
+              </span>
             </div>
-        ) : (
-            <div className="h-full flex flex-col items-center justify-center text-center p-2">
-                <span className="text-2xl mb-2 opacity-50">🥗</span>
-                <p className="text-xs font-bold mb-2 opacity-80">
-                    {menu?.main === 'Unavailable' ? "Menu Unavailable" : "Add ID"}
-                </p>
-                {schoolId && (
-                    <button 
-                        onClick={handleOpenMenu}
-                        className="px-3 py-1.5 rounded-lg bg-current bg-opacity-10 hover:bg-opacity-20 text-[10px] font-bold transition-colors"
-                    >
-                        View Online
-                    </button>
-                )}
-            </div>
-        )}
+          ))}
+        </div>
+      ) : isUnavailable ? (
+        <div className="h-full flex flex-col items-center justify-center text-center gap-2 pb-2">
+          <span className="text-2xl opacity-40">🍽️</span>
+          <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Menu unavailable</p>
+          {schoolId && (
+            <button
+              onClick={handleOpenMenu}
+              className="px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-opacity hover:opacity-70"
+              style={{ background: 'rgba(0,0,0,0.15)' }}
+            >
+              View online
+            </button>
+          )}
+        </div>
+      ) : null}
     </GlassCard>
   );
 };

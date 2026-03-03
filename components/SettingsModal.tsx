@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X, Check } from 'lucide-react';
 import { AppSettings } from '../types';
 
 interface SettingsModalProps {
@@ -10,139 +10,253 @@ interface SettingsModalProps {
   onSave: (settings: AppSettings) => void;
 }
 
+const THEMES: { id: AppSettings['theme']; label: string; colors: string[] }[] = [
+  { id: 'dark',   label: 'Dark',   colors: ['#1e1b4b', '#0c2340', '#052e16'] },
+  { id: 'light',  label: 'Light',  colors: ['#eef2ff', '#eff6ff', '#f0fdf4'] },
+  { id: 'sunset', label: 'Sunset', colors: ['#3b1c08', '#1c0d1a', '#1a2400'] },
+];
+
+const INTERVALS = [
+  { value: 5,  label: 'Every 5 min' },
+  { value: 10, label: 'Every 10 min' },
+  { value: 15, label: 'Every 15 min' },
+  { value: 30, label: 'Every 30 min' },
+  { value: 60, label: 'Every hour' },
+];
+
+const inputCls = `
+  w-full rounded-xl px-3.5 py-2.5 text-sm font-medium
+  focus:outline-none focus:ring-2 transition-all
+`.trim();
+
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, settings, onSave }) => {
-  const [localSettings, setLocalSettings] = React.useState(settings);
+  const [local, setLocal] = React.useState(settings);
+
+  // Sync when settings prop changes (e.g. theme preview from outside)
+  useEffect(() => { setLocal(settings); }, [settings]);
 
   if (!isOpen) return null;
 
-  const handleChange = (key: keyof AppSettings, value: any) => {
-    setLocalSettings(prev => ({ ...prev, [key]: value }));
+  const set = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
+    setLocal(prev => ({ ...prev, [key]: value }));
   };
 
+  const handleSave = () => { onSave(local); onClose(); };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 text-white">
-      <div className="bg-slate-900 border border-white/10 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
-        <div className="p-6 border-b border-white/10 flex justify-between items-center bg-slate-950">
-            <h2 className="text-xl font-bold">Dashboard Settings</h2>
-            <button onClick={onClose} className="text-white/50 hover:text-white">
-                <X size={24} />
-            </button>
-        </div>
-        
-        <div className="p-6 space-y-6 overflow-y-auto custom-scrollbar">
-            {/* Section: General */}
-            <div className="space-y-3">
-                <h3 className="text-blue-400 text-xs font-bold uppercase tracking-widest">General</h3>
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">Family Name</label>
-                    <input 
-                        type="text" 
-                        value={localSettings.familyName}
-                        onChange={(e) => handleChange('familyName', e.target.value)}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">Location (City, State)</label>
-                    <input 
-                        type="text" 
-                        value={localSettings.location}
-                        onChange={(e) => handleChange('location', e.target.value)}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
-                    />
-                </div>
-                
-                {/* THEME SELECTOR */}
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">Visual Theme</label>
-                    <select
-                        value={localSettings.theme || 'dark'}
-                        onChange={(e) => handleChange('theme', e.target.value)}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none appearance-none capitalize"
-                    >
-                        <option value="dark">Modern Dark</option>
-                        <option value="light">Modern Light</option>
-                        <option value="trek">Star Trek (LCARS)</option>
-                        <option value="forest">Cozy Forest</option>
-                        <option value="cyber">Cyberpunk</option>
-                    </select>
-                </div>
-            </div>
-
-            <hr className="border-white/5" />
-
-            {/* Section: System */}
-            <div className="space-y-3">
-                <h3 className="text-yellow-400 text-xs font-bold uppercase tracking-widest">System</h3>
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">Data Refresh Rate</label>
-                    <select
-                        value={localSettings.refreshInterval}
-                        onChange={(e) => handleChange('refreshInterval', parseInt(e.target.value))}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none appearance-none"
-                    >
-                        <option value={5}>Every 5 Minutes</option>
-                        <option value={10}>Every 10 Minutes</option>
-                        <option value={15}>Every 15 Minutes</option>
-                        <option value={30}>Every 30 Minutes</option>
-                        <option value={60}>Every Hour</option>
-                    </select>
-                </div>
-            </div>
-
-            <hr className="border-white/5" />
-
-            {/* Section: School */}
-            <div className="space-y-3">
-                <h3 className="text-green-400 text-xs font-bold uppercase tracking-widest">School Lunch</h3>
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">School Name</label>
-                    <input 
-                        type="text" 
-                        value={localSettings.schoolName}
-                        onChange={(e) => handleChange('schoolName', e.target.value)}
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">School ID (MealViewer)</label>
-                    <input 
-                        type="text" 
-                        value={localSettings.schoolId || ''}
-                        onChange={(e) => handleChange('schoolId', e.target.value)}
-                        placeholder="e.g. EastSilverSpringES"
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none text-xs"
-                    />
-                </div>
-            </div>
-
-            <hr className="border-white/5" />
-
-            {/* Section: Calendar */}
-            <div className="space-y-3">
-                <h3 className="text-purple-400 text-xs font-bold uppercase tracking-widest">Google Calendar Integration</h3>
-                <div>
-                    <label className="block text-xs text-white/50 font-bold mb-2">Secret Address in iCal format</label>
-                    <input 
-                        type="text" 
-                        value={localSettings.googleCalendarIcalUrl || ''}
-                        onChange={(e) => handleChange('googleCalendarIcalUrl', e.target.value)}
-                        placeholder="https://calendar.google.com/calendar/ical/..."
-                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-blue-500 focus:outline-none text-xs font-mono break-all"
-                    />
-                </div>
-            </div>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(6px)' }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+        style={{
+          background: 'var(--modal-bg)',
+          border: '1px solid var(--modal-border)',
+          color: 'var(--modal-text)',
+        }}
+      >
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-5 py-4 flex-shrink-0"
+          style={{ borderBottom: '1px solid var(--modal-border)', background: 'var(--modal-header)' }}
+        >
+          <h2 className="text-base font-black tracking-tight">Settings</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg transition-opacity opacity-50 hover:opacity-100"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        <div className="p-6 pt-4 bg-slate-950 border-t border-white/10">
-            <button 
-                onClick={() => { onSave(localSettings); onClose(); }}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-blue-900/20"
-            >
-                Save Changes
-            </button>
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar px-5 py-5 space-y-6">
+
+          {/* --- General --- */}
+          <section className="space-y-3">
+            <SectionLabel>General</SectionLabel>
+            <Field label="Family Name">
+              <input
+                type="text"
+                value={local.familyName}
+                onChange={e => set('familyName', e.target.value)}
+                className={inputCls}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="Location">
+              <input
+                type="text"
+                value={local.location}
+                onChange={e => set('location', e.target.value)}
+                placeholder="City, State"
+                className={inputCls}
+                style={inputStyle}
+              />
+            </Field>
+          </section>
+
+          <Divider />
+
+          {/* --- Theme --- */}
+          <section className="space-y-3">
+            <SectionLabel>Theme</SectionLabel>
+            <div className="grid grid-cols-3 gap-2">
+              {THEMES.map(theme => {
+                const active = local.theme === theme.id;
+                return (
+                  <button
+                    key={theme.id}
+                    onClick={() => set('theme', theme.id)}
+                    className="relative rounded-xl overflow-hidden transition-all"
+                    style={{
+                      border: active
+                        ? '2px solid var(--modal-accent)'
+                        : '2px solid var(--modal-border)',
+                      transform: active ? 'scale(1.02)' : 'scale(1)',
+                    }}
+                  >
+                    {/* Color swatches */}
+                    <div className="h-10 flex">
+                      {theme.colors.map((c, i) => (
+                        <div key={i} className="flex-1" style={{ background: c }} />
+                      ))}
+                    </div>
+                    <div
+                      className="px-2 py-1.5 text-[11px] font-black uppercase tracking-wider flex items-center justify-between"
+                      style={{ background: 'var(--modal-input-bg)', color: 'var(--modal-text)' }}
+                    >
+                      <span>{theme.label}</span>
+                      {active && <Check size={11} style={{ color: 'var(--modal-accent)' }} />}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <Divider />
+
+          {/* --- School Lunch --- */}
+          <section className="space-y-3">
+            <SectionLabel>School Lunch</SectionLabel>
+            <Field label="School Name">
+              <input
+                type="text"
+                value={local.schoolName}
+                onChange={e => set('schoolName', e.target.value)}
+                className={inputCls}
+                style={inputStyle}
+              />
+            </Field>
+            <Field label="MealViewer School ID">
+              <input
+                type="text"
+                value={local.schoolId || ''}
+                onChange={e => set('schoolId', e.target.value)}
+                placeholder="e.g. EastSilverSpringES"
+                className={`${inputCls} font-mono text-xs`}
+                style={inputStyle}
+              />
+            </Field>
+          </section>
+
+          <Divider />
+
+          {/* --- System --- */}
+          <section className="space-y-3">
+            <SectionLabel>System</SectionLabel>
+            <Field label="Refresh Interval">
+              <div className="flex flex-wrap gap-2">
+                {INTERVALS.map(opt => {
+                  const active = local.refreshInterval === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => set('refreshInterval', opt.value)}
+                      className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider transition-all"
+                      style={{
+                        background: active ? 'var(--modal-accent)' : 'var(--modal-input-bg)',
+                        border: `1px solid ${active ? 'var(--modal-accent)' : 'var(--modal-input-border)'}`,
+                        color: active ? '#fff' : 'var(--modal-text)',
+                        opacity: active ? 1 : 0.7,
+                      }}
+                    >
+                      {opt.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+          </section>
+
+          <Divider />
+
+          {/* --- Calendar --- */}
+          <section className="space-y-3">
+            <SectionLabel>Google Calendar</SectionLabel>
+            <Field label="iCal Secret Address">
+              <input
+                type="text"
+                value={local.googleCalendarIcalUrl || ''}
+                onChange={e => set('googleCalendarIcalUrl', e.target.value)}
+                placeholder="https://calendar.google.com/calendar/ical/..."
+                className={`${inputCls} font-mono text-[11px]`}
+                style={inputStyle}
+              />
+            </Field>
+          </section>
+        </div>
+
+        {/* Footer */}
+        <div
+          className="px-5 py-4 flex-shrink-0"
+          style={{ borderTop: '1px solid var(--modal-border)', background: 'var(--modal-header)' }}
+        >
+          <button
+            onClick={handleSave}
+            className="w-full py-2.5 rounded-xl text-sm font-black uppercase tracking-wider text-white transition-opacity hover:opacity-90 active:scale-[0.98]"
+            style={{ background: 'var(--modal-accent)' }}
+          >
+            Save Changes
+          </button>
         </div>
       </div>
     </div>
   );
 };
+
+// Small helpers
+
+const inputStyle: React.CSSProperties = {
+  background: 'var(--modal-input-bg)',
+  border: '1px solid var(--modal-input-border)',
+  color: 'var(--modal-text)',
+};
+
+const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <h3
+    className="text-[10px] font-black uppercase tracking-[0.14em]"
+    style={{ color: 'var(--modal-accent)', opacity: 0.9 }}
+  >
+    {children}
+  </h3>
+);
+
+const Field: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <div className="space-y-1.5">
+    <label
+      className="block text-[11px] font-bold uppercase tracking-wider"
+      style={{ color: 'var(--modal-text-muted)' }}
+    >
+      {label}
+    </label>
+    {children}
+  </div>
+);
+
+const Divider = () => (
+  <div className="h-px" style={{ background: 'var(--modal-border)' }} />
+);

@@ -1,300 +1,279 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* --- THEME DEFINITIONS --- */
+/* ========================================
+   THEME SYSTEM — 3 themes: dark, light, sunset
+   ======================================== */
 
 :root {
-  /* Default: Modern Dark */
-  --bg-app: #000000;
+  /* ---- Dark (default) ---- */
+  --bg-app: #0d0f14;
   --font-main: 'Plus Jakarta Sans', sans-serif;
-  --header-text: #ffffff;
-  --header-accent: #818cf8; /* indigo-400 */
-  --border-radius: 2rem;
-  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --header-text: #f1f5f9;
+  --header-accent: #818cf8;
+  --border-radius: 1.25rem;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
 
-  /* Widgets */
-  --bg-time: #4f46e5; --text-time: #ffffff; --text-time-sub: #c7d2fe;
-  --bg-weather: #e0f2fe; --text-weather: #1e293b; --text-weather-sub: #64748b;
-  --bg-lunch: #d1fae5; --text-lunch: #064e3b; --accent-lunch: #10b981;
-  --bg-joke: #fde047; --text-joke: #422006;
-  
+  /* Modal */
+  --modal-bg: #1a1d27;
+  --modal-border: rgba(255,255,255,0.08);
+  --modal-header: #111318;
+  --modal-text: #f1f5f9;
+  --modal-text-muted: rgba(241,245,249,0.45);
+  --modal-input-bg: rgba(255,255,255,0.06);
+  --modal-input-border: rgba(255,255,255,0.1);
+  --modal-accent: #6366f1;
+  --modal-accent-hover: #4f46e5;
+
+  /* Skeleton */
+  --skeleton-base: rgba(255,255,255,0.06);
+  --skeleton-shine: rgba(255,255,255,0.12);
+
+  /* Temp range bar track */
+  --bar-track: rgba(255,255,255,0.1);
+
+  /* Widgets — time */
+  --bg-time: #1e1b4b;
+  --bg-time-to: #312e81;
+  --text-time: #e0e7ff;
+  --text-time-sub: #a5b4fc;
+  --time-glow: rgba(99,102,241,0.15);
+
+  /* Widgets — weather */
+  --bg-weather: #0c2340;
+  --bg-weather-to: #0e3a6a;
+  --text-weather: #e0f2fe;
+  --text-weather-sub: #7dd3fc;
+
+  /* Widgets — lunch */
+  --bg-lunch: #052e16;
+  --bg-lunch-to: #14532d;
+  --text-lunch: #d1fae5;
+  --accent-lunch: #34d399;
+
+  /* Widgets — joke */
+  --bg-joke: #1c1400;
+  --bg-joke-to: #2d2000;
+  --text-joke: #fef9c3;
+  --text-joke-sub: #fbbf24;
+
   /* Calendar */
-  --bg-cal-col: #171717; /* neutral-900 */
-  --bg-cal-today: #262626; /* neutral-800 */
-  --ring-cal-today: #6366f1; /* indigo-500 */
-  --text-cal-header: #ffffff;
-  --text-cal-subheader: #a3a3a3;
-  --text-cal-today: #818cf8;
-
-  /* Event Colors (Dark Mode Defaults) */
-  --evt-blue-bg: rgba(30, 58, 138, 0.4); --evt-blue-text: #dbeafe; --evt-blue-border: #3b82f6;
-  --evt-green-bg: rgba(20, 83, 45, 0.4); --evt-green-text: #dcfce7; --evt-green-border: #22c55e;
-  --evt-purple-bg: rgba(88, 28, 135, 0.4); --evt-purple-text: #f3e8ff; --evt-purple-border: #a855f7;
-  --evt-orange-bg: rgba(124, 45, 18, 0.4); --evt-orange-text: #ffedd5; --evt-orange-border: #f97316;
-  --evt-red-bg: rgba(127, 29, 29, 0.4); --evt-red-text: #fee2e2; --evt-red-border: #ef4444;
-}
-
-[data-theme='light'] {
-  --bg-app: #f1f5f9; /* slate-100 */
-  --header-text: #0f172a;
-  --header-accent: #4f46e5;
-  
-  /* Widgets (Pastels) */
-  --bg-time: #ffffff; --text-time: #1e293b; --text-time-sub: #64748b;
-  --bg-weather: #ffffff; --text-weather: #1e293b; --text-weather-sub: #64748b;
-  --bg-lunch: #ffffff; --text-lunch: #064e3b; --accent-lunch: #10b981;
-  --bg-joke: #ffffff; --text-joke: #422006;
-
-  /* Calendar */
-  --bg-cal-col: #ffffff;
-  --bg-cal-today: #eff6ff; /* blue-50 */
-  --ring-cal-today: #bfdbfe;
-  --text-cal-header: #1e293b;
+  --bg-cal-col: #13151d;
+  --bg-cal-col-border: rgba(255,255,255,0.05);
+  --bg-cal-today: #1a1f33;
+  --ring-cal-today: #6366f1;
+  --text-cal-header: #e2e8f0;
   --text-cal-subheader: #64748b;
-  --text-cal-today: #2563eb;
-
-  /* Event Colors (Light Mode) */
-  --evt-blue-bg: #eff6ff; --evt-blue-text: #1e40af; --evt-blue-border: #3b82f6;
-  --evt-green-bg: #f0fdf4; --evt-green-text: #166534; --evt-green-border: #22c55e;
-  --evt-purple-bg: #faf5ff; --evt-purple-text: #6b21a8; --evt-purple-border: #a855f7;
-  --evt-orange-bg: #fff7ed; --evt-orange-text: #9a3412; --evt-orange-border: #f97316;
-  --evt-red-bg: #fef2f2; --evt-red-text: #991b1b; --evt-red-border: #ef4444;
-}
-
-[data-theme='trek'] {
-  --bg-app: #000000;
-  --font-main: 'Antonio', sans-serif;
-  --header-text: #ffcc00;
-  --header-accent: #cc99cc;
-  --border-radius: 0.25rem;
-  
-  --lcars-orange: #ff9900;
-  --lcars-purple: #cc99cc;
-  --lcars-blue: #9999cc;
-  --lcars-peach: #ffcc99;
-  --lcars-red: #cc6666;
-
-  --bg-time: var(--lcars-orange); --text-time: #000000; --text-time-sub: #000000;
-  --bg-weather: var(--lcars-purple); --text-weather: #000000; --text-weather-sub: #000000;
-  --bg-lunch: var(--lcars-blue); --text-lunch: #000000; --accent-lunch: #000000;
-  --bg-joke: var(--lcars-peach); --text-joke: #000000;
-
-  --bg-cal-col: #111111;
-  --bg-cal-today: #1a1a1a;
-  --ring-cal-today: var(--lcars-orange);
-  --text-cal-header: var(--lcars-orange);
-  --text-cal-subheader: var(--lcars-purple);
-  --text-cal-today: #ffffff;
-
-  /* LCARS events are high-contrast blocks */
-  --evt-blue-bg: #9999cc; --evt-blue-text: #000000; --evt-blue-border: transparent;
-  --evt-green-bg: #99cc99; --evt-green-text: #000000; --evt-green-border: transparent;
-  --evt-purple-bg: #cc99cc; --evt-purple-text: #000000; --evt-purple-border: transparent;
-  --evt-orange-bg: #ff9900; --evt-orange-text: #000000; --evt-orange-border: transparent;
-  --evt-red-bg: #cc6666; --evt-red-text: #000000; --evt-red-border: transparent;
-}
-
-/* Forest Theme - Cozy, nature-inspired */
-[data-theme='forest'] {
-  --bg-app: #1a2f1a;
-  --font-main: 'Plus Jakarta Sans', sans-serif;
-  --header-text: #c8e6c9;
-  --header-accent: #81c784;
-  --border-radius: 1.5rem;
-  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-
-  /* Widgets */
-  --bg-time: #2e7d32; --text-time: #ffffff; --text-time-sub: #c8e6c9;
-  --bg-weather: #43a047; --text-weather: #ffffff; --text-weather-sub: #e8f5e9;
-  --bg-lunch: #66bb6a; --text-lunch: #1b5e20; --accent-lunch: #2e7d32;
-  --bg-joke: #a5d6a7; --text-joke: #1b5e20;
-
-  /* Calendar */
-  --bg-cal-col: #1b3d1b;
-  --bg-cal-today: #2e5a2e;
-  --ring-cal-today: #81c784;
-  --text-cal-header: #c8e6c9;
-  --text-cal-subheader: #a5d6a7;
-  --text-cal-today: #81c784;
+  --text-cal-today: #a5b4fc;
 
   /* Event Colors */
-  --evt-blue-bg: rgba(46, 125, 50, 0.4); --evt-blue-text: #c8e6c9; --evt-blue-border: #66bb6a;
-  --evt-green-bg: rgba(76, 175, 80, 0.4); --evt-green-text: #e8f5e9; --evt-green-border: #a5d6a7;
-  --evt-purple-bg: rgba(123, 31, 162, 0.4); --evt-purple-text: #e1bee7; --evt-purple-border: #ab47bc;
-  --evt-orange-bg: rgba(230, 126, 34, 0.4); --evt-orange-text: #ffe0b2; --evt-orange-border: #ffa726;
-  --evt-red-bg: rgba(198, 40, 40, 0.4); --evt-red-text: #ffcdd2; --evt-red-border: #ef5350;
+  --evt-blue-bg: rgba(30,58,138,0.35);   --evt-blue-text: #bfdbfe; --evt-blue-border: #3b82f6;
+  --evt-green-bg: rgba(20,83,45,0.35);   --evt-green-text: #bbf7d0; --evt-green-border: #22c55e;
+  --evt-purple-bg: rgba(88,28,135,0.35); --evt-purple-text: #e9d5ff; --evt-purple-border: #a855f7;
+  --evt-orange-bg: rgba(124,45,18,0.35); --evt-orange-text: #fed7aa; --evt-orange-border: #f97316;
+  --evt-red-bg: rgba(127,29,29,0.35);    --evt-red-text: #fecaca;   --evt-red-border: #ef4444;
 }
 
-/* Cyber Theme - Neon cyberpunk aesthetic */
-[data-theme='cyber'] {
-  --bg-app: #0a0a0f;
-  --font-main: 'Plus Jakarta Sans', sans-serif;
-  --header-text: #00ffff;
-  --header-accent: #ff00ff;
-  --border-radius: 0.5rem;
-  --card-shadow: 0 0 20px rgba(0, 255, 255, 0.15), inset 0 0 20px rgba(0, 255, 255, 0.03);
+/* ---- Light ---- */
+[data-theme='light'] {
+  --bg-app: #eef2f7;
+  --header-text: #0f172a;
+  --header-accent: #4f46e5;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
 
-  /* Widgets */
-  --bg-time: #1a1a2e; --text-time: #00ffff; --text-time-sub: #7fdbff;
-  --bg-weather: #16213e; --text-weather: #ff00ff; --text-weather-sub: #ff79c6;
-  --bg-lunch: #0f3460; --text-lunch: #39ff14; --accent-lunch: #00ff00;
-  --bg-joke: #2d132c; --text-joke: #ffff00;
+  --modal-bg: #ffffff;
+  --modal-border: rgba(0,0,0,0.08);
+  --modal-header: #f8fafc;
+  --modal-text: #0f172a;
+  --modal-text-muted: #64748b;
+  --modal-input-bg: rgba(0,0,0,0.04);
+  --modal-input-border: rgba(0,0,0,0.1);
+  --modal-accent: #4f46e5;
+  --modal-accent-hover: #4338ca;
 
-  /* Calendar */
-  --bg-cal-col: #0f0f1a;
-  --bg-cal-today: #1a1a30;
-  --ring-cal-today: #00ffff;
-  --text-cal-header: #00ffff;
-  --text-cal-subheader: #7fdbff;
-  --text-cal-today: #ff00ff;
+  --skeleton-base: rgba(0,0,0,0.06);
+  --skeleton-shine: rgba(0,0,0,0.12);
 
-  /* Event Colors - Neon style */
-  --evt-blue-bg: rgba(0, 255, 255, 0.15); --evt-blue-text: #00ffff; --evt-blue-border: #00ffff;
-  --evt-green-bg: rgba(57, 255, 20, 0.15); --evt-green-text: #39ff14; --evt-green-border: #39ff14;
-  --evt-purple-bg: rgba(255, 0, 255, 0.15); --evt-purple-text: #ff00ff; --evt-purple-border: #ff00ff;
-  --evt-orange-bg: rgba(255, 165, 0, 0.15); --evt-orange-text: #ffa500; --evt-orange-border: #ffa500;
-  --evt-red-bg: rgba(255, 0, 0, 0.15); --evt-red-text: #ff4136; --evt-red-border: #ff4136;
+  --bar-track: rgba(0,0,0,0.08);
+
+  --bg-time: #eef2ff;       --bg-time-to: #e0e7ff;   --text-time: #1e1b4b;  --text-time-sub: #6366f1; --time-glow: rgba(99,102,241,0.08);
+  --bg-weather: #eff6ff;    --bg-weather-to: #dbeafe; --text-weather: #1e3a5f; --text-weather-sub: #2563eb;
+  --bg-lunch: #f0fdf4;      --bg-lunch-to: #dcfce7;  --text-lunch: #14532d; --accent-lunch: #16a34a;
+  --bg-joke: #fefce8;       --bg-joke-to: #fef9c3;   --text-joke: #713f12;  --text-joke-sub: #d97706;
+
+  --bg-cal-col: #ffffff;
+  --bg-cal-col-border: rgba(0,0,0,0.06);
+  --bg-cal-today: #eef2ff;
+  --ring-cal-today: #a5b4fc;
+  --text-cal-header: #0f172a;
+  --text-cal-subheader: #64748b;
+  --text-cal-today: #4f46e5;
+
+  --evt-blue-bg: #eff6ff;   --evt-blue-text: #1d4ed8;   --evt-blue-border: #93c5fd;
+  --evt-green-bg: #f0fdf4;  --evt-green-text: #15803d;  --evt-green-border: #86efac;
+  --evt-purple-bg: #faf5ff; --evt-purple-text: #7e22ce; --evt-purple-border: #d8b4fe;
+  --evt-orange-bg: #fff7ed; --evt-orange-text: #c2410c; --evt-orange-border: #fdba74;
+  --evt-red-bg: #fef2f2;    --evt-red-text: #b91c1c;    --evt-red-border: #fca5a5;
 }
 
-/* Cyber theme specific effects */
-[data-theme='cyber'] .widget-card {
-  border: 1px solid rgba(0, 255, 255, 0.2);
-}
-[data-theme='cyber'] .widget-card:hover {
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.25), inset 0 0 20px rgba(0, 255, 255, 0.05);
+/* ---- Sunset ---- */
+[data-theme='sunset'] {
+  --bg-app: #120a05;
+  --header-text: #fef3c7;
+  --header-accent: #f59e0b;
+  --border-radius: 1.25rem;
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.4);
+
+  --modal-bg: #1e1008;
+  --modal-border: rgba(245,158,11,0.15);
+  --modal-header: #120a05;
+  --modal-text: #fef3c7;
+  --modal-text-muted: rgba(254,243,199,0.45);
+  --modal-input-bg: rgba(245,158,11,0.08);
+  --modal-input-border: rgba(245,158,11,0.2);
+  --modal-accent: #f59e0b;
+  --modal-accent-hover: #d97706;
+
+  --skeleton-base: rgba(245,158,11,0.08);
+  --skeleton-shine: rgba(245,158,11,0.16);
+
+  --bar-track: rgba(245,158,11,0.1);
+
+  --bg-time: #3b1c08;      --bg-time-to: #5c2d10;   --text-time: #fef3c7;  --text-time-sub: #fbbf24; --time-glow: rgba(245,158,11,0.2);
+  --bg-weather: #1c0d1a;   --bg-weather-to: #2d1330; --text-weather: #f5d0fe; --text-weather-sub: #d946ef;
+  --bg-lunch: #1a2400;     --bg-lunch-to: #2a3a00;  --text-lunch: #d9f99d; --accent-lunch: #84cc16;
+  --bg-joke: #0f1a2e;      --bg-joke-to: #1a2a4a;   --text-joke: #bae6fd;  --text-joke-sub: #38bdf8;
+
+  --bg-cal-col: #1a0d05;
+  --bg-cal-col-border: rgba(245,158,11,0.1);
+  --bg-cal-today: #2a1508;
+  --ring-cal-today: #f59e0b;
+  --text-cal-header: #fef3c7;
+  --text-cal-subheader: #92400e;
+  --text-cal-today: #fbbf24;
+
+  --evt-blue-bg: rgba(30,58,138,0.3);    --evt-blue-text: #bfdbfe;   --evt-blue-border: #60a5fa;
+  --evt-green-bg: rgba(20,83,45,0.3);    --evt-green-text: #bbf7d0;  --evt-green-border: #4ade80;
+  --evt-purple-bg: rgba(88,28,135,0.3);  --evt-purple-text: #e9d5ff; --evt-purple-border: #c084fc;
+  --evt-orange-bg: rgba(124,45,18,0.4);  --evt-orange-text: #fed7aa; --evt-orange-border: #fb923c;
+  --evt-red-bg: rgba(127,29,29,0.3);     --evt-red-text: #fecaca;    --evt-red-border: #f87171;
 }
 
-/* LCARS Specific Frame Styles */
-.lcars-elbow-top {
-  border-top-left-radius: 40px;
-  background-color: var(--lcars-purple);
-  height: 60px;
-}
-
-.lcars-sidebar {
-  width: 140px;
-  background-color: var(--lcars-orange);
-  border-bottom-left-radius: 40px;
-  margin-right: 15px;
-}
-
-.lcars-bar-seg {
-  height: 30px;
-  margin-bottom: 5px;
-}
-
-/* --- APP BASE --- */
+/* ========================================
+   BASE STYLES
+   ======================================== */
 
 body {
   font-family: var(--font-main);
   background-color: var(--bg-app);
-  color: var(--text-main);
+  color: var(--header-text);
   overflow-x: hidden;
   overflow-y: auto;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Allow scroll on small screens OR short landscape screens */
-@media (max-width: 767px),
-       (max-height: 600px) and (orientation: landscape) {
-  body {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
+@media (max-width: 767px), (max-height: 600px) and (orientation: landscape) {
+  body { overflow-y: auto; }
 }
 
-/* --- SEMANTIC CLASSES --- */
+/* ========================================
+   WIDGET CARDS
+   ======================================== */
 
-.app-header-text { color: var(--header-text); }
-.app-header-accent { color: var(--header-accent); }
+.bg-app { background-color: var(--bg-app); }
 
 .widget-card {
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+[data-theme='light'] .widget-card {
+  border-color: rgba(0,0,0,0.06);
+}
+
+[data-theme='sunset'] .widget-card {
+  border-color: rgba(245,158,11,0.08);
 }
 
 .widget-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--card-shadow), 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-3px);
+  box-shadow: var(--card-shadow), 0 12px 40px rgba(0,0,0,0.2);
 }
 
-[data-theme='trek'] .widget-card {
-    box-shadow: none; /* Authentic LCARS is flat */
-}
-[data-theme='trek'] .widget-card:hover {
-    transform: none;
-    box-shadow: none;
-}
-
+/* ---- Widget color themes ---- */
 .widget-time {
-  background-color: var(--bg-time);
+  background: linear-gradient(145deg, var(--bg-time), var(--bg-time-to));
   color: var(--text-time);
+  box-shadow: var(--card-shadow), 0 0 40px var(--time-glow);
 }
 .widget-time-sub { color: var(--text-time-sub); }
 
 .widget-weather {
-  background-color: var(--bg-weather);
+  background: linear-gradient(145deg, var(--bg-weather), var(--bg-weather-to));
   color: var(--text-weather);
 }
 .widget-weather-sub { color: var(--text-weather-sub); }
 
 .widget-lunch {
-  background-color: var(--bg-lunch);
+  background: linear-gradient(145deg, var(--bg-lunch), var(--bg-lunch-to));
   color: var(--text-lunch);
 }
 .widget-lunch-accent { background-color: var(--accent-lunch); }
 
 .widget-joke {
-  background-color: var(--bg-joke);
+  background: linear-gradient(145deg, var(--bg-joke), var(--bg-joke-to));
   color: var(--text-joke);
 }
+.widget-joke-sub { color: var(--text-joke-sub); }
 
-.widget-calendar-col { background-color: var(--bg-cal-col); }
-.widget-calendar-today { 
-  background-color: var(--bg-cal-today); 
-  --tw-ring-color: var(--ring-cal-today); 
+/* ---- Calendar ---- */
+.widget-calendar-col {
+  background-color: var(--bg-cal-col);
+  border-color: var(--bg-cal-col-border);
+}
+.widget-calendar-today {
+  background-color: var(--bg-cal-today);
+  border-color: var(--ring-cal-today) !important;
 }
 .widget-calendar-text-header { color: var(--text-cal-header); }
-.widget-calendar-text-sub { color: var(--text-cal-subheader); }
-.widget-calendar-text-today { color: var(--text-cal-today); }
+.widget-calendar-text-sub    { color: var(--text-cal-subheader); }
+.widget-calendar-text-today  { color: var(--text-cal-today); }
 
-/* Event Cards */
+/* ---- Event Cards ---- */
 .event-card {
-  border-left-width: 4px;
-  background-color: var(--bg-cal-col);
+  border-left-width: 3px;
+  border-left-style: solid;
+  transition: transform 0.15s ease;
 }
-.event-card.blue { background-color: var(--evt-blue-bg); color: var(--evt-blue-text); border-left-color: var(--evt-blue-border); }
-.event-card.green { background-color: var(--evt-green-bg); color: var(--evt-green-text); border-left-color: var(--evt-green-border); }
+.event-card:hover { transform: translateX(2px); }
+.event-card.blue   { background-color: var(--evt-blue-bg);   color: var(--evt-blue-text);   border-left-color: var(--evt-blue-border); }
+.event-card.green  { background-color: var(--evt-green-bg);  color: var(--evt-green-text);  border-left-color: var(--evt-green-border); }
 .event-card.purple { background-color: var(--evt-purple-bg); color: var(--evt-purple-text); border-left-color: var(--evt-purple-border); }
 .event-card.orange { background-color: var(--evt-orange-bg); color: var(--evt-orange-text); border-left-color: var(--evt-orange-border); }
-.event-card.red { background-color: var(--evt-red-bg); color: var(--evt-red-text); border-left-color: var(--evt-red-border); }
+.event-card.red    { background-color: var(--evt-red-bg);    color: var(--evt-red-text);    border-left-color: var(--evt-red-border); }
 
-/* Scrollbars */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(128, 128, 128, 0.2); border-radius: 10px; }
+/* ========================================
+   ANIMATIONS
+   ======================================== */
 
-@keyframes pulse-slow {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.95; transform: scale(1.02); }
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 8s infinite ease-in-out;
-}
-
-/* Widget entrance animations */
+/* --- Entrance --- */
 @keyframes widget-enter {
-  0% {
+  from {
     opacity: 0;
-    transform: translateY(12px) scale(0.97);
+    transform: translateY(18px) scale(0.96);
+    filter: blur(2px);
   }
-  100% {
+  to {
     opacity: 1;
     transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
@@ -302,84 +281,91 @@ body {
   animation: widget-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-/* Staggered delays for top row widgets */
 .widget-card:nth-child(1) { animation-delay: 0ms; }
-.widget-card:nth-child(2) { animation-delay: 60ms; }
-.widget-card:nth-child(3) { animation-delay: 120ms; }
-.widget-card:nth-child(4) { animation-delay: 180ms; }
+.widget-card:nth-child(2) { animation-delay: 75ms; }
+.widget-card:nth-child(3) { animation-delay: 150ms; }
+.widget-card:nth-child(4) { animation-delay: 225ms; }
 
-/* Calendar columns get slightly later stagger */
 .widget-calendar-col,
 .widget-calendar-today {
   animation: widget-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-  animation-delay: 250ms;
 }
-.widget-calendar-col:nth-child(2),
-.widget-calendar-today:nth-child(2) { animation-delay: 310ms; }
-.widget-calendar-col:nth-child(3) { animation-delay: 370ms; }
-.widget-calendar-col:nth-child(4) { animation-delay: 430ms; }
+.widget-calendar-col:nth-child(1),
+.widget-calendar-today:nth-child(1) { animation-delay: 300ms; }
+.widget-calendar-col:nth-child(2)   { animation-delay: 375ms; }
+.widget-calendar-col:nth-child(3)   { animation-delay: 450ms; }
+.widget-calendar-col:nth-child(4)   { animation-delay: 525ms; }
 
-/* --- MISSING UTILITY CLASSES --- */
+/* --- Ambient pulse (time widget bg) --- */
+@keyframes ambient-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.92; }
+}
+.animate-ambient { animation: ambient-pulse 6s ease-in-out infinite; }
 
-/* Background app class for Tailwind usage */
-.bg-app {
-  background-color: var(--bg-app);
-}
-
-/* Custom scrollbar styling */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(128, 128, 128, 0.3);
-  border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(128, 128, 128, 0.5);
-}
-/* Firefox scrollbar */
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(128, 128, 128, 0.3) transparent;
+/* --- Shimmer skeleton --- */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
 }
 
-/* Trek theme-specific visibility and styling classes */
-.trek-icon-hide,
-.trek-action-hide {
-  /* Default: visible */
-}
-[data-theme='trek'] .trek-icon-hide,
-[data-theme='trek'] .trek-action-hide {
-  display: none;
-}
-[data-theme='trek'] .trek-title-style {
-  font-family: 'Antonio', sans-serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--lcars-orange);
+.skeleton {
+  border-radius: 0.5rem;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-shine) 50%,
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
-/* --- RESPONSIVE LAYOUT UTILITIES --- */
+/* --- Spin on click (refresh buttons) --- */
+@keyframes spin-once {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.animate-spin-once { animation: spin-once 0.5s ease-in-out; }
 
-/* Widget row height with orientation awareness */
-.widget-row-height {
-  height: clamp(200px, 30vh, 340px);
+/* ========================================
+   SETTINGS BUTTON
+   ======================================== */
+.settings-btn {
+  position: relative;
+}
+.settings-btn::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 2px solid var(--header-accent);
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.settings-btn:hover::after {
+  opacity: 0.35;
+  transform: scale(1);
 }
 
-@media (max-height: 700px) and (orientation: landscape) {
-  .widget-row-height {
-    height: clamp(180px, 26vh, 280px);
-  }
-}
+/* ========================================
+   SCROLLBARS
+   ======================================== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 10px; }
 
-/* Hide elements on short landscape screens */
-@media (max-height: 500px) and (orientation: landscape) {
-  .hide-short-landscape {
-    display: none !important;
-  }
-}
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.25); border-radius: 10px; }
+.custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(128,128,128,0.25) transparent; }
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+.app-header-text  { color: var(--header-text); }
+.app-header-accent { color: var(--header-accent); }
+
+/* Tab-stop numbers for clock */
+.tabular-nums { font-variant-numeric: tabular-nums; }

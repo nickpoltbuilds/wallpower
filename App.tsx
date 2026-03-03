@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Settings, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Settings } from 'lucide-react';
 import { TimeWidget } from './components/TimeWidget';
 import { WeatherWidget } from './components/WeatherWidget';
 import { CalendarGrid } from './components/CalendarGrid';
@@ -11,139 +11,130 @@ import { AppSettings, CalendarEvent } from './types';
 import { fetchGoogleCalendarEvents } from './services/calendar';
 
 const DEFAULT_EVENTS: CalendarEvent[] = [
-  { id: '1', title: 'Soccer Practice', start: new Date(new Date().setHours(17, 0)).toISOString(), end: new Date(new Date().setHours(18, 30)).toISOString(), color: 'orange' },
-  { id: '2', title: 'Trash Pickup', start: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(), end: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(), color: 'green' },
+  {
+    id: '1',
+    title: 'Soccer Practice',
+    start: new Date(new Date().setHours(17, 0, 0, 0)).toISOString(),
+    end: new Date(new Date().setHours(18, 30, 0, 0)).toISOString(),
+    color: 'orange',
+  },
+  {
+    id: '2',
+    title: 'Trash Pickup',
+    start: (() => { const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(0,0,0,0); return d.toISOString(); })(),
+    end: (() => { const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(23,59,0,0); return d.toISOString(); })(),
+    color: 'green',
+    isAllDay: true,
+  },
 ];
+
+const DEFAULTS: AppSettings = {
+  familyName: 'Poltstetlers',
+  location: 'Silver Spring, MD',
+  schoolName: 'East Silver Spring Elementary',
+  schoolId: 'EastSilverSpringES',
+  googleCalendarIcalUrl: '',
+  refreshInterval: 5,
+  theme: 'dark',
+};
 
 const App: React.FC = () => {
   const [settings, setSettings] = useState<AppSettings>(() => {
-    const defaults: AppSettings = {
-        familyName: 'Poltstetlers',
-        location: 'Silver Spring, MD',
-        schoolName: 'East Silver Spring Elementary',
-        schoolId: 'EastSilverSpringES',
-        googleCalendarIcalUrl: '',
-        refreshInterval: 5,
-        theme: 'dark'
-    };
     try {
-        const saved = localStorage.getItem('familyHubSettings');
-        if (saved) return { ...defaults, ...JSON.parse(saved) };
+      const saved = localStorage.getItem('familyHubSettings');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Migrate old theme values to new 3-theme system
+        const validThemes = ['dark', 'light', 'sunset'];
+        if (!validThemes.includes(parsed.theme)) parsed.theme = 'dark';
+        return { ...DEFAULTS, ...parsed };
+      }
     } catch (e) {}
-    return defaults;
+    return DEFAULTS;
   });
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isGoogleLinked, setIsGoogleLinked] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncError, setSyncError] = useState<string | null>(null);
-  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
-  const [greeting, setGreeting] = useState("Good Morning");
-  const [weatherCondition, setWeatherCondition] = useState<string>('clear');
-
-  useEffect(() => {
-      const updateGreeting = () => {
-          const hour = new Date().getHours();
-          if (hour < 12) setGreeting("Good Morning");
-          else if (hour < 18) setGreeting("Good Afternoon");
-          else setGreeting("Good Evening");
-      };
-      updateGreeting();
-      const timer = setInterval(updateGreeting, 3600000); 
-      return () => clearInterval(timer);
-  }, []);
+  const [weatherCondition, setWeatherCondition] = useState<string>('');
 
   useEffect(() => {
     localStorage.setItem('familyHubSettings', JSON.stringify(settings));
   }, [settings]);
 
-  const loadGoogleEvents = async () => {
-      const url = settings.googleCalendarIcalUrl;
-      if (url && url.length > 15) {
-          setIsSyncing(true);
-          try {
-            const result = await fetchGoogleCalendarEvents(url);
-            if (result.success) {
-                setEvents(result.events);
-                setSyncError(null);
-                setLastSyncTime(new Date());
-            } else {
-                setSyncError(result.message || "Sync Failed");
-            }
-          } catch (e) {
-            setSyncError("Connection Error");
-          }
-          setIsSyncing(false);
-      } else {
-          setEvents(DEFAULT_EVENTS);
-          setSyncError(null);
-          setLastSyncTime(null);
-      }
-  };
+  const loadGoogleEvents = useCallback(async () => {
+    const url = settings.googleCalendarIcalUrl;
+    if (!url || url.length <= 15) {
+      setEvents(DEFAULT_EVENTS);
+      return;
+    }
+    try {
+      const result = await fetchGoogleCalendarEvents(url);
+      if (result.success) setEvents(result.events);
+    } catch (e) {}
+  }, [settings.googleCalendarIcalUrl]);
 
   useEffect(() => {
-    if (settings.googleCalendarIcalUrl && settings.googleCalendarIcalUrl.length > 15) {
-        setIsGoogleLinked(true);
-        loadGoogleEvents();
+    const url = settings.googleCalendarIcalUrl;
+    const linked = Boolean(url && url.length > 15);
+    setIsGoogleLinked(linked);
+    if (linked) {
+      loadGoogleEvents();
     } else {
-        setIsGoogleLinked(false);
-        setEvents(DEFAULT_EVENTS);
-        setSyncError(null);
-        setLastSyncTime(null);
+      setEvents(DEFAULT_EVENTS);
     }
   }, [settings.googleCalendarIcalUrl]);
 
   useEffect(() => {
-      if (!isGoogleLinked) return;
-      const interval = setInterval(loadGoogleEvents, settings.refreshInterval * 60000);
-      return () => clearInterval(interval);
-  }, [isGoogleLinked, settings.refreshInterval, settings.googleCalendarIcalUrl]);
-
-  const isTrek = settings.theme === 'trek';
+    if (!isGoogleLinked) return;
+    const interval = setInterval(loadGoogleEvents, settings.refreshInterval * 60000);
+    return () => clearInterval(interval);
+  }, [isGoogleLinked, settings.refreshInterval, loadGoogleEvents]);
 
   return (
-    <div className={`h-screen w-full p-3 sm:p-4 md:p-5 lg:p-6 relative flex bg-app ${isTrek ? 'overflow-hidden' : 'flex-col'}`} data-theme={settings.theme || 'dark'}>
-      <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 app-header-text transition-all absolute top-4 right-4 z-50">
-          <Settings size={20} />
+    <div
+      className="h-screen w-full relative flex flex-col bg-app overflow-hidden"
+      data-theme={settings.theme}
+    >
+      {/* Settings trigger */}
+      <button
+        onClick={() => setIsSettingsOpen(true)}
+        className="settings-btn absolute top-4 right-4 z-50 p-2.5 rounded-full app-header-text transition-opacity opacity-60 hover:opacity-100"
+        style={{ background: 'rgba(255,255,255,0.08)' }}
+        aria-label="Open settings"
+      >
+        <Settings size={18} />
       </button>
-      
-      {/* LCARS Sidebar for Trek Theme */}
-      {isTrek && (
-        <div className="hidden lg:flex flex-col w-[clamp(120px,12vw,180px)] flex-shrink-0 ipad-landscape:hidden xl:flex">
-          <div className="lcars-elbow-top w-full mb-3 flex items-end justify-end px-3 pb-1">
-            <span className="text-black font-black text-xs">COM: ACCESS</span>
-          </div>
-          <div className="flex-1 lcars-sidebar flex flex-col p-4 justify-between">
-            <div className="flex flex-col gap-2">
-              <div className="bg-lcars-blue h-12 rounded-sm flex items-center justify-center text-black font-black text-sm">02-441</div>
-              <div className="bg-lcars-peach h-8 rounded-sm"></div>
-              <div className="bg-lcars-red h-24 rounded-sm flex items-end justify-center pb-2 text-black font-black text-xs rotate-180 [writing-mode:vertical-lr]">SECTOR 7G</div>
-            </div>
-            <div className="bg-black/20 p-2 rounded-sm text-[10px] text-black font-black leading-tight">
-              STARDATE: {Math.floor(Date.now() / 1000000)}<br/>
-              SECURE LINK: ACTIVE
-            </div>
-          </div>
+
+      {/* Main layout */}
+      <div className="flex-1 flex flex-col gap-3 p-3 sm:p-4 md:p-5 min-h-0">
+
+        {/* Top widget row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0"
+          style={{ height: 'clamp(180px, 28vh, 300px)' }}
+        >
+          <TimeWidget weatherCondition={weatherCondition} />
+          <WeatherWidget
+            location={settings.location}
+            refreshInterval={settings.refreshInterval}
+            onWeatherUpdate={setWeatherCondition}
+          />
+          <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
+          <DadJokeWidget />
         </div>
-      )}
 
-      <div className={`flex-1 flex flex-col ${isTrek ? 'mt-2' : ''}`}>
-
-        <div className="relative z-10 flex-1 flex flex-col gap-4 min-h-0">
-          <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-h-[50%] tablet-landscape:max-h-[40%] ipad-landscape:max-h-[40%]">
-              <TimeWidget weatherCondition={weatherCondition} />
-              <WeatherWidget location={settings.location} refreshInterval={settings.refreshInterval} onWeatherUpdate={setWeatherCondition} />
-              <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
-              <DadJokeWidget />
-          </div>
-          <div className="flex-1 min-h-0 overflow-y-auto">
-              <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
-          </div>
+        {/* Calendar — fills remaining space */}
+        <div className="flex-1 min-h-0">
+          <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
         </div>
       </div>
 
-      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} settings={settings} onSave={setSettings} />
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        settings={settings}
+        onSave={setSettings}
+      />
     </div>
   );
 };

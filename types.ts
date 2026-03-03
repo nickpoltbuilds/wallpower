@@ -7,15 +7,21 @@ export interface CalendarEvent {
   color: 'blue' | 'green' | 'purple' | 'orange' | 'red';
   location?: string;
   isAllDay?: boolean;
-  rrule?: string; // Recurrence Rule string
+  rrule?: string;
 }
 
 export interface WeatherData {
   currentTemp: number;
+  feelsLike?: number;
   condition: string;
   high: number;
   low: number;
   location: string;
+  hourly: Array<{
+    label: string;  // "Now", "3pm", "6pm" etc.
+    temp: number;
+  }>;
+  // Index 0 = today, 1 = tomorrow, 2 = +2, 3 = +3
   forecast: Array<{
     day: string;
     icon: string;
@@ -28,6 +34,7 @@ export interface LunchMenu {
   main: string;
   sides: string[];
   date: string;
+  isWeekend?: boolean;
 }
 
 export interface AppSettings {
@@ -37,5 +44,5 @@ export interface AppSettings {
   schoolId: string;
   googleCalendarIcalUrl?: string;
   refreshInterval: number; // in minutes
-  theme: 'dark' | 'light' | 'trek' | 'forest' | 'cyber';
+  theme: 'dark' | 'light' | 'sunset';
 }
