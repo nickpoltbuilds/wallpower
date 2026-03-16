@@ -100,7 +100,7 @@ const App: React.FC = () => {
       {/* Settings trigger */}
       <button
         onClick={() => setIsSettingsOpen(true)}
-        className="settings-btn absolute top-4 right-4 z-50 p-2.5 rounded-full app-header-text transition-opacity opacity-60 hover:opacity-100"
+        className="settings-btn absolute bottom-4 right-4 z-50 p-2.5 rounded-full app-header-text transition-opacity opacity-40 hover:opacity-100"
         style={{ background: 'rgba(255,255,255,0.08)' }}
         aria-label="Open settings"
       >
