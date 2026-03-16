@@ -1,7 +1,7 @@
 {
-  "name": "family-hub",
+  "name": "wallpower",
   "version": "1.0.0",
-  "description": "A beautiful, zero-config family dashboard — weather, school lunch, calendar, and more.",
+  "description": "A zero-config family dashboard for wall-mounted displays — weather, school lunch, calendar, and more.",
   "license": "MIT",
   "type": "module",
   "scripts": {

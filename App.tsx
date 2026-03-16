@@ -42,10 +42,15 @@ const DEFAULTS: AppSettings = {
 const App: React.FC = () => {
   const [settings, setSettings] = useState<AppSettings>(() => {
     try {
-      const saved = localStorage.getItem('familyHubSettings');
+      // Migrate from old key (family-hub → wallpower)
+      const legacy = localStorage.getItem('familyHubSettings');
+      if (legacy) {
+        localStorage.setItem('wallpowerSettings', legacy);
+        localStorage.removeItem('familyHubSettings');
+      }
+      const saved = localStorage.getItem('wallpowerSettings');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Migrate old theme values to new 3-theme system
         const validThemes = ['dark', 'light', 'sunset'];
         if (!validThemes.includes(parsed.theme)) parsed.theme = 'dark';
         return { ...DEFAULTS, ...parsed };
@@ -60,7 +65,7 @@ const App: React.FC = () => {
   const [weatherCondition, setWeatherCondition] = useState<string>('');
 
   useEffect(() => {
-    localStorage.setItem('familyHubSettings', JSON.stringify(settings));
+    localStorage.setItem('wallpowerSettings', JSON.stringify(settings));
   }, [settings]);
 
   const loadGoogleEvents = useCallback(async () => {

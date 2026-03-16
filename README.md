@@ -1,4 +1,4 @@
-# Family Hub
+# Wallpower
 
 A zero-configuration family dashboard designed to live on a wall-mounted tablet or always-on screen. Shows the weather, today's school lunch, your Google Calendar, and a daily dad joke — all in one glanceable view.
 
@@ -29,8 +29,8 @@ A zero-configuration family dashboard designed to live on a wall-mounted tablet 
 ### Run locally
 
 ```bash
-git clone https://github.com/nickpoltbuilds/family-hub.git
-cd family-hub
+git clone https://github.com/nickpoltbuilds/wallpower.git
+cd wallpower
 npm install
 npm run dev
 ```
@@ -119,9 +119,9 @@ Events are color-coded automatically by keyword:
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
-| Build | [Vite 5](https://vitejs.dev/) |
-| Styling | [Tailwind CSS 3](https://tailwindcss.com/) + CSS custom properties |
+| Framework | [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
+| Build | [Vite 6](https://vitejs.dev/) |
+| Styling | [Tailwind CSS 4](https://tailwindcss.com/) + CSS custom properties |
 | Icons | [Lucide React](https://lucide.dev/) |
 | Serverless | [Vercel Functions](https://vercel.com/docs/functions) (`/api/lunch`) |
 | Weather | [Open-Meteo](https://open-meteo.com/) (no key required) |

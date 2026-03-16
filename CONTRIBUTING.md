@@ -1,11 +1,11 @@
-# Contributing to Family Hub
+# Contributing to Wallpower
 
 Thanks for your interest! This is a small open-source project and contributions are welcome.
 
 ## Getting started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/family-hub.git`
+2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/wallpower.git`
 3. Install dependencies: `npm install`
 4. Start the dev server: `npm run dev`
 
@@ -13,7 +13,7 @@ No environment variables or API keys are needed to run the app locally.
 
 ## What to work on
 
-Check the [Issues](https://github.com/nickpoltbuilds/family-hub/issues) tab for open bugs and feature requests. Feel free to open a new issue to discuss an idea before building it.
+Check the [Issues](https://github.com/nickpoltbuilds/wallpower/issues) tab for open bugs and feature requests. Feel free to open a new issue to discuss an idea before building it.
 
 Good first areas to contribute:
 
