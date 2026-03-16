@@ -1,7 +1,8 @@
 {
-  "name": "familyhub-ai",
-  "private": true,
+  "name": "family-hub",
   "version": "1.0.0",
+  "description": "A beautiful, zero-config family dashboard — weather, school lunch, calendar, and more.",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,14 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "latest",
     "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
-    "@types/node": "^20.11.24",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@vercel/node": "^5.6.10",

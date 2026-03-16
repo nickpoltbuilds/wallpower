@@ -29,10 +29,10 @@ const DEFAULT_EVENTS: CalendarEvent[] = [
 ];
 
 const DEFAULTS: AppSettings = {
-  familyName: 'Poltstetlers',
-  location: 'Silver Spring, MD',
-  schoolName: 'East Silver Spring Elementary',
-  schoolId: 'EastSilverSpringES',
+  familyName: 'Our Family',
+  location: 'New York, NY',
+  schoolName: 'My School',
+  schoolId: '',
   googleCalendarIcalUrl: '',
   refreshInterval: 5,
   theme: 'dark',

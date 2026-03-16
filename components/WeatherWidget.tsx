@@ -97,6 +97,8 @@ const Sparkline: React.FC<SparklineProps> = ({ data }) => {
         className="w-full"
         style={{ height: '42px' }}
         preserveAspectRatio="none"
+        role="img"
+        aria-label="Hourly temperature forecast"
       >
         <defs>
           <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">

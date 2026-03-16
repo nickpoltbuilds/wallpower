@@ -126,11 +126,17 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, use24Hour = 
                     : parseTime(event.start, use24Hour);
                   const duration          = event.isAllDay ? null : formatDuration(event.start, event.end);
 
+                  const ariaLabel = event.isAllDay
+                    ? `All day: ${event.title}`
+                    : `${hour} ${ampm}: ${event.title}${duration ? `, ${duration}` : ''}`;
+
                   return (
                     <div
                       key={`${event.id}_${i}_${idx}`}
                       className={`event-card ${colorClass} flex items-stretch rounded-lg overflow-hidden`}
                       style={{ borderLeftWidth: '4px' }}
+                      role="article"
+                      aria-label={ariaLabel}
                     >
                       {/* ── Time column ── */}
                       <div

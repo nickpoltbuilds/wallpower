@@ -77,8 +77,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
           {/* --- General --- */}
           <section className="space-y-3">
             <SectionLabel>General</SectionLabel>
-            <Field label="Family Name">
+            <Field label="Family Name" htmlFor="setting-family-name">
               <input
+                id="setting-family-name"
                 type="text"
                 value={local.familyName}
                 onChange={e => set('familyName', e.target.value)}
@@ -86,8 +87,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
                 style={inputStyle}
               />
             </Field>
-            <Field label="Location">
+            <Field label="Location" htmlFor="setting-location">
               <input
+                id="setting-location"
                 type="text"
                 value={local.location}
                 onChange={e => set('location', e.target.value)}
@@ -159,8 +161,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
           {/* --- School Lunch --- */}
           <section className="space-y-3">
             <SectionLabel>School Lunch</SectionLabel>
-            <Field label="School Name">
+            <Field label="School Name" htmlFor="setting-school-name">
               <input
+                id="setting-school-name"
                 type="text"
                 value={local.schoolName}
                 onChange={e => set('schoolName', e.target.value)}
@@ -168,12 +171,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
                 style={inputStyle}
               />
             </Field>
-            <Field label="MealViewer School ID">
+            <Field label="MealViewer School ID" htmlFor="setting-school-id">
               <input
+                id="setting-school-id"
                 type="text"
                 value={local.schoolId || ''}
                 onChange={e => set('schoolId', e.target.value)}
-                placeholder="e.g. EastSilverSpringES"
+                placeholder="e.g. LincolnES"
                 className={`${inputCls} font-mono text-xs`}
                 style={inputStyle}
               />
@@ -214,9 +218,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
           {/* --- Calendar --- */}
           <section className="space-y-3">
             <SectionLabel>Google Calendar</SectionLabel>
-            <Field label="iCal Secret Address">
+            <Field label="iCal Secret Address" htmlFor="setting-ical-url">
               <input
-                type="text"
+                id="setting-ical-url"
+                type="url"
                 value={local.googleCalendarIcalUrl || ''}
                 onChange={e => set('googleCalendarIcalUrl', e.target.value)}
                 placeholder="https://calendar.google.com/calendar/ical/..."
@@ -262,9 +267,10 @@ const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   </h3>
 );
 
-const Field: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+const Field: React.FC<{ label: string; htmlFor?: string; children: React.ReactNode }> = ({ label, htmlFor, children }) => (
   <div className="space-y-1.5">
     <label
+      htmlFor={htmlFor}
       className="block text-[11px] font-bold uppercase tracking-wider"
       style={{ color: 'var(--modal-text-muted)' }}
     >

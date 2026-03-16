@@ -108,7 +108,7 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
         <div className="flex flex-col gap-2.5 pt-1">
           {allEntrees.map((item, i) => (
             <div key={i} className="flex gap-2.5 items-center group">
-              <span className="text-2xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
+              <span className="text-2xl flex-shrink-0 transition-transform duration-300 group-hover:scale-110" aria-hidden="true">
                 {getFoodEmoji(item)}
               </span>
               <span
