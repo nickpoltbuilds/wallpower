@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { WeatherData } from '../types';
-import { fetchWeather } from '../services/gemini';
+import { fetchWeather } from '../services/api';
 
 interface WeatherWidgetProps {
   location: string;

@@ -19,6 +19,7 @@ Good first areas to contribute:
 
 - **New food emoji mappings** in `services/foodEmoji.ts` — more keyword coverage is always welcome
 - **Calendar color rules** in `services/calendar.ts` → `assignColor()` — expanding keyword matching
+- **API integrations** — weather, lunch, and dad joke fetching live in `services/api.ts`
 - **New themes** — add a new theme block to `index.css` and the `THEMES` array in `SettingsModal.tsx`
 - **Bug fixes** — especially edge cases in iCal parsing or recurring event expansion
 - **Accessibility improvements** — ARIA, keyboard navigation, contrast

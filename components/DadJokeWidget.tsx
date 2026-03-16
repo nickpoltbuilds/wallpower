@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
 import { GlassCard } from './GlassCard';
-import { fetchDadJoke } from '../services/gemini';
+import { fetchDadJoke } from '../services/api';
 
 export const DadJokeWidget: React.FC = () => {
   const [joke, setJoke] = useState<string>('');

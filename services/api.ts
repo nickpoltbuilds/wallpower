@@ -1,5 +1,5 @@
 
-import { CalendarEvent, LunchMenu, WeatherData } from "../types";
+import { LunchMenu, WeatherData } from "../types";
 
 // --- Dad Joke API ---
 export const fetchDadJoke = async (): Promise<string> => {
@@ -286,7 +286,6 @@ export const fetchSchoolLunch = async (schoolName: string, schoolId?: string): P
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
             const parsed = JSON.parse(cached) as LunchMenu;
-            console.log(`Lunch: cache hit for ${isoDate}`);
             return parsed;
         }
     } catch (e) { /* ignore cache errors */ }
@@ -361,5 +360,3 @@ export const fetchSchoolLunch = async (schoolName: string, schoolId?: string): P
     }
 };
 
-// Keep CalendarEvent type usage for iCal parsing in calendar.ts
-export type { CalendarEvent };

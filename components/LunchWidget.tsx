@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Utensils, ExternalLink, RefreshCw } from 'lucide-react';
 import { GlassCard } from './GlassCard';
 import { LunchMenu } from '../types';
-import { fetchSchoolLunch } from '../services/gemini';
+import { fetchSchoolLunch } from '../services/api';
 import { getFoodEmoji } from '../services/foodEmoji';
 
 interface LunchWidgetProps {
