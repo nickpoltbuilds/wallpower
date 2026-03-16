@@ -11,6 +11,17 @@ interface CalendarGridProps {
   use24Hour?: boolean;
 }
 
+const formatDuration = (startStr: string, endStr: string): string | null => {
+  try {
+    const mins = Math.round((new Date(endStr).getTime() - new Date(startStr).getTime()) / 60000);
+    if (mins <= 0 || mins >= 1440) return null; // skip all-day-length or bogus
+    if (mins < 60) return `${mins}m`;
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return m === 0 ? `${h}h` : `${h}h ${m}m`;
+  } catch { return null; }
+};
+
 const parseTime = (dateStr: string, use24Hour: boolean): { hour: string; ampm: string } => {
   try {
     const d = new Date(dateStr);
@@ -113,6 +124,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, use24Hour = 
                   const { hour, ampm }    = event.isAllDay
                     ? { hour: '', ampm: '' }
                     : parseTime(event.start, use24Hour);
+                  const duration          = event.isAllDay ? null : formatDuration(event.start, event.end);
 
                   return (
                     <div
@@ -150,14 +162,22 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, use24Hour = 
                           {event.title}
                         </span>
 
-                        {(event.location || multiDayLabel) && (
+                        {(duration || event.location || multiDayLabel) && (
                           <div className="flex items-center justify-between gap-1 mt-1 opacity-60">
-                            {event.location && (
-                              <div className="flex items-center gap-1 text-[11px] font-semibold min-w-0">
-                                <MapPin size={10} strokeWidth={2.5} className="flex-shrink-0" />
-                                <span className="truncate">{event.location}</span>
-                              </div>
-                            )}
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              {duration && (
+                                <span className="text-[11px] font-black tabular-nums flex-shrink-0">
+                                  {duration}
+                                </span>
+                              )}
+                              {event.location && (
+                                <div className="flex items-center gap-1 text-[11px] font-semibold min-w-0">
+                                  {duration && <span className="opacity-40">·</span>}
+                                  <MapPin size={10} strokeWidth={2.5} className="flex-shrink-0" />
+                                  <span className="truncate">{event.location}</span>
+                                </div>
+                              )}
+                            </div>
                             {multiDayLabel && (
                               <span className="text-[10px] font-black uppercase tracking-tight ml-auto flex-shrink-0 opacity-70">
                                 {multiDayLabel}
