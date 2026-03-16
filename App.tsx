@@ -6,6 +6,10 @@ import { WeatherWidget } from './components/WeatherWidget';
 import { CalendarGrid } from './components/CalendarGrid';
 import { LunchWidget } from './components/LunchWidget';
 import { DadJokeWidget } from './components/DadJokeWidget';
+import { OnThisDayWidget } from './components/OnThisDayWidget';
+import { TriviaWidget } from './components/TriviaWidget';
+import { QuoteWidget } from './components/QuoteWidget';
+import { CountdownWidget } from './components/CountdownWidget';
 import { SettingsModal } from './components/SettingsModal';
 import { AppSettings, CalendarEvent } from './types';
 import { fetchGoogleCalendarEvents } from './services/calendar';
@@ -126,7 +130,15 @@ const App: React.FC = () => {
             onWeatherUpdate={setWeatherCondition}
           />
           <LunchWidget schoolName={settings.schoolName} schoolId={settings.schoolId} />
-          <DadJokeWidget />
+          {(() => {
+            switch (settings.widget4) {
+              case 'onthisday': return <OnThisDayWidget />;
+              case 'trivia':    return <TriviaWidget />;
+              case 'quote':     return <QuoteWidget />;
+              case 'countdown': return <CountdownWidget label={settings.countdownLabel} date={settings.countdownDate} />;
+              default:          return <DadJokeWidget />;
+            }
+          })()}
         </div>
 
         {/* Calendar — fills remaining space */}

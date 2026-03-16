@@ -1,7 +1,15 @@
 
 import React, { useEffect } from 'react';
 import { X, Check } from 'lucide-react';
-import { AppSettings } from '../types';
+import { AppSettings, Widget4Type } from '../types';
+
+const WIDGET4_OPTIONS: { value: Widget4Type; label: string; emoji: string }[] = [
+  { value: 'dadjoke',   label: 'Dad Joke',     emoji: '😄' },
+  { value: 'onthisday', label: 'On This Day',  emoji: '📅' },
+  { value: 'trivia',    label: 'Trivia',        emoji: '🧠' },
+  { value: 'quote',     label: 'Quote',         emoji: '💬' },
+  { value: 'countdown', label: 'Countdown',     emoji: '⏳' },
+];
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -154,6 +162,60 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
                 );
               })}
             </div>
+          </section>
+
+          <Divider />
+
+          {/* --- 4th Widget --- */}
+          <section className="space-y-3">
+            <SectionLabel>4th Widget</SectionLabel>
+            <Field label="Widget Type" htmlFor="setting-widget4">
+              <div className="relative">
+                <select
+                  id="setting-widget4"
+                  value={local.widget4 || 'dadjoke'}
+                  onChange={e => set('widget4', e.target.value as Widget4Type)}
+                  className={`${inputCls} appearance-none pr-8 cursor-pointer`}
+                  style={inputStyle}
+                >
+                  {WIDGET4_OPTIONS.map(opt => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.emoji} {opt.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" opacity="0.4">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
+              </div>
+            </Field>
+            {local.widget4 === 'countdown' && (
+              <>
+                <Field label="Countdown Label" htmlFor="setting-countdown-label">
+                  <input
+                    id="setting-countdown-label"
+                    type="text"
+                    value={local.countdownLabel || ''}
+                    onChange={e => set('countdownLabel', e.target.value)}
+                    placeholder="e.g. Summer Break"
+                    className={inputCls}
+                    style={inputStyle}
+                  />
+                </Field>
+                <Field label="Target Date" htmlFor="setting-countdown-date">
+                  <input
+                    id="setting-countdown-date"
+                    type="date"
+                    value={local.countdownDate || ''}
+                    onChange={e => set('countdownDate', e.target.value)}
+                    className={inputCls}
+                    style={inputStyle}
+                  />
+                </Field>
+              </>
+            )}
           </section>
 
           <Divider />

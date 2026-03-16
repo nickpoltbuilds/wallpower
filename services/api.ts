@@ -1,6 +1,57 @@
 
 import { LunchMenu, WeatherData } from "../types";
 
+// --- On This Day (Wikipedia) ---
+
+export const fetchOnThisDay = async (): Promise<{ year: number; text: string } | null> => {
+    try {
+        const now = new Date();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const res = await fetch(
+            `https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/${month}/${day}`,
+            { headers: { 'Accept': 'application/json' } }
+        );
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+        const events: any[] = data.events ?? [];
+        if (events.length === 0) throw new Error('No events');
+        const event = events[Math.floor(Math.random() * Math.min(events.length, 15))];
+        const text = event.text.length > 130 ? event.text.slice(0, 130).trimEnd() + '…' : event.text;
+        return { year: event.year, text };
+    } catch {
+        return null;
+    }
+};
+
+// --- Trivia (Open Trivia DB) ---
+
+const decodeHtml = (html: string): string => {
+    try {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    } catch {
+        return html;
+    }
+};
+
+export const fetchTrivia = async (): Promise<{ question: string; correct: string } | null> => {
+    try {
+        const res = await fetch('https://opentdb.com/api.php?amount=1&type=multiple&difficulty=easy');
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+        if (data.response_code !== 0 || !data.results?.[0]) throw new Error('No results');
+        const r = data.results[0];
+        return {
+            question: decodeHtml(r.question),
+            correct: decodeHtml(r.correct_answer),
+        };
+    } catch {
+        return null;
+    }
+};
+
 // --- Dad Joke API ---
 export const fetchDadJoke = async (): Promise<string> => {
     try {

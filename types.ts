@@ -37,6 +37,8 @@ export interface LunchMenu {
   isWeekend?: boolean;
 }
 
+export type Widget4Type = 'dadjoke' | 'onthisday' | 'trivia' | 'quote' | 'countdown';
+
 export interface AppSettings {
   familyName: string;
   location: string;
@@ -46,4 +48,7 @@ export interface AppSettings {
   refreshInterval: number; // in minutes
   theme: 'dark' | 'light' | 'sunset';
   use24Hour: boolean;
+  widget4?: Widget4Type;
+  countdownLabel?: string;
+  countdownDate?: string; // YYYY-MM-DD
 }

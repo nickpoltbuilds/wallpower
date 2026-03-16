@@ -58,6 +58,30 @@
   --text-joke: #fef9c3;
   --text-joke-sub: #fbbf24;
 
+  /* Widgets — on this day */
+  --bg-otd: #042030;
+  --bg-otd-to: #063850;
+  --text-otd: #b3e8f0;
+  --text-otd-sub: #38bdf8;
+
+  /* Widgets — trivia */
+  --bg-trivia: #2a0424;
+  --bg-trivia-to: #3d0634;
+  --text-trivia: #fae8ff;
+  --text-trivia-sub: #e879f9;
+
+  /* Widgets — quote */
+  --bg-quote: #220a14;
+  --bg-quote-to: #361220;
+  --text-quote: #fce7f3;
+  --text-quote-sub: #f472b6;
+
+  /* Widgets — countdown */
+  --bg-countdown: #0f172a;
+  --bg-countdown-to: #1e293b;
+  --text-countdown: #f1f5f9;
+  --text-countdown-sub: #94a3b8;
+
   /* Calendar */
   --bg-cal-col: #13151d;
   --bg-cal-col-border: rgba(255,255,255,0.05);
@@ -101,6 +125,10 @@
   --bg-weather: #eff6ff;    --bg-weather-to: #dbeafe; --text-weather: #1e3a5f; --text-weather-sub: #2563eb;
   --bg-lunch: #f0fdf4;      --bg-lunch-to: #dcfce7;  --text-lunch: #14532d; --accent-lunch: #16a34a;
   --bg-joke: #fefce8;       --bg-joke-to: #fef9c3;   --text-joke: #713f12;  --text-joke-sub: #d97706;
+  --bg-otd: #e0f9ff;        --bg-otd-to: #baeeff;    --text-otd: #0c4a6e;   --text-otd-sub: #0284c7;
+  --bg-trivia: #fdf4ff;     --bg-trivia-to: #f5d0fe; --text-trivia: #4a044e; --text-trivia-sub: #c026d3;
+  --bg-quote: #fdf2f8;      --bg-quote-to: #fce7f3;  --text-quote: #500724; --text-quote-sub: #db2777;
+  --bg-countdown: #f8fafc;  --bg-countdown-to: #f1f5f9; --text-countdown: #0f172a; --text-countdown-sub: #475569;
 
   --bg-cal-col: #ffffff;
   --bg-cal-col-border: rgba(0,0,0,0.06);
@@ -144,6 +172,10 @@
   --bg-weather: #1c0d1a;   --bg-weather-to: #2d1330; --text-weather: #f5d0fe; --text-weather-sub: #d946ef;
   --bg-lunch: #1a2400;     --bg-lunch-to: #2a3a00;  --text-lunch: #d9f99d; --accent-lunch: #84cc16;
   --bg-joke: #0f1a2e;      --bg-joke-to: #1a2a4a;   --text-joke: #bae6fd;  --text-joke-sub: #38bdf8;
+  --bg-otd: #031828;       --bg-otd-to: #052838;    --text-otd: #b3e8f0;   --text-otd-sub: #22d3ee;
+  --bg-trivia: #240422;    --bg-trivia-to: #360430; --text-trivia: #fae8ff; --text-trivia-sub: #e879f9;
+  --bg-quote: #2d0a14;     --bg-quote-to: #4a1020;  --text-quote: #fce7f3; --text-quote-sub: #f472b6;
+  --bg-countdown: #0f172a; --bg-countdown-to: #1e293b; --text-countdown: #f1f5f9; --text-countdown-sub: #94a3b8;
 
   --bg-cal-col: #1a0d05;
   --bg-cal-col-border: rgba(245,158,11,0.1);
@@ -232,6 +264,30 @@ body {
   color: var(--text-joke);
 }
 .widget-joke-sub { color: var(--text-joke-sub); }
+
+.widget-onthisday {
+  background: linear-gradient(145deg, var(--bg-otd), var(--bg-otd-to));
+  color: var(--text-otd);
+}
+.widget-onthisday-sub { color: var(--text-otd-sub); }
+
+.widget-trivia {
+  background: linear-gradient(145deg, var(--bg-trivia), var(--bg-trivia-to));
+  color: var(--text-trivia);
+}
+.widget-trivia-sub { color: var(--text-trivia-sub); }
+
+.widget-quote {
+  background: linear-gradient(145deg, var(--bg-quote), var(--bg-quote-to));
+  color: var(--text-quote);
+}
+.widget-quote-sub { color: var(--text-quote-sub); }
+
+.widget-countdown {
+  background: linear-gradient(145deg, var(--bg-countdown), var(--bg-countdown-to));
+  color: var(--text-countdown);
+}
+.widget-countdown-sub { color: var(--text-countdown-sub); }
 
 /* ---- Calendar ---- */
 .widget-calendar-col {
