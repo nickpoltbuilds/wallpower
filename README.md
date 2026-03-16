@@ -121,7 +121,7 @@ Events are color-coded automatically by keyword:
 |-------|-----------|
 | Framework | [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/) |
 | Build | [Vite 6](https://vitejs.dev/) |
-| Styling | [Tailwind CSS 4](https://tailwindcss.com/) + CSS custom properties |
+| Styling | [Tailwind CSS 3](https://tailwindcss.com/docs/installation) + CSS custom properties |
 | Icons | [Lucide React](https://lucide.dev/) |
 | Serverless | [Vercel Functions](https://vercel.com/docs/functions) (`/api/lunch`) |
 | Weather | [Open-Meteo](https://open-meteo.com/) (no key required) |
@@ -136,11 +136,13 @@ No database. No authentication. No build-time secrets.
 
 ## Browser Support
 
-Modern browsers from 2020 onward. Tested on:
+Modern browsers from 2018 onward. Tested on:
 
-- Chrome / Edge 103+
-- Safari 15+ / iOS 15+ (AbortSignal.timeout polyfill included for older devices)
-- Firefox 103+
+- Chrome / Edge 80+
+- Safari 13+ / iOS 13+ (including older iPads pinned to iOS 13–15)
+- Firefox 80+
+
+> **Why Tailwind 3?** Tailwind CSS 4 requires `@layer` cascade layers and `@property`, which are only available in Safari 15.4+/iOS 15.4+ (2022) and Safari 16.4+/iOS 16.4+ (2023) respectively. To keep the app working on older wall-mounted tablets and iPads that can't be updated past iOS 13–15, this project intentionally stays on Tailwind CSS 3. **Do not upgrade to Tailwind 4.**
 
 Internet Explorer is not supported.
 
