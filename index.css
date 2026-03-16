@@ -332,7 +332,7 @@ body {
    SETTINGS BUTTON
    ======================================== */
 .settings-btn {
-  position: relative;
+  /* position:relative removed — button uses Tailwind's `absolute` which positions it bottom-right */
 }
 .settings-btn::after {
   content: '';
