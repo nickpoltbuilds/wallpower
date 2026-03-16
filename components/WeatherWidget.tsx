@@ -122,7 +122,7 @@ const Sparkline: React.FC<SparklineProps> = ({ data }) => {
       </svg>
 
       {/* Time labels — HTML so they don't get stretched */}
-      <div className="relative w-full" style={{ height: '14px' }}>
+      <div className="relative w-full" style={{ height: '16px' }}>
         {labelIdxs.map(i => {
           const leftPct = toX(i); // 0–100, matches the SVG x positions
           const isFirst = i === 0;
@@ -130,13 +130,13 @@ const Sparkline: React.FC<SparklineProps> = ({ data }) => {
           return (
             <span
               key={i}
-              className="absolute text-[9px] font-black uppercase tracking-wide"
+              className="absolute text-[11px] font-black uppercase tracking-wide"
               style={{
                 left:      `${leftPct}%`,
                 top:       0,
                 transform: isFirst ? 'none' : isLast ? 'translateX(-100%)' : 'translateX(-50%)',
-                opacity:   0.45,
-                lineHeight: '14px',
+                opacity:   0.5,
+                lineHeight: '16px',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -163,9 +163,9 @@ const ForecastRow: React.FC<ForecastRowProps> = ({ day, weekMin, weekMax }) => {
   const widthPct = Math.max(((day.high - day.low) / range) * 100, 10);
 
   return (
-    <div className="flex items-center gap-2 h-[27px]">
+    <div className="flex items-center gap-2 h-[30px]">
       {/* Day label */}
-      <span className="text-[11px] font-black opacity-85 w-7 flex-shrink-0 tracking-tight">
+      <span className="text-[13px] font-black opacity-85 w-8 flex-shrink-0 tracking-tight">
         {day.day.slice(0, 3)}
       </span>
 
@@ -173,7 +173,7 @@ const ForecastRow: React.FC<ForecastRowProps> = ({ day, weekMin, weekMax }) => {
       <SmallIcon condition={day.icon} />
 
       {/* Low temp */}
-      <span className="text-[11px] font-black tabular-nums opacity-45 w-6 text-right flex-shrink-0">
+      <span className="text-[13px] font-black tabular-nums opacity-45 w-7 text-right flex-shrink-0">
         {Math.round(day.low)}°
       </span>
 
@@ -193,7 +193,7 @@ const ForecastRow: React.FC<ForecastRowProps> = ({ day, weekMin, weekMax }) => {
       </div>
 
       {/* High temp */}
-      <span className="text-[11px] font-black tabular-nums w-6 flex-shrink-0">
+      <span className="text-[13px] font-black tabular-nums w-7 flex-shrink-0">
         {Math.round(day.high)}°
       </span>
     </div>
@@ -322,15 +322,15 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
 
             {/* Condition + location pushed to far right */}
             <div className="flex flex-col items-end flex-shrink-0 max-w-[40%]">
-              <span className="text-[11px] font-bold opacity-65 leading-tight text-right truncate w-full">
+              <span className="text-[13px] font-bold opacity-65 leading-tight text-right truncate w-full">
                 {weather.condition}
               </span>
               {weather.feelsLike !== undefined && weather.feelsLike !== weather.currentTemp && (
-                <span className="text-[10px] font-bold opacity-40 leading-tight">
+                <span className="text-[12px] font-bold opacity-40 leading-tight">
                   Feels {weather.feelsLike}°
                 </span>
               )}
-              <span className="text-[9px] font-black uppercase tracking-wider opacity-35 truncate w-full text-right mt-0.5">
+              <span className="text-[11px] font-black uppercase tracking-wider opacity-35 truncate w-full text-right mt-0.5">
                 {weather.location.split(',')[0]}
               </span>
             </div>
@@ -357,10 +357,10 @@ export const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location, refreshI
       ) : error ? (
         <div className="h-full flex flex-col items-center justify-center gap-3 px-4 opacity-70">
           <Cloud size={28} className="opacity-40" />
-          <p className="text-[11px] font-black uppercase tracking-wider opacity-60">Unavailable</p>
+          <p className="text-[13px] font-black uppercase tracking-wider opacity-60">Unavailable</p>
           <button
             onClick={handleRefresh}
-            className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider hover:opacity-80"
+            className="px-3 py-1.5 rounded-lg text-[12px] font-black uppercase tracking-wider hover:opacity-80"
             style={{ background: 'rgba(0,0,0,0.2)' }}
           >
             Retry

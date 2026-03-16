@@ -58,7 +58,7 @@ export const DadJokeWidget: React.FC = () => {
         ) : (
           <p
             className="font-bold leading-snug text-center opacity-90"
-            style={{ fontSize: 'clamp(0.75rem, 1.8vmin, 0.95rem)' }}
+            style={{ fontSize: 'clamp(0.85rem, 2.2vmin, 1.05rem)' }}
           >
             {joke && `"${joke}"`}
           </p>

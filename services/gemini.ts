@@ -231,6 +231,18 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
     return null;
 };
 
+// AbortSignal.timeout() polyfill — not available in Safari < 16 / iOS < 16
+function timeoutSignal(ms: number): AbortSignal {
+    try {
+        // Use native if available (Safari 16+, Chrome 103+)
+        return AbortSignal.timeout(ms);
+    } catch {
+        const controller = new AbortController();
+        setTimeout(() => controller.abort(), ms);
+        return controller.signal;
+    }
+}
+
 // --- School Lunch Service ---
 
 const LUNCH_PROXIES = [
@@ -288,7 +300,7 @@ export const fetchSchoolLunch = async (schoolName: string, schoolId?: string): P
         try {
             const res = await fetch(`/api/lunch?schoolId=${encodeURIComponent(schoolId)}&date=${encodeURIComponent(dateStr)}`, {
                 headers: { 'Accept': 'application/json' },
-                signal: AbortSignal.timeout(10000),
+                signal: timeoutSignal(10000),
             });
             if (res.ok) {
                 rawData = await res.json();
@@ -303,7 +315,7 @@ export const fetchSchoolLunch = async (schoolName: string, schoolId?: string): P
                 try {
                     const res = await fetch(proxyFn(apiUrl), {
                         headers: { 'Accept': 'application/json' },
-                        signal: AbortSignal.timeout(8000),
+                        signal: timeoutSignal(8000),
                     });
                     if (res.ok) {
                         rawData = await res.json();

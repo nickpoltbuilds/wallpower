@@ -72,7 +72,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events }) => {
                 >
                   {dayLabel}
                 </span>
-                <span className="text-[11px] font-bold widget-calendar-text-sub opacity-70">
+                <span className="text-[13px] font-bold widget-calendar-text-sub opacity-70">
                   {dateLabel}
                 </span>
               </div>
@@ -104,25 +104,25 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events }) => {
                         className={`px-3 py-2.5 event-card ${colorClass}`}
                       >
                         <div className="flex items-center justify-between mb-0.5">
-                          <div className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider opacity-80">
-                            {!event.isAllDay && <Clock size={10} strokeWidth={3} className="flex-shrink-0" />}
+                          <div className="flex items-center gap-1 text-[12px] font-black uppercase tracking-wider opacity-80">
+                            {!event.isAllDay && <Clock size={11} strokeWidth={3} className="flex-shrink-0" />}
                             <span>{timeString}</span>
                           </div>
                           {multiDayLabel && (
-                            <span className="text-[9px] font-black opacity-60 uppercase tracking-tight">
+                            <span className="text-[11px] font-black opacity-60 uppercase tracking-tight">
                               Day {multiDayLabel}
                             </span>
                           )}
                         </div>
                         <div
                           className="font-bold leading-tight"
-                          style={{ fontSize: 'clamp(0.85rem, 1.8vmin, 1rem)' }}
+                          style={{ fontSize: 'clamp(0.9rem, 2vmin, 1.05rem)' }}
                         >
                           {event.title}
                         </div>
                         {event.location && (
-                          <div className="flex items-center gap-1 text-[10px] font-bold mt-0.5 opacity-70 truncate">
-                            <MapPin size={9} strokeWidth={2.5} className="flex-shrink-0" />
+                          <div className="flex items-center gap-1 text-[12px] font-bold mt-0.5 opacity-70 truncate">
+                            <MapPin size={11} strokeWidth={2.5} className="flex-shrink-0" />
                             {event.location}
                           </div>
                         )}

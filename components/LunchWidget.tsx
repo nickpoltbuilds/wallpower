@@ -96,12 +96,12 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
       ) : isWeekend ? (
         <div className="h-full flex flex-col items-center justify-center text-center gap-1 pb-2">
           <span className="text-3xl">🏫</span>
-          <p className="text-xs font-black uppercase tracking-widest opacity-60 mt-1">No school today</p>
+          <p className="text-sm font-black uppercase tracking-widest opacity-60 mt-1">No school today</p>
         </div>
       ) : noId ? (
         <div className="h-full flex flex-col items-center justify-center text-center gap-2 pb-2">
           <span className="text-2xl opacity-40">🥗</span>
-          <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Add school ID in settings</p>
+          <p className="text-xs font-black uppercase tracking-wider opacity-60">Add school ID in settings</p>
         </div>
       ) : allEntrees.length > 0 ? (
         <div className="flex flex-col gap-2.5 pt-1">
@@ -112,7 +112,7 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
               />
               <span
                 className="font-bold leading-tight"
-                style={{ fontSize: 'clamp(0.85rem, 2vmin, 1.1rem)' }}
+                style={{ fontSize: 'clamp(0.95rem, 2.5vmin, 1.2rem)' }}
               >
                 {item}
               </span>
@@ -122,11 +122,11 @@ export const LunchWidget: React.FC<LunchWidgetProps> = ({ schoolName, schoolId }
       ) : isUnavailable ? (
         <div className="h-full flex flex-col items-center justify-center text-center gap-2 pb-2">
           <span className="text-2xl opacity-40">🍽️</span>
-          <p className="text-[10px] font-black uppercase tracking-wider opacity-60">Menu unavailable</p>
+          <p className="text-xs font-black uppercase tracking-wider opacity-60">Menu unavailable</p>
           {schoolId && (
             <button
               onClick={handleOpenMenu}
-              className="px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-opacity hover:opacity-70"
+              className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider transition-opacity hover:opacity-70"
               style={{ background: 'rgba(0,0,0,0.15)' }}
             >
               View online

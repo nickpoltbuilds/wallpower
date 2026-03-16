@@ -25,7 +25,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
           <div className="flex items-center gap-2 opacity-70">
             {icon && <span className="flex-shrink-0">{icon}</span>}
             {title && (
-              <h2 className="text-[10px] font-black tracking-[0.12em] uppercase">
+              <h2 className="text-[13px] font-black tracking-[0.1em] uppercase">
                 {title}
               </h2>
             )}

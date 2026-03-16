@@ -69,11 +69,11 @@ export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '' })
             className="flex items-center gap-1.5 px-3 py-1 rounded-full"
             style={{ background: 'rgba(0,0,0,0.15)' }}
           >
-            <span className="widget-time-sub text-[11px] font-black tracking-widest">
+            <span className="widget-time-sub text-[13px] font-black tracking-widest">
               {weekday}
             </span>
             <span className="w-1 h-1 rounded-full bg-current opacity-25" />
-            <span className="text-[11px] font-black tracking-tight opacity-90">
+            <span className="text-[13px] font-black tracking-tight opacity-90">
               {monthDay}
             </span>
             {weatherCondition && (

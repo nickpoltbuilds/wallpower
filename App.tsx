@@ -109,9 +109,9 @@ const App: React.FC = () => {
       {/* Main layout */}
       <div className="flex-1 flex flex-col gap-3 p-3 sm:p-4 md:p-5 min-h-0">
 
-        {/* Top widget row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0"
-          style={{ height: 'clamp(180px, 28vh, 300px)' }}
+        {/* Top widget row — 2-col on tablet/mobile, 4-col on lg+ */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0"
+          style={{ gridAutoRows: 'clamp(160px, 26vh, 260px)' }}
         >
           <TimeWidget weatherCondition={weatherCondition} />
           <WeatherWidget
