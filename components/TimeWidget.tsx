@@ -5,6 +5,7 @@ import { GlassCard } from './GlassCard';
 
 interface TimeWidgetProps {
   weatherCondition?: string;
+  use24Hour?: boolean;
 }
 
 const WeatherIcon: React.FC<{ condition: string }> = ({ condition }) => {
@@ -19,7 +20,7 @@ const WeatherIcon: React.FC<{ condition: string }> = ({ condition }) => {
   return <Sun size={size} className={cls} />;
 };
 
-export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '' }) => {
+export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '', use24Hour = false }) => {
   const [date, setDate] = useState(new Date());
 
   useEffect(() => {
@@ -27,9 +28,13 @@ export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '' })
     return () => clearInterval(timer);
   }, []);
 
-  const hours   = String(date.getHours()).padStart(2, '0');
+  const rawHours = date.getHours();
+  const hours   = use24Hour
+    ? String(rawHours).padStart(2, '0')
+    : String(rawHours % 12 || 12).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
   const seconds = String(date.getSeconds()).padStart(2, '0');
+  const ampm    = use24Hour ? null : (rawHours >= 12 ? 'PM' : 'AM');
 
   const weekday  = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
   const monthDay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
@@ -55,12 +60,22 @@ export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '' })
           >
             {hours}:{minutes}
           </span>
-          <span
-            className="font-bold tracking-tighter mb-1 ml-1 opacity-50"
-            style={{ fontSize: 'clamp(1rem, 2.5vmin, 1.75rem)' }}
-          >
-            {seconds}
-          </span>
+          <div className="flex flex-col items-start mb-1 ml-1 gap-0.5">
+            <span
+              className="font-bold tracking-tighter opacity-50"
+              style={{ fontSize: 'clamp(1rem, 2.5vmin, 1.75rem)' }}
+            >
+              {seconds}
+            </span>
+            {ampm && (
+              <span
+                className="font-black uppercase leading-none opacity-50"
+                style={{ fontSize: 'clamp(0.6rem, 1.4vmin, 0.9rem)' }}
+              >
+                {ampm}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Date row */}

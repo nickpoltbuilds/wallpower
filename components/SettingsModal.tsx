@@ -96,6 +96,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
                 style={inputStyle}
               />
             </Field>
+            <Field label="Clock Format">
+              <div className="flex rounded-xl overflow-hidden" style={{ border: '1px solid var(--modal-input-border)' }}>
+                {([false, true] as const).map(is24 => (
+                  <button
+                    key={String(is24)}
+                    onClick={() => set('use24Hour', is24)}
+                    className="flex-1 py-2 text-[12px] font-black uppercase tracking-wider transition-all"
+                    style={{
+                      background: local.use24Hour === is24 ? 'var(--modal-accent)' : 'var(--modal-input-bg)',
+                      color: local.use24Hour === is24 ? '#fff' : 'var(--modal-text-muted)',
+                    }}
+                  >
+                    {is24 ? '24-hour' : '12-hour'}
+                  </button>
+                ))}
+              </div>
+            </Field>
           </section>
 
           <Divider />

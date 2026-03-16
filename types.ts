@@ -45,4 +45,5 @@ export interface AppSettings {
   googleCalendarIcalUrl?: string;
   refreshInterval: number; // in minutes
   theme: 'dark' | 'light' | 'sunset';
+  use24Hour: boolean;
 }

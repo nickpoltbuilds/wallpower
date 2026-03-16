@@ -36,6 +36,7 @@ const DEFAULTS: AppSettings = {
   googleCalendarIcalUrl: '',
   refreshInterval: 5,
   theme: 'dark',
+  use24Hour: false,
 };
 
 const App: React.FC = () => {
@@ -113,7 +114,7 @@ const App: React.FC = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0"
           style={{ gridAutoRows: 'clamp(160px, 26vh, 260px)' }}
         >
-          <TimeWidget weatherCondition={weatherCondition} />
+          <TimeWidget weatherCondition={weatherCondition} use24Hour={settings.use24Hour} />
           <WeatherWidget
             location={settings.location}
             refreshInterval={settings.refreshInterval}
@@ -125,7 +126,7 @@ const App: React.FC = () => {
 
         {/* Calendar — fills remaining space */}
         <div className="flex-1 min-h-0">
-          <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} />
+          <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} use24Hour={settings.use24Hour} />
         </div>
       </div>
 
