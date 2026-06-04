@@ -138,7 +138,7 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
 
     // Try Open-Meteo first (no CORS issues, reliable)
     try {
-        const omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code,apparent_temperature&hourly=temperature_2m&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=auto&forecast_days=4`;
+        const omUrl = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,weather_code,apparent_temperature&daily=weather_code,temperature_2m_max,temperature_2m_min&temperature_unit=fahrenheit&timezone=auto&forecast_days=4`;
         const res = await fetch(omUrl);
         const data = await res.json();
 
@@ -160,31 +160,6 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
             };
             const condition = wmoConditions[data.current.weather_code] || 'Partly Cloudy';
 
-            // Build hourly sparkline: next 13 hours from current hour
-            const hourlyTimes: string[] = data.hourly?.time ?? [];
-            const hourlyTemps: number[] = data.hourly?.temperature_2m ?? [];
-            const now = new Date();
-            let startIdx = 0;
-            for (let i = 0; i < hourlyTimes.length - 1; i++) {
-                // Open-Meteo local times: "2024-03-03T14:00"
-                const [dp, tp] = hourlyTimes[i].split('T');
-                const [y, mo, d] = dp.split('-').map(Number);
-                const h = parseInt(tp);
-                const t = new Date(y, mo - 1, d, h, 0, 0);
-                if (t <= now) startIdx = i;
-                else break;
-            }
-            const hourlySlice = hourlyTimes.slice(startIdx, startIdx + 13);
-            const hourly = hourlySlice.map((t, idx) => {
-                const h = parseInt(t.split('T')[1]);
-                const ampm = h >= 12 ? 'pm' : 'am';
-                const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-                return {
-                    label: idx === 0 ? 'Now' : `${h12}${ampm}`,
-                    temp: Math.round(hourlyTemps[startIdx + idx] ?? 0),
-                };
-            });
-
             return {
                 currentTemp: Math.round(data.current.temperature_2m),
                 feelsLike: Math.round(data.current.apparent_temperature),
@@ -192,7 +167,6 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
                 high: Math.round(data.daily.temperature_2m_max[0]),
                 low: Math.round(data.daily.temperature_2m_min[0]),
                 location: city,
-                hourly,
                 forecast
             };
         }
@@ -270,7 +244,6 @@ export const fetchWeather = async (locationQuery: string): Promise<WeatherData |
                     high: dailyForecasts[0]?.high || currentTemp,
                     low: dailyForecasts[0]?.low || currentTemp,
                     location: city,
-                    hourly: [], // NOAA fallback: no hourly sparkline data
                     forecast: dailyForecasts
                 };
             }

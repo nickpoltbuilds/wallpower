@@ -40,7 +40,7 @@ export const CountdownWidget: React.FC<CountdownWidgetProps> = ({ label, date })
       icon={<span className="text-sm leading-none">⏳</span>}
       className="h-full widget-countdown"
     >
-      <div className="h-full flex flex-col items-center justify-center pb-2 gap-1">
+      <div className="h-full flex flex-col items-center justify-center pb-2 space-y-1">
         {!date ? (
           <p
             className="widget-countdown-sub font-medium opacity-60 text-center leading-snug"

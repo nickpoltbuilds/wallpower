@@ -103,7 +103,7 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="h-screen w-full relative flex flex-col bg-app overflow-hidden"
+      className="app-root w-full relative flex flex-col bg-app overflow-hidden"
       data-theme={settings.theme}
     >
       {/* Settings trigger */}
@@ -117,10 +117,10 @@ const App: React.FC = () => {
       </button>
 
       {/* Main layout */}
-      <div className="flex-1 flex flex-col gap-3 p-3 sm:p-4 md:p-5 min-h-0">
+      <div className="flex-1 grid grid-rows-[auto_1fr] gap-3 p-3 sm:p-4 md:p-5 min-h-0">
 
         {/* Top widget row — 2-col on tablet/mobile, 4-col on lg+ */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 flex-shrink-0"
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3"
           style={{ gridAutoRows: 'clamp(160px, 26vh, 260px)' }}
         >
           <TimeWidget weatherCondition={weatherCondition} use24Hour={settings.use24Hour} />
@@ -142,7 +142,7 @@ const App: React.FC = () => {
         </div>
 
         {/* Calendar — fills remaining space */}
-        <div className="flex-1 min-h-0">
+        <div className="min-h-0">
           <CalendarGrid events={events} setEvents={setEvents} isGoogleLinked={isGoogleLinked} use24Hour={settings.use24Hour} />
         </div>
       </div>

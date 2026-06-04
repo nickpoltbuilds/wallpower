@@ -17,10 +17,6 @@ export interface WeatherData {
   high: number;
   low: number;
   location: string;
-  hourly: Array<{
-    label: string;  // "Now", "3pm", "6pm" etc.
-    temp: number;
-  }>;
   // Index 0 = today, 1 = tomorrow, 2 = +2, 3 = +3
   forecast: Array<{
     day: string;

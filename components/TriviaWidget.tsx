@@ -50,9 +50,9 @@ export const TriviaWidget: React.FC = () => {
         </button>
       }
     >
-      <div className="h-full flex flex-col justify-between px-1 pb-2 gap-2">
+      <div className="h-full flex flex-col justify-between px-1 pb-2 space-y-2">
         {loading && !trivia ? (
-          <div className="flex flex-col gap-2 w-full mt-1">
+          <div className="flex flex-col space-y-2 w-full mt-1">
             <div className="skeleton h-4 w-full rounded" />
             <div className="skeleton h-4 w-4/5 rounded" />
           </div>

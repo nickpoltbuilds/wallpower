@@ -22,7 +22,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
     <div className={`widget-card relative flex flex-col min-h-0 ${className}`}>
       {(title || icon || action) && (
         <div className="flex items-center justify-between px-4 pt-4 pb-2 flex-shrink-0">
-          <div className="flex items-center gap-2 opacity-70">
+          <div className="flex items-center space-x-2 opacity-70">
             {icon && <span className="flex-shrink-0">{icon}</span>}
             {title && (
               <h2 className="text-[13px] font-black tracking-[0.1em] uppercase">

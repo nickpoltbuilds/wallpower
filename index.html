@@ -5,6 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="A beautiful family dashboard — weather, school lunch, calendar, and more." />
 
+    <!--
+      Safari < 16 (e.g. iPadOS 13) throws "SyntaxError: The string did not match the
+      expected pattern" when React 19's dev-mode profiler calls performance.measure()
+      with a numeric start time. That kills the first render → blank screen. Swallow it.
+      No-op in modern browsers; the throwing path doesn't exist in production React.
+    -->
+    <script>
+      (function () {
+        var p = window.performance;
+        if (!p) return;
+        ['measure', 'mark'].forEach(function (fn) {
+          var orig = p[fn];
+          if (typeof orig !== 'function') return;
+          p[fn] = function () {
+            try { return orig.apply(p, arguments); } catch (e) { return undefined; }
+          };
+        });
+      })();
+    </script>
+
+    <!--
+      iOS < 15.4 has no 100dvh and its CSS 100vh is taller than the visible viewport
+      (it counts the area behind Safari's toolbars). Expose the real visible height as
+      --app-vh so .app-root can use it. No-op visually on browsers that support 100dvh.
+    -->
+    <script>
+      (function () {
+        function setVH() {
+          document.documentElement.style.setProperty('--app-vh', window.innerHeight * 0.01 + 'px');
+        }
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', function () { setTimeout(setVH, 200); });
+      })();
+    </script>
+
     <!-- PWA / home screen -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />

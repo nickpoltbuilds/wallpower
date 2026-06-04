@@ -217,6 +217,18 @@ body {
 
 .bg-app { background-color: var(--bg-app); }
 
+/* App fills exactly the visible viewport (no scroll). Modern browsers use dvh, which
+   tracks the dynamic viewport. iOS < 15.4 has no dvh and its CSS 100vh counts the area
+   behind Safari's toolbars (≈44px too tall on iPadOS 13), so fall back to a JS-measured
+   --app-vh set from window.innerHeight (see index.html). */
+.app-root {
+  height: 100vh;   /* legacy fallback */
+  height: 100dvh;  /* modern browsers */
+}
+@supports not (height: 100dvh) {
+  .app-root { height: calc(var(--app-vh, 1vh) * 100); }
+}
+
 .widget-card {
   border-radius: var(--border-radius);
   box-shadow: var(--card-shadow);

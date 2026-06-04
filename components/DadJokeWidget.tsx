@@ -50,7 +50,7 @@ export const DadJokeWidget: React.FC = () => {
     >
       <div className="h-full flex items-center justify-center px-1 pb-2">
         {loading && !joke ? (
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col space-y-2 w-full">
             <div className="skeleton h-4 w-full rounded" />
             <div className="skeleton h-4 w-4/5 rounded" />
             <div className="skeleton h-4 w-3/5 rounded" />

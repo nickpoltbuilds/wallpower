@@ -50,9 +50,9 @@ export const OnThisDayWidget: React.FC = () => {
         </button>
       }
     >
-      <div className="h-full flex flex-col justify-center px-1 pb-2 gap-1.5">
+      <div className="h-full flex flex-col justify-center px-1 pb-2 space-y-1.5">
         {loading && !fact ? (
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col space-y-2 w-full">
             <div className="skeleton h-3 w-1/4 rounded" />
             <div className="skeleton h-4 w-full rounded" />
             <div className="skeleton h-4 w-4/5 rounded" />

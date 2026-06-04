@@ -112,7 +112,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, use24Hour = 
             <div className="mx-4 h-px bg-current opacity-[0.07] flex-shrink-0" />
 
             {/* Events */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 py-1.5 px-2 flex flex-col gap-1">
+            <div className="flex-1 overflow-y-auto custom-scrollbar min-h-0 py-1.5 px-2 flex flex-col space-y-1">
               {dayEvents.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center">
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] opacity-15">Free</span>
@@ -169,15 +169,15 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({ events, use24Hour = 
                         </span>
 
                         {(duration || event.location || multiDayLabel) && (
-                          <div className="flex items-center justify-between gap-1 mt-1 opacity-60">
-                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <div className="flex items-center justify-between space-x-1 mt-1 opacity-60">
+                            <div className="flex items-center space-x-2 min-w-0 flex-1">
                               {duration && (
                                 <span className="text-[11px] font-black tabular-nums flex-shrink-0">
                                   {duration}
                                 </span>
                               )}
                               {event.location && (
-                                <div className="flex items-center gap-1 text-[11px] font-semibold min-w-0">
+                                <div className="flex items-center space-x-1 text-[11px] font-semibold min-w-0">
                                   {duration && <span className="opacity-40">·</span>}
                                   <MapPin size={10} strokeWidth={2.5} className="flex-shrink-0" />
                                   <span className="truncate">{event.location}</span>

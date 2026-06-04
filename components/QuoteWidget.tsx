@@ -75,7 +75,7 @@ export const QuoteWidget: React.FC = () => {
         </button>
       }
     >
-      <div className="h-full flex flex-col justify-center px-1 pb-2 gap-2">
+      <div className="h-full flex flex-col justify-center px-1 pb-2 space-y-2">
         <p
           className="font-bold leading-snug opacity-90"
           style={{ fontSize: 'clamp(0.78rem, 2vmin, 0.92rem)' }}

@@ -252,14 +252,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, s
           <section className="space-y-3">
             <SectionLabel>System</SectionLabel>
             <Field label="Refresh Interval">
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap -m-1">
                 {INTERVALS.map(opt => {
                   const active = local.refreshInterval === opt.value;
                   return (
                     <button
                       key={opt.value}
                       onClick={() => set('refreshInterval', opt.value)}
-                      className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider transition-all"
+                      className="m-1 px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider transition-all"
                       style={{
                         background: active ? 'var(--modal-accent)' : 'var(--modal-input-bg)',
                         border: `1px solid ${active ? 'var(--modal-accent)' : 'var(--modal-input-border)'}`,

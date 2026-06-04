@@ -51,7 +51,7 @@ export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '', u
         />
       </div>
 
-      <div className="relative h-full flex flex-col items-center justify-center gap-2 py-5 px-4">
+      <div className="relative h-full flex flex-col items-center justify-center space-y-2 py-5 px-4">
         {/* Time */}
         <div className="flex items-end leading-none tabular-nums select-none">
           <span
@@ -60,7 +60,7 @@ export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '', u
           >
             {hours}:{minutes}
           </span>
-          <div className="flex flex-col items-start mb-1 ml-1 gap-0.5">
+          <div className="flex flex-col items-start mb-1 ml-1 space-y-0.5">
             <span
               className="font-bold tracking-tighter opacity-50"
               style={{ fontSize: 'clamp(1rem, 2.5vmin, 1.75rem)' }}
@@ -79,9 +79,9 @@ export const TimeWidget: React.FC<TimeWidgetProps> = ({ weatherCondition = '', u
         </div>
 
         {/* Date row */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center space-x-2">
           <div
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full"
+            className="flex items-center space-x-1.5 px-3 py-1 rounded-full"
             style={{ background: 'rgba(0,0,0,0.15)' }}
           >
             <span className="widget-time-sub text-[13px] font-black tracking-widest">
